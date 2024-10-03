@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import logoBanner from "../../assets/images/loginBanner.png";
-import logo from "../../assets/images/logo.png";
-import vector1 from "../../assets/images/Vector1.png";
-import vector2 from "../../assets/images/Vector2.png";
 import { Link } from "react-router-dom";
+import { AiOutlineDown, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import RightBanner from "../../commonComponent/RightBanner";
 
 const AdminSignup = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +19,35 @@ const AdminSignup = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const hospitals = [
+    "Hummingbird Garden Samaritan Hospital Center",
+    "Fountain Grove Medical Clinic",
+    "Silver Peak Medical Center",
+    "Bliss Angel Hospital",
+    "Peace Feather Medical Clinic",
+    "Rose Point Clinic",
+    "Dream Isle Medical Clinic",
+    "Mirror Eden General Hospital",
+  ];
+
+  const handleCreateHospital = () => {
+    setShowCreateModal(true);
+  };
+
+  const closeModal = () => {
+    setShowCreateModal(false);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -69,13 +96,13 @@ const AdminSignup = () => {
           <h2 className="text-3xl font-bold mb-6">Registration</h2>
           <form onSubmit={handleSubmit}>
             {/* First Name and Last Name */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-4 ">
               <div className="relative mb-4">
                 <input
                   type="text"
                   id="firstName"
                   name="firstName"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 placeholder-transparent ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                     errors.firstName ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter First Name"
@@ -89,7 +116,9 @@ const AdminSignup = () => {
                   First Name<span className="text-red-500">*</span>
                 </label>
                 {errors.firstName && (
-                  <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.firstName}
+                  </p>
                 )}
               </div>
               <div className="relative mb-4">
@@ -97,7 +126,7 @@ const AdminSignup = () => {
                   type="text"
                   id="lastName"
                   name="lastName"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 placeholder-transparent ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                     errors.lastName ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter Last Name"
@@ -117,13 +146,13 @@ const AdminSignup = () => {
             </div>
 
             {/* Email and Phone Number */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="relative mb-4">
                 <input
                   type="email"
                   id="email"
                   name="email"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 placeholder-transparent ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                     errors.email ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter Email Address"
@@ -145,7 +174,7 @@ const AdminSignup = () => {
                   type="text"
                   id="phone"
                   name="phone"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 placeholder-transparent ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                     errors.phone ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Enter Phone Number"
@@ -165,12 +194,12 @@ const AdminSignup = () => {
             </div>
 
             {/* Country, State, City */}
-            <div className="grid grid-cols-3 gap-4 mb-4">
+            <div className="grid grid-cols-3 gap-4">
               <div className="relative mb-4">
                 <select
                   id="country"
                   name="country"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${
                     errors.country ? "border-red-500" : "border-gray-300"
                   }`}
                   value={formData.country}
@@ -194,7 +223,7 @@ const AdminSignup = () => {
                 <select
                   id="state"
                   name="state"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${
                     errors.state ? "border-red-500" : "border-gray-300"
                   }`}
                   value={formData.state}
@@ -218,7 +247,7 @@ const AdminSignup = () => {
                 <select
                   id="city"
                   name="city"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 ${
+                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${
                     errors.city ? "border-red-500" : "border-gray-300"
                   }`}
                   value={formData.city}
@@ -226,7 +255,7 @@ const AdminSignup = () => {
                 >
                   <option value="">Select City</option>
                   <option value="City1">City1</option>
-                  <option value="City2">City2</option>
+                  <option value="City2" >City2</option>
                 </select>
                 <label
                   htmlFor="city"
@@ -242,37 +271,239 @@ const AdminSignup = () => {
 
             {/* Select Hospital */}
             <div className="relative mb-4">
-              <select
-                id="hospital"
-                name="hospital"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 ${
-                  errors.hospital ? "border-red-500" : "border-gray-300"
-                }`}
-                value={formData.hospital}
-                onChange={handleChange}
+              <div
+                className="peer w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-normal text-gray-500 cursor-pointer flex justify-between items-center"
+                onClick={toggleDropdown}
               >
-                <option value="">Select Hospital</option>
-                <option value="Hospital1">Hospital1</option>
-                <option value="Hospital2">Hospital2</option>
-              </select>
+                {formData.hospital ? formData.hospital : "Select Hospital"}
+                <AiOutlineDown />
+              </div>
               <label
                 htmlFor="hospital"
-                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3"
+                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200 peer-focus:-top-2.5 peer-focus:left-3"
               >
                 Hospital<span className="text-red-500">*</span>
               </label>
-              {errors.hospital && (
-                <p className="text-red-500 text-sm mt-1">{errors.hospital}</p>
+
+              {isDropdownOpen && (
+                <div className="absolute w-full mt-2 bg-white border border-gray-300 rounded-md max-h-48 overflow-y-auto shadow-md z-10">
+                  {hospitals.map((hospital, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setFormData({ ...formData, hospital });
+                        setIsDropdownOpen(false);
+                      }}
+                      className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 cursor-pointer font-normal"
+                    >
+                      {hospital}
+                    </div>
+                  ))}
+                  <div className="px-4 py-2">
+                    <button
+                      onClick={handleCreateHospital}
+                      className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                    >
+                      Create Hospital
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
+
+            {/* Modal Popup for Creating New Hospital */}
+            {showCreateModal && (
+              <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-md w-full max-w-md">
+                  <h2 className="text-xl font-bold mb-4">
+                    Create New Hospital
+                  </h2>
+                  <form>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1">
+                        Hospital Name*
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter Hospital Name"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1">
+                        Hospital Address*
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter Hospital Address"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          Country*
+                        </label>
+                        <select className="w-full px-4 py-2 border rounded-md focus:outline-none">
+                          <option value="">Select Country</option>
+                          <option value="Country1">Country1</option>
+                          <option value="Country2">Country2</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          State*
+                        </label>
+                        <select className="w-full px-4 py-2 border rounded-md focus:outline-none">
+                          <option value="">Select State</option>
+                          <option value="State1">State1</option>
+                          <option value="State2">State2</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          City*
+                        </label>
+                        <select className="w-full px-4 py-2 border rounded-md focus:outline-none">
+                          <option value="">Select City</option>
+                          <option value="City1">City1</option>
+                          <option value="City2">City2</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          Zip Code*
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter Zip Code"
+                          className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between mt-4">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            {/* Modal Popup for Creating New Hospital */}
+            {showCreateModal && (
+              <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50 z-50">
+                <div className="bg-white p-6 rounded-md w-full max-w-md">
+                  <h2 className="text-xl font-bold mb-4">
+                    Create New Hospital
+                  </h2>
+                  <form>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1">
+                        Hospital Name*
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter Hospital Name"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1">
+                        Hospital Address*
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter Hospital Address"
+                        className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          Country*
+                        </label>
+                        <select className="w-full px-4 py-2 border rounded-md focus:outline-none">
+                          <option value="">Select Country</option>
+                          <option value="Country1">Country1</option>
+                          <option value="Country2">Country2</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          State*
+                        </label>
+                        <select className="w-full px-4 py-2 border rounded-md focus:outline-none">
+                          <option value="">Select State</option>
+                          <option value="State1">State1</option>
+                          <option value="State2">State2</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          City*
+                        </label>
+                        <select className="w-full px-4 py-2 border rounded-md focus:outline-none">
+                          <option value="">Select City</option>
+                          <option value="City1">City1</option>
+                          <option value="City2">City2</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          Zip Code*
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter Zip Code"
+                          className="w-full px-4 py-2 border rounded-md focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between mt-4">
+                      <button
+                        type="button"
+                        onClick={closeModal}
+                        className="bg-gray-300 px-4 py-2 rounded-md hover:bg-gray-400"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
 
             {/* Password and Confirm Password */}
             <div className="relative mb-4">
               <input
-                type="password"
+                type={showPassword ? "password" : "text"}
                 id="password"
                 name="password"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 placeholder-transparent ${
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter Password"
@@ -281,20 +512,32 @@ const AdminSignup = () => {
               />
               <label
                 htmlFor="password"
-                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3"
+                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200 peer-focus:-top-2.5 peer-focus:left-3"
               >
                 Password<span className="text-red-500">*</span>
               </label>
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
+
+              {/* Add the icon */}
+              <div
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible className="text-gray-500" />
+                ) : (
+                  <AiOutlineEye className="text-gray-500" />
+                )}
+              </div>
             </div>
             <div className="relative mb-4">
               <input
-                type="password"
+                type={showPassword ? "password" : "text"}
                 id="confirmPassword"
                 name="confirmPassword"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 placeholder-transparent ${
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                   errors.confirmPassword ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Confirm Password"
@@ -312,10 +555,21 @@ const AdminSignup = () => {
                   {errors.confirmPassword}
                 </p>
               )}
+              {/* Add the icon */}
+              <div
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible className="text-gray-500" />
+                ) : (
+                  <AiOutlineEye className="text-gray-500" />
+                )}
+              </div>
             </div>
 
             {/* Agree to Terms */}
-            <div className="flex items-center ">
+            <div className="flex items-center mb-2 ">
               <input
                 type="checkbox"
                 name="agreeToTerms"
@@ -357,31 +611,7 @@ const AdminSignup = () => {
       </div>
 
       {/* Right Side - Banner & Vector Section */}
-      <div className="w-1/2 bg-gray-100 relative flex justify-center items-center">
-        <img
-          src={vector1}
-          alt="Vector Top Left"
-          className="absolute top-0 left-0 w-50 h-60"
-        />
-        <img
-          src={vector2}
-          alt="Vector Bottom Right"
-          className="absolute bottom-0 right-0 w-50 h-60"
-        />
-
-        <div className="text-center">
-          <img src={logo} alt="Logo" className="mb-4 mx-auto w-60 h-30" />
-          <img
-            src={logoBanner}
-            alt="Banner"
-            className="w-full max-w-lg mx-auto"
-          />
-          <h2 className="text-4xl font-bold mt-4">Hospital</h2>
-          <p className="text-gray-600 mt-2 font-semibold">
-            Stay connected with your hospital and manage your appointments.
-          </p>
-        </div>
-      </div>
+      <RightBanner/>
     </div>
   );
 };

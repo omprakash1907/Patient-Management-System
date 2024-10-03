@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import logoBanner from "../../assets/images/loginBanner.png";
-import logo from "../../assets/images/logo.png";
-import vector1 from "../../assets/images/Vector1.png";
-import vector2 from "../../assets/images/Vector2.png";
 import { Link } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import RightBanner from "../../commonComponent/RightBanner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(true);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +49,7 @@ const Login = () => {
                 type="text"
                 id="email"
                 name="email"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  placeholder-transparent ${
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter Email or Phone Number"
@@ -67,10 +70,10 @@ const Login = () => {
             {/* Password Input */}
             <div className="relative mb-4">
               <input
-                type="password"
+                type={showPassword ? "password" : "text"} // Conditionally set the type
                 id="password"
                 name="password"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  placeholder-transparent ${
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter Password"
@@ -79,13 +82,25 @@ const Login = () => {
               />
               <label
                 htmlFor="password"
-                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3"
+                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200 peer-focus:-top-2.5 peer-focus:left-3"
               >
                 Password<span className="text-red-500">*</span>
               </label>
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
+
+              {/* Add the icon */}
+              <div
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible className="text-gray-500" />
+                ) : (
+                  <AiOutlineEye className="text-gray-500" />
+                )}
+              </div>
             </div>
 
             <div className="flex justify-between items-center mb-4">
@@ -108,7 +123,10 @@ const Login = () => {
           </form>
           <p className="text-center mt-4 text-sm">
             Don’t have an account?{" "}
-            <Link to={"/admin-signup"} className="text-blue-500 hover:underline">
+            <Link
+              to={"/signup"}
+              className="text-blue-500 hover:underline"
+            >
               Registration
             </Link>
           </p>
@@ -116,34 +134,7 @@ const Login = () => {
       </div>
 
       {/* Right Side - Banner & Vector Section */}
-      <div className="w-1/2 bg-gray-100 relative flex justify-center items-center">
-        {/* Vectors */}
-        <img
-          src={vector1}
-          alt="Vector Top Left"
-          className="absolute top-0 left-0 w-50 h-60"
-        />
-        <img
-          src={vector2}
-          alt="Vector Bottom Right"
-          className="absolute bottom-0 right-0 w-50 h-60"
-        />
-
-        {/* Banner Content */}
-        <div className="text-center">
-          <img src={logo} alt="Logo" className="mb-4 mx-auto w-60 h-30" />
-          <img
-            src={logoBanner}
-            alt="Banner"
-            className="w-full max-w-lg mx-auto"
-          />
-          <h2 className="text-4xl font-bold mt-4">Hospital</h2>
-          <p className="text-gray-600 mt-2 font-semibold">
-            You Can stay your Hospital and Contact
-            <br /> With Your Facility.
-          </p>
-        </div>
-      </div>
+      <RightBanner />
     </div>
   );
 };
