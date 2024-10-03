@@ -20,7 +20,8 @@ const Login = () => {
     }
     if (!password) {
       validationErrors.password = "Password is required.";
-    } else if (password !== "123456") {  // Dummy password check
+    } else if (password !== "123456") {
+      // Dummy password check
       validationErrors.password = "Incorrect Password.";
     }
 
@@ -40,36 +41,48 @@ const Login = () => {
           <h2 className="text-3xl font-bold mb-6">Login</h2>
           <form onSubmit={handleSubmit}>
             {/* Email or Phone Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Email or Phone*
-              </label>
+            <div className="relative mb-4">
               <input
                 type="text"
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
+                id="email"
+                name="email"
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  placeholder-transparent ${
                   errors.email ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter Email or Phone Number"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              <label
+                htmlFor="email"
+                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3"
+              >
+                Email or Phone<span className="text-red-500">*</span>
+              </label>
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
             </div>
 
             {/* Password Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Password*</label>
+            <div className="relative mb-4">
               <input
                 type="password"
-                className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
+                id="password"
+                name="password"
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  placeholder-transparent ${
                   errors.password ? "border-red-500" : "border-gray-300"
                 }`}
                 placeholder="Enter Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <label
+                htmlFor="password"
+                className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3"
+              >
+                Password<span className="text-red-500">*</span>
+              </label>
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
@@ -95,7 +108,7 @@ const Login = () => {
           </form>
           <p className="text-center mt-4 text-sm">
             Don’t have an account?{" "}
-            <Link to={"/signup"} className="text-blue-500 hover:underline">
+            <Link to={"/admin-signup"} className="text-blue-500 hover:underline">
               Registration
             </Link>
           </p>
@@ -126,7 +139,8 @@ const Login = () => {
           />
           <h2 className="text-4xl font-bold mt-4">Hospital</h2>
           <p className="text-gray-600 mt-2 font-semibold">
-            You Can stay your Hospital and Contact<br /> With Your Facility.
+            You Can stay your Hospital and Contact
+            <br /> With Your Facility.
           </p>
         </div>
       </div>
