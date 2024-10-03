@@ -12,13 +12,15 @@ const userSchema = new mongoose.Schema(
         country: { type: String, required: true },
         state: { type: String, required: true },
         city: { type: String, required: true },
-        hospital: { type: String, },
+        hospital: { type: String },
         password: { type: String, required: true, minlength: 6 },
         otp: { type: String },
         otpExpires: { type: Date },
+        isAdmin: { type: Boolean, default: true } // Add this line
     },
     { timestamps: true }
 );
+
 
 // Password encryption
 userSchema.pre("save", async function (next) {
