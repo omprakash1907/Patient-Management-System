@@ -1,10 +1,10 @@
 import React from "react";
-import { FiCamera, FiLock, FiFileText, FiShield } from "react-icons/fi";
+import { FiCamera, FiLock, FiFileText, FiShield, FiUser } from "react-icons/fi";
 
 const ProfileSidebar = ({ name, image, setActiveSection, isEditing }) => {
   return (
     <div className="flex flex-col items-center w-1/4 border-r pr-8">
-      <div className="relative w-48 h-48 mb-4">
+      <div className="relative w-32 h-32 mb-4">
         <img
           src={image}
           alt="Profile"
@@ -21,36 +21,39 @@ const ProfileSidebar = ({ name, image, setActiveSection, isEditing }) => {
         </button>
       )}
 
-      <div className="mt-6 w-full">
-        <button
-          onClick={() => setActiveSection("profile")}
-          className="flex items-center space-x-2 w-full py-2 px-4 text-left hover:bg-gray-100"
-        >
-          <FiFileText />
-          <span>Profile</span>
-        </button>
-        <button
-          onClick={() => setActiveSection("password")}
-          className="flex items-center space-x-2 w-full py-2 px-4 text-left hover:bg-gray-100"
-        >
-          <FiLock />
-          <span>Change Password</span>
-        </button>
-        <button
-          onClick={() => setActiveSection("terms")}
-          className="flex items-center space-x-2 w-full py-2 px-4 text-left hover:bg-gray-100"
-        >
-          <FiFileText />
-          <span>Terms & Condition</span>
-        </button>
-        <button
-          onClick={() => setActiveSection("privacy")}
-          className="flex items-center space-x-2 w-full py-2 px-4 text-left hover:bg-gray-100"
-        >
-          <FiShield />
-          <span>Privacy Policy</span>
-        </button>
-      </div>
+      {/* Conditionally render these buttons only when not editing */}
+      {!isEditing && (
+        <div className="mt-6 w-full">
+          <button
+            onClick={() => setActiveSection("profile")}
+            className="flex items-center space-x-2 w-full py-4 px-4 text-left bg-gray-100 mb-3 rounded-lg"
+          >
+            <FiUser />
+            <span>Profile</span>
+          </button>
+          <button
+            onClick={() => setActiveSection("password")}
+            className="flex items-center space-x-2 w-full py-4 px-4 text-left bg-gray-100 mb-3 rounded-lg"
+          >
+            <FiLock />
+            <span>Change Password</span>
+          </button>
+          <button
+            onClick={() => setActiveSection("terms")}
+            className="flex items-center space-x-2 w-full py-4 px-4 text-left bg-gray-100 mb-3 rounded-lg"
+          >
+            <FiFileText />
+            <span>Terms & Condition</span>
+          </button>
+          <button
+            onClick={() => setActiveSection("privacy")}
+            className="flex items-center space-x-2 w-full py-4 px-4 text-left bg-gray-100 mb-3 rounded-lg"
+          >
+            <FiShield />
+            <span>Privacy Policy</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
