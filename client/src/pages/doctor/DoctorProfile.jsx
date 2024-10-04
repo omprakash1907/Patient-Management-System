@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import ProfileForm from '../../components/ProfileForm';
-import ProfileCard from '../../components/ProfileCard';
-import ProfileSidebar from '../../components/ProfileSidebar';
-import ProfileHeader from '../../components/ProfileHeader';
-import { FiEdit } from 'react-icons/fi'; // Importing the Edit Icon
+import React, { useState } from "react";
+import ProfileForm from "../../components/ProfileForm";
+import ProfileCard from "../../components/ProfileCard";
+import ProfileSidebar from "../../components/ProfileSidebar";
+import ProfileHeader from "../../components/ProfileHeader";
+import { FiEdit } from "react-icons/fi"; // Importing the Edit Icon
 
 const DoctorProfile = () => {
-  const [activeSection, setActiveSection] = useState('profile');
+  const [activeSection, setActiveSection] = useState("profile");
   const [isEditing, setIsEditing] = useState(false); // State to manage edit mode
   const [formData, setFormData] = useState({
-    firstName: 'Lincoln',
-    lastName: 'Philips',
-    email: 'Lincon@gmail.com',
-    phoneNumber: '99130 53222',
-    hospitalName: 'Silver Park Medical Center',
-    gender: 'Male',
-    city: 'Ahmedabad',
-    state: 'Gujarat',
-    country: 'India',
+    firstName: "Lincoln",
+    lastName: "Philips",
+    email: "Lincon@gmail.com",
+    phoneNumber: "99130 53222",
+    hospitalName: "Silver Park Medical Center",
+    gender: "Male",
+    city: "Ahmedabad",
+    state: "Gujarat",
+    country: "India",
   });
   const [errors, setErrors] = useState({});
 
@@ -58,40 +58,94 @@ const DoctorProfile = () => {
         </div>
         <div className="grid grid-cols-3 gap-6">
           <div className="relative mb-4">
-            <label className="block text-gray-600">First Name</label>
-            <p>{formData.firstName}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              First Name
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.firstName}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">Last Name</label>
-            <p>{formData.lastName}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              Last Name
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.lastName}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">Email Address</label>
-            <p>{formData.email}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              Email Address
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.email}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">Phone Number</label>
-            <p>{formData.phoneNumber}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              Phone Number
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.phoneNumber}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">Hospital Name</label>
-            <p>{formData.hospitalName}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              Hospital Name
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.hospitalName}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">Gender</label>
-            <p>{formData.gender}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              Gender
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.gender}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">City</label>
-            <p>{formData.city}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              City
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.city}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">State</label>
-            <p>{formData.state}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              State
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.state}
+            </p>
           </div>
           <div className="relative mb-4">
-            <label className="block text-gray-600">Country</label>
-            <p>{formData.country}</p>
+            <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
+              Country
+            </label>
+            <p
+              className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0`}
+            >
+              {formData.country}
+            </p>
           </div>
         </div>
       </div>
