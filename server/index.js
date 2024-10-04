@@ -22,7 +22,7 @@ cloudinary.config({
 const app = express();
 
 // Middleware for parsing
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true  }));
 app.use(express.json());
 
 // Routes
