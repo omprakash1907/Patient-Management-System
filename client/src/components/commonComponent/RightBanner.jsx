@@ -1,10 +1,10 @@
 import React from 'react'
-import logoBanner from "../assets/images/loginBanner.png";
-import logo from "../assets/images/logo.png";
-import vector1 from "../assets/images/Vector1.png";
-import vector2 from "../assets/images/Vector2.png";
-import vector3 from "../assets/images/Vector3.png";
-import vector from "../assets/images/Vector.png";
+import logoBanner from "../../assets/images/loginBanner.png";
+import logo from "../../assets/images/logo.png";
+import vector1 from "../../assets/images/Vector1.png";
+import vector2 from "../../assets/images/Vector2.png";
+import vector3 from "../../assets/images/Vector3.png";
+import vector from "../../assets/images/Vector.png";
 
 const RightBanner = () => {
   return (

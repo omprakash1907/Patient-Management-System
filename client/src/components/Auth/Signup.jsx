@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // For password visibility toggle
-import RightBanner from "../../commonComponent/RightBanner";
+import RightBanner from "../commonComponent/RightBanner";
 
 const Signup = () => {
   const [formData, setFormData] = useState({

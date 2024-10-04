@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineDown, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import RightBanner from "../../commonComponent/RightBanner";
+import RightBanner from "../commonComponent/RightBanner";
 
 const AdminSignup = () => {
   const [formData, setFormData] = useState({
