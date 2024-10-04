@@ -5,7 +5,7 @@ import { FaUser, FaKey, FaFileContract, FaLock } from "react-icons/fa";
 
 const Sidebar = () => {
   return (
-    <div className="w-64 bg-white h-full shadow-lg p-5">
+    <div className="w-64 bg-white h-full shadow-lg p-5 relative">
       <div className="mb-8">
         <img
           src={logo}
@@ -54,7 +54,7 @@ const Sidebar = () => {
       <div className="absolute bottom-0 left-0 w-full p-5">
         <NavLink
           to="/logout"
-          className="flex items-center px-4 py-2 text-red-500 hover:bg-red-100 rounded-md"
+          className="flex items-center px-4 py-2 text-red-500 bg-red-100 rounded-md"
         >
           Logout
         </NavLink>

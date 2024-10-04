@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import AdminSignup from './components/Auth/AdminSignup';
 import Layout from './components/Layout';
 import CreateDoctor from './pages/admin/CreateDoctor';
+import PatientProfile from './pages/patient/PatientProfile';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
         <Route path="/create-doctor" element={<Layout><CreateDoctor /></Layout>} />
+        <Route path="/patient-profile" element={<Layout><PatientProfile /></Layout>} />
       </Routes>
     </Router>
   );

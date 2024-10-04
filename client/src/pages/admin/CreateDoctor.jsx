@@ -1,32 +1,33 @@
 import React, { useState } from "react";
-import { AiOutlineCamera, AiOutlineClockCircle } from "react-icons/ai"; // Icons
-import { FiUpload } from "react-icons/fi"; // Upload icon
+import { AiOutlineCamera, AiOutlineClockCircle } from "react-icons/ai";
+import { FiUpload } from "react-icons/fi";
 
 const CreateDoctor = () => {
   const [formData, setFormData] = useState({
     doctorName: "",
+    doctorQualification: "",
     specialtyType: "",
     checkUpTime: "",
     phoneNumber: "",
     country: "",
     zipCode: "",
     onlineConsultationRate: "",
-    doctorQualification: "",
     gender: "",
     workOn: "",
     state: "",
     city: "",
     doctorAddress: "",
     description: "",
-    hospitalName: "",
-    hospitalAddress: "",
-    emergencyContact: "",
-    hospitalWebsite: "",
     experience: "",
     workingTime: "",
     breakTime: "",
     age: "",
     doctorEmail: "",
+    hospitalName: "",
+    hospitalAddress: "",
+    emergencyContact: "",
+    hospitalWebsite: "",
+    doctorCurrentHospital: "",
   });
 
   const handleChange = (e) => {
@@ -38,238 +39,355 @@ const CreateDoctor = () => {
   };
 
   return (
-    <div className="flex flex-col w-full px-6 py-4 bg-white rounded-lg shadow-md border border-gray-300">
-      <h2 className="text-2xl font-bold mb-4">Add New Doctor</h2>
+    <div className="flex flex-col w-full px-4 py-4 bg-white rounded-lg shadow-md ">
+      <div className="border border-gray-300 rounded-lg px-4 py-4">
+        <h2 className="text-2xl font-bold mb-4">Add New Doctor</h2>
 
-      {/* Flex container for Profile, Signature, and Doctor Fields */}
-      <div className="flex justify-between gap-8">
-        {/* Left side (Profile photo and Upload Signature) */}
-        <div className="flex flex-col w-1/6">
-          {/* Profile Photo */}
-          <div className="relative mb-4 flex flex-col items-center">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
-              <AiOutlineCamera className="text-gray-400 text-3xl" />
+        {/* Flex container for Profile, Signature, and Doctor Fields */}
+        <div className="flex justify-between gap-8">
+          {/* Left side (Profile photo and Upload Signature) */}
+          <div className="flex flex-col w-1/6">
+            {/* Profile Photo */}
+            <div className="relative mb-4 flex flex-col items-center">
+              <div className="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center">
+                <AiOutlineCamera className="text-gray-400 text-3xl" />
+              </div>
+              <label className="mt-2 text-blue-500 cursor-pointer">
+                <input
+                  type="file"
+                  className="hidden"
+                  name="profile"
+                  onChange={(e) => {}}
+                />
+                Choose Photo
+              </label>
             </div>
-            <label className="mt-2 text-blue-500 cursor-pointer">
-              <input
-                type="file"
-                className="hidden"
-                name="profile"
-                onChange={(e) => {
-                  // Handle file upload
-                }}
-              />
-              Choose Photo
-            </label>
+
+            {/* Upload Signature */}
+            <div className="mb-4">
+              <label className="text-gray-700 text-sm font-medium">
+                Upload Signature
+              </label>
+              <div className=" flex-col items-center justify-center border border-dashed border-gray-300 rounded-md p-10 w-full mt-2">
+                <div className="flex align-middle justify-center">
+                  <FiUpload className="text-gray-500 text-2xl" />
+                </div>
+                <div className=" text-center">
+                  <label className="text-blue-500 cursor-pointer">
+                    <input
+                      type="file"
+                      className="hidden"
+                      name="signature"
+                      onChange={(e) => {
+                        // Handle file upload here
+                      }}
+                    />
+                    Upload a file
+                  </label>
+                  <p className="text-xs text-gray-400">PNG Up To 5MB</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Upload Signature */}
-          <div className="relative mb-4 flex items-center justify-center border border-dashed border-gray-300 rounded-md h-28">
-            <FiUpload className="text-gray-500" />
-            <label className="absolute text-gray-500 cursor-pointer">
-              <input
-                type="file"
-                className="hidden"
-                name="signature"
-                onChange={(e) => {
-                  // Handle file upload
-                }}
-              />
-              Upload Signature
-            </label>
-          </div>
-        </div>
-
-        {/* Right side (Doctor fields) */}
-        <div className="w-2/3 grid grid-cols-2 gap-4">
-          {/* Doctor Name */}
-          <div className="relative mb-4">
-            <input
-              type="text"
+          {/* Right side (Doctor fields) */}
+          <div className="w-10/12 grid grid-cols-3 gap-4">
+            {/* Doctor Name */}
+            <InputField
               id="doctorName"
-              name="doctorName"
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter Doctor Name"
+              label="Doctor Name"
               value={formData.doctorName}
               onChange={handleChange}
             />
-            <label
-              htmlFor="doctorName"
-              className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-            >
-              Doctor Name<span className="text-red-500">*</span>
-            </label>
-          </div>
 
-          {/* Doctor Qualification */}
-          <div className="relative mb-4">
-            <input
-              type="text"
+            {/* Doctor Qualification */}
+            <InputField
               id="doctorQualification"
-              name="doctorQualification"
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter Doctor Qualification"
+              label="Doctor Qualification"
               value={formData.doctorQualification}
               onChange={handleChange}
             />
-            <label
-              htmlFor="doctorQualification"
-              className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-            >
-              Doctor Qualification<span className="text-red-500">*</span>
-            </label>
-          </div>
 
-          {/* Specialty Type */}
-          <div className="relative mb-4">
-            <input
-              type="text"
+            {/* Gender */}
+            <SelectField
+              id="gender"
+              label="Gender"
+              options={["Male", "Female", "Other"]}
+              value={formData.gender}
+              onChange={handleChange}
+            />
+
+            {/* Specialty Type */}
+            <InputField
               id="specialtyType"
-              name="specialtyType"
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter Specialty Type"
+              label="Specialty Type"
               value={formData.specialtyType}
               onChange={handleChange}
             />
-            <label
-              htmlFor="specialtyType"
-              className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-            >
-              Specialty Type<span className="text-red-500">*</span>
-            </label>
-          </div>
 
-          {/* Work On */}
-          <div className="relative mb-4">
-            <select
+            {/* Work On */}
+            <SelectField
               id="workOn"
-              name="workOn"
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md text-gray-500 focus:outline-none"
+              label="Work On"
+              options={["Online", "Onsite", "Both"]}
               value={formData.workOn}
               onChange={handleChange}
-            >
-              <option value="">Select Work On</option>
-              <option value="Online">Online</option>
-              <option value="Onsite">Onsite</option>
-              <option value="Both">Both</option>
-            </select>
-            <label
-              htmlFor="workOn"
-              className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-            >
-              Work On<span className="text-red-500">*</span>
-            </label>
-          </div>
+            />
 
-          {/* Check-Up Time */}
-          <div className="relative mb-4">
-            <input
-              type="text"
+            {/* Working Time */}
+            <InputFieldWithIcon
+              id="workingTime"
+              label="Working Time"
+              icon={
+                <AiOutlineClockCircle className="absolute right-3 top-3 text-gray-400" />
+              }
+              value={formData.workingTime}
+              onChange={handleChange}
+            />
+
+            {/* Check-Up Time */}
+            <InputFieldWithIcon
               id="checkUpTime"
-              name="checkUpTime"
-              className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter Checkup Time"
+              label="Check-Up Time"
+              icon={
+                <AiOutlineClockCircle className="absolute right-3 top-3 text-gray-400" />
+              }
               value={formData.checkUpTime}
               onChange={handleChange}
             />
-            <label
-              htmlFor="checkUpTime"
-              className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-            >
-              Check-Up Time<span className="text-red-500">*</span>
-            </label>
-            <AiOutlineClockCircle className="absolute right-3 top-3 text-gray-400" />
+
+            {/* Break Time */}
+            <InputFieldWithIcon
+              id="breakTime"
+              label="Break Time"
+              icon={
+                <AiOutlineClockCircle className="absolute right-3 top-3 text-gray-400" />
+              }
+              value={formData.breakTime}
+              onChange={handleChange}
+            />
+
+            {/* Experience */}
+            <InputField
+              id="experience"
+              label="Experience"
+              value={formData.experience}
+              onChange={handleChange}
+            />
+
+            {/* Age */}
+            <InputField
+              id="age"
+              label="Age"
+              value={formData.age}
+              onChange={handleChange}
+            />
+
+            {/* Phone Number */}
+            <InputField
+              id="phoneNumber"
+              label="Phone Number"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+            />
+
+            {/* Doctor Email */}
+            <InputField
+              id="doctorEmail"
+              label="Doctor Email"
+              type="email"
+              value={formData.doctorEmail}
+              onChange={handleChange}
+            />
+
+            {/* Country */}
+            <SelectField
+              id="country"
+              label="Country"
+              options={["India", "USA"]}
+              value={formData.country}
+              onChange={handleChange}
+            />
+
+            {/* State */}
+            <SelectField
+              id="state"
+              label="State"
+              options={["India", "USA"]}
+              value={formData.state}
+              onChange={handleChange}
+            />
+
+            {/* City */}
+            <SelectField
+              id="city"
+              label="City"
+              options={["India", "USA"]}
+              value={formData.city}
+              onChange={handleChange}
+            />
+
+            {/* Zip Code */}
+            <InputField
+              id="zipCode"
+              label="Zip Code"
+              value={formData.zipCode}
+              onChange={handleChange}
+            />
+
+            {/* Doctor Address */}
+            <InputField
+              id="doctorAddress"
+              label="Doctor Address"
+              value={formData.doctorAddress}
+              onChange={handleChange}
+            />
+
+            {/* Description */}
+            <InputField
+              id="description"
+              label="Description"
+              value={formData.description}
+              onChange={handleChange}
+            />
+
+            {/* Online Consultation Rate */}
+            <InputField
+              id="onlineConsultationRate"
+              label="Online Consultation Rate"
+              placeholder="₹ 0000"
+              value={formData.onlineConsultationRate}
+              onChange={handleChange}
+            />
           </div>
-
-          {/* More doctor fields */}
-          {/* Add other fields as per your requirement */}
         </div>
-      </div>
 
-      {/* Hospital fields below */}
-      <div className="grid grid-cols-2 gap-4 mt-6">
-        {/* Hospital Name */}
-        <div className="relative mb-4">
-          <input
-            type="text"
+        {/* Hospital fields below */}
+        <div className="grid grid-cols-3 gap-4 mt-6">
+          {/* Doctor Current Hospital */}
+          <InputField
+            id="doctorCurrentHospital"
+            label="Doctor Current Hospital"
+            value={formData.doctorCurrentHospital}
+            onChange={handleChange}
+          />
+
+          {/* Hospital Name */}
+          <InputField
             id="hospitalName"
-            name="hospitalName"
-            className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter Hospital Name"
+            label="Hospital Name"
             value={formData.hospitalName}
             onChange={handleChange}
           />
-          <label
-            htmlFor="hospitalName"
-            className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-          >
-            Hospital Name
-          </label>
-        </div>
 
-        {/* Hospital Address */}
-        <div className="relative mb-4">
-          <input
-            type="text"
+          {/* Hospital Address */}
+          <InputField
             id="hospitalAddress"
-            name="hospitalAddress"
-            className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter Hospital Address"
+            label="Hospital Address"
             value={formData.hospitalAddress}
             onChange={handleChange}
           />
-          <label
-            htmlFor="hospitalAddress"
-            className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-          >
-            Hospital Address
-          </label>
-        </div>
 
-        {/* Emergency Contact */}
-        <div className="relative mb-4">
-          <input
-            type="text"
-            id="emergencyContact"
-            name="emergencyContact"
-            className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter Emergency Contact Number"
-            value={formData.emergencyContact}
-            onChange={handleChange}
-          />
-          <label
-            htmlFor="emergencyContact"
-            className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-          >
-            Emergency Contact Number
-          </label>
-        </div>
-
-        {/* Hospital Website */}
-        <div className="relative mb-4">
-          <input
-            type="text"
+          {/* Hospital Website */}
+          <InputField
             id="hospitalWebsite"
-            name="hospitalWebsite"
-            className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter Hospital Website Link"
+            label="Hospital Website Link"
             value={formData.hospitalWebsite}
             onChange={handleChange}
           />
-          <label
-            htmlFor="hospitalWebsite"
-            className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
-          >
-            Hospital Website Link
-          </label>
+
+          {/* Emergency Contact */}
+          <InputField
+            id="emergencyContact"
+            label="Emergency Contact Number"
+            value={formData.emergencyContact}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="flex justify-end">
+          <button className="mt-4 py-2 px-6 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            Add
+          </button>
         </div>
       </div>
-
-      <button className="mt-4 py-2 px-6 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-        Add Doctor
-      </button>
     </div>
   );
 };
+
+// Input field component
+const InputField = ({
+  id,
+  label,
+  type = "text",
+  placeholder = "",
+  value,
+  onChange,
+}) => (
+  <div className="relative mb-4">
+    <input
+      type={type}
+      id={id}
+      name={id}
+      className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+      placeholder={placeholder || `Enter ${label}`}
+      value={value}
+      onChange={onChange}
+    />
+    <label
+      htmlFor={id}
+      className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
+    >
+      {label}
+    </label>
+  </div>
+);
+
+// Select field component
+const SelectField = ({ id, label, options, value, onChange }) => (
+  <div className="relative mb-4">
+    <select
+      id={id}
+      name={id}
+      className="peer w-full px-4 py-2 border border-gray-300 rounded-md text-gray-500 focus:outline-none"
+      value={value}
+      onChange={onChange}
+    >
+      <option value="">{`Select ${label}`}</option>
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+    <label
+      htmlFor={id}
+      className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
+    >
+      {label}
+    </label>
+  </div>
+);
+
+// Input field with icon component
+const InputFieldWithIcon = ({ id, label, icon, value, onChange }) => (
+  <div className="relative mb-4">
+    <input
+      type="text"
+      id={id}
+      name={id}
+      className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+      placeholder={`Enter ${label}`}
+      value={value}
+      onChange={onChange}
+    />
+    <label
+      htmlFor={id}
+      className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
+    >
+      {label}
+    </label>
+    {icon}
+  </div>
+);
 
 export default CreateDoctor;
