@@ -11,6 +11,7 @@ import AdminSignup from './components/Auth/AdminSignup';
 import Layout from './components/Layout';
 import CreateDoctor from './pages/admin/CreateDoctor';
 import PatientProfile from './pages/patient/PatientProfile';
+import DoctorProfile from './pages/doctor/DoctorProfile';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
         <Route path="/create-doctor" element={<Layout><CreateDoctor /></Layout>} />
         <Route path="/patient-profile" element={<Layout><PatientProfile /></Layout>} />
+        <Route path="/doctor-profile" element={<Layout><DoctorProfile /></Layout>} />
       </Routes>
     </Router>
   );
