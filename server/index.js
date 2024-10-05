@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary').v2; // Cloudinary
 const authRoutes = require('./routes/authrouts');
 const hospitalrots = require('./routes/hospitalrouts');
 const doctorRoutes = require('./routes/doctorRoutes'); // Import doctor routes
+const patientRoutes = require('./routes/patientrouts');
 // const adminRoutes = require('./routes/adminRoutes');
 
 
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/hospital', hospitalrots);
 app.use('/api/doctor', doctorRoutes);  
+app.use('/api/patients', patientRoutes); 
 
 // Error handling for invalid routes
 app.use((req, res, next) => {

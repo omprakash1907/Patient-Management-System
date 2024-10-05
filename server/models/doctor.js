@@ -20,8 +20,14 @@ const doctorSchema = new mongoose.Schema({
   address: { type: String, required: true },
   description: { type: String },
   onlineConsultationRate: { type: Number, required: true },
-  doctorImage: { type: String, required: true }, // Cloudinary image URL
-  doctorSignature: { type: String, required: true }, // Cloudinary signature URL
+  doctorImage: {
+    url: { type: String, required: true }, // Cloudinary image URL
+    public_id: { type: String, required: true }, // Cloudinary public ID
+  },
+  doctorSignature: {
+    url: { type: String, required: true }, // Cloudinary signature URL
+    public_id: { type: String, required: true }, // Cloudinary public ID
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Doctor', doctorSchema);
