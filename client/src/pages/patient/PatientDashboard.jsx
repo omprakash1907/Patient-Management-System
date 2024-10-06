@@ -7,30 +7,33 @@ import MedicalHistory from "../../components/Patient/MedicalHistory";
 
 const PatientDashboard = () => {
   return (
-    <div className="">
+    <div className="flex flex-col h-screen"> 
       {/* Patient Details at the top */}
       <PatientDetails />
 
       {/* Grid Layout for Medical History, Prescriptions, Test Reports, and Patient Status */}
-      <div className="grid grid-cols-8 gap-6">
-        {/* Medical History on the left */}
-        <div className="col-span-5">
-          <MedicalHistory />
+      <div className="grid grid-cols-8 gap-6 flex-1"> 
+        {/* Left Column: Medical History */}
+        <div className="col-span-5 flex flex-col">
+          <MedicalHistory className="flex-1 h-full" />
         </div>
 
-        {/* Prescriptions on the right */}
-        <div className="col-span-3">
-          <PrescriptionList />
+        {/* Right Column: Prescriptions */}
+        <div className="col-span-3 flex flex-col">
+          <PrescriptionList className="flex-1 h-full" />
+        </div>
+      </div>
+
+      {/* Second row for Test Reports and Patient Status */}
+      <div className="grid grid-cols-8 gap-6 flex-1 mt-6"> 
+        {/* Test Reports */}
+        <div className="col-span-5 flex flex-col">
+          <TestReports className="flex-1 h-full" />
         </div>
 
-        {/* Test Reports across two columns below Medical History */}
-        <div className="col-span-5">
-          <TestReports />
-        </div>
-
-        {/* Patient Status on the right below Prescriptions */}
-        <div className="col-span-3">
-          <PatientStatus />
+        {/* Patient Status */}
+        <div className="col-span-3 flex flex-col">
+          <PatientStatus className="flex-1 h-full" />
         </div>
       </div>
     </div>

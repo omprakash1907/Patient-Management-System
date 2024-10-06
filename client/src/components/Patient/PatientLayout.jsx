@@ -10,7 +10,7 @@ const PatientLayout = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen  ">
       {/* Sidebar */}
       <PatientSidebar onMenuClick={handleMenuClick} />
 
@@ -20,7 +20,7 @@ const PatientLayout = ({ children }) => {
         <PatientNavbar activeMenu={activeMenu} />
 
         {/* Main content */}
-        <main className="flex-1 bg-gray-100 p-6">{children}</main>
+        <main className="flex-1 bg-gray-100 p-6 flex flex-col overflow-y-auto no-scrollbar">{children}</main>
       </div>
     </div>
   );
