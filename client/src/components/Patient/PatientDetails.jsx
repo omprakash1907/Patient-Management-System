@@ -1,5 +1,6 @@
 import React from "react";
 import { FaEdit } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const PatientDetails = () => {
   return (
@@ -7,10 +8,10 @@ const PatientDetails = () => {
       {/* Heading and Edit Button */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Patient Details</h2>
-        <button className="flex items-center px-4 py-2 bg-customBlue text-white rounded-md shadow-md">
+        <Link to={'/edit-patient-profile'} className="flex items-center px-4 py-2 bg-customBlue text-white rounded-md shadow-md">
           <FaEdit className="mr-2" />
           Edit Profile
-        </button>
+        </Link>
       </div>
 
       <div className=" flex justify-between items-start">

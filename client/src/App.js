@@ -10,7 +10,6 @@ import Profile from './pages/Profile';
 import AdminSignup from './components/Auth/AdminSignup';
 import Layout from './components/Layout';
 import CreateDoctor from './pages/admin/CreateDoctor';
-import PatientProfile from './pages/Patient/PatientProfile';
 import DoctorProfile from './pages/doctor/DoctorProfile';
 import Otp from './components/Auth/Otp';
 import ResetPassword from './components/Auth/ResetPassword';
@@ -18,6 +17,8 @@ import AdminLayout from './components/Admin/AdminLayout';
 import DoctorLayout from './components/Doctor/DoctorLayout';
 import PatientLayout from './components/Patient/PatientLayout';
 import PatientDashboard from './pages/Patient/PatientDashboard';
+import PatientEditProfile from './pages/Patient/PatientEditProfile';
+import PrescriptionPage from './pages/Patient/PrescriptionPage';
 
 const App = () => {
 
@@ -54,7 +55,18 @@ const App = () => {
             element={<PatientLayout><PatientDashboard /></PatientLayout>}
           />
         )}
-        <Route path="/patient-profile" element={<Layout><PatientProfile /></Layout>} />
+        {userRole === 'patient' && (
+          <Route
+            path="/edit-patient-profile"
+            element={<PatientLayout><PatientEditProfile /></PatientLayout>}
+          />
+        )}
+        {userRole === 'patient' && (
+          <Route
+            path="/prescriptions"
+            element={<PatientLayout><PrescriptionPage /></PatientLayout>}
+          />
+        )}
         <Route path="/doctor-profile" element={<Layout><DoctorProfile /></Layout>} />
       </Routes>
     </Router>

@@ -1,21 +1,54 @@
 import React from "react";
 import { FaEye } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const PrescriptionList = () => {
+  const navigate = useNavigate();
+
   const prescriptions = [
-    { hospital: "Apollo Hospitals", date: "2 Jan, 2022", disease: "Colds and Flu" },
-    { hospital: "Medanta The Medicity", date: "2 Jan, 2022", disease: "Allergies" },
+    {
+      hospital: "Apollo Hospitals",
+      date: "2 Jan, 2022",
+      disease: "Colds and Flu",
+    },
+    {
+      hospital: "Medanta The Medicity",
+      date: "2 Jan, 2022",
+      disease: "Allergies",
+    },
     { hospital: "Manipal Hospitals", date: "2 Jan, 2022", disease: "Diarrhea" },
-    { hospital: "Narayana Health", date: "2 Jan, 2022", disease: "Colds and Flu" },
-    { hospital: "Narayana Health", date: "2 Jan, 2022", disease: "Colds and Flu" },
-    { hospital: "Narayana Health", date: "2 Jan, 2022", disease: "Colds and Flu" },
+    {
+      hospital: "Narayana Health",
+      date: "2 Jan, 2022",
+      disease: "Colds and Flu",
+    },
+    {
+      hospital: "Narayana Health",
+      date: "2 Jan, 2022",
+      disease: "Colds and Flu",
+    },
+    {
+      hospital: "Narayana Health",
+      date: "2 Jan, 2022",
+      disease: "Colds and Flu",
+    },
   ];
+
+  const handleViewAll = () => {
+    navigate("/prescriptions"); // Navigate to the PrescriptionPage
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Prescriptions</h2>
-        <a href="#" className="text-blue-600  hover:underline">View All Prescription</a>
+        <a
+          href="#"
+          className="text-blue-600 hover:underline"
+          onClick={handleViewAll}
+        >
+          View All Prescription
+        </a>
       </div>
 
       {/* Scrollable container for the table body */}
