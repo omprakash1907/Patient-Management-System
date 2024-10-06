@@ -595,7 +595,7 @@ const AdminSignup = () => {
 
             <button
               type="submit"
-              className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
+              className="w-full py-2 bg-gray-200 text-gray-500 font-semibold rounded-md hover:bg-customBlue hover:text-white transition duration-200"
             >
               Register
             </button>

@@ -20,7 +20,7 @@ const Sidebar = () => {
             className="flex items-center px-4 py-2 text-gray-700 hover:bg-blue-100 rounded-md"
           >
             <FaUser className="mr-3" />
-            Profile
+            Profile    
           </NavLink>
         </li>
         <li className="mb-4">

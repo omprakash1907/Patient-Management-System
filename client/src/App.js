@@ -10,20 +10,50 @@ import Profile from './pages/Profile';
 import AdminSignup from './components/Auth/AdminSignup';
 import Layout from './components/Layout';
 import CreateDoctor from './pages/admin/CreateDoctor';
-import PatientProfile from './pages/patient/PatientProfile';
+import PatientProfile from './pages/Patient/PatientProfile';
 import DoctorProfile from './pages/doctor/DoctorProfile';
+import Otp from './components/Auth/Otp';
+import ResetPassword from './components/Auth/ResetPassword';
+import AdminLayout from './components/Admin/AdminLayout';
+import DoctorLayout from './components/Doctor/DoctorLayout';
+import PatientLayout from './components/Patient/PatientLayout';
+import PatientDashboard from './pages/Patient/PatientDashboard';
 
 const App = () => {
+
+  const userRole = 'patient';
+
+  const getLayout = (children) => {
+    switch (userRole) {
+      case 'admin':
+        return <AdminLayout>{children}</AdminLayout>;
+      case 'doctor':
+        return <DoctorLayout>{children}</DoctorLayout>;
+      case 'patient':
+        return <PatientLayout>{children}</PatientLayout>;
+      default:
+        return <Login />;
+    }
+  };
+
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/enter-otp" element={<Otp />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/admin-signup" element={<AdminSignup />} />
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/profile" element={<Layout><Profile /></Layout>} />
         <Route path="/create-doctor" element={<Layout><CreateDoctor /></Layout>} />
+        {userRole === 'patient' && (
+          <Route
+            path="/patient-dashboard"
+            element={<PatientLayout><PatientDashboard /></PatientLayout>}
+          />
+        )}
         <Route path="/patient-profile" element={<Layout><PatientProfile /></Layout>} />
         <Route path="/doctor-profile" element={<Layout><DoctorProfile /></Layout>} />
       </Routes>
