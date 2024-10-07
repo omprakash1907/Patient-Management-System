@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaEye, FaSearch } from "react-icons/fa";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const PrescriptionPage = () => {
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Personal Health Record", path: "/patient-dashboard" },
+      { label: "Prescriptions", path: "/prescriptions" },
+    ]);
+  }, [updateBreadcrumb]);
+
   const prescriptions = [
     {
       doctor: "Dr. Ryan Vetrows",
@@ -101,9 +111,7 @@ const PrescriptionPage = () => {
           >
             {/* Card header with doctor name and eye icon */}
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded-t-lg  mb-4">
-              <h4 className="font-semibold">
-                {prescription.doctor}
-              </h4>
+              <h4 className="font-semibold">{prescription.doctor}</h4>
               <div className="text-customBlue p-2 rounded-full bg-white shadow">
                 <FaEye />
               </div>

@@ -1,20 +1,31 @@
-import React from 'react';
-import { AiOutlineDown, AiOutlineRight } from 'react-icons/ai';
-import { FaBell, FaHome, FaSearch } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import user from '../../assets/images/user.png'
+import React from "react";
+import { AiOutlineDown, AiOutlineRight } from "react-icons/ai";
+import { FaBell, FaHome, FaSearch } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import user from "../../assets/images/user.png";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const PatientNavbar = ({ activeMenu }) => {
+  const { breadcrumb } = useBreadcrumb();
+
   return (
     <div className="flex items-center justify-between bg-white shadow-md p-4">
       {/* Profile Setting Path */}
       <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full space-x-2">
+        <Link to={'/patient-dashboard'}>
         <FaHome className="text-gray-500 text-lg" />
-        <AiOutlineRight className="text-gray-400 text-sm" />
-
-        <Link to="/profile-setting" className="pro-text-color font-medium text-customBlue">
-         {activeMenu}
         </Link>
+        {breadcrumb.map((item, index) => (
+          <React.Fragment key={index}>
+            <AiOutlineRight className="text-gray-400 text-sm" />
+            <Link
+              to={item.path}
+              className="pro-text-color font-medium text-customBlue"
+            >
+              {item.label}
+            </Link>
+          </React.Fragment>
+        ))}
       </div>
 
       {/* Right Side - Search, Notification, and Profile */}

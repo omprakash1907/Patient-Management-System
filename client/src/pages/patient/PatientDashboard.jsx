@@ -7,7 +7,7 @@ import MedicalHistory from "../../components/Patient/MedicalHistory";
 
 const PatientDashboard = () => {
   return (
-    <div className="flex flex-col h-screen"> 
+    <div className="flex flex-col h-screen p-6"> 
       {/* Patient Details at the top */}
       <PatientDetails />
 

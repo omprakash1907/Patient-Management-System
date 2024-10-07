@@ -9,8 +9,19 @@ import {
 import { HiOutlineLogout } from "react-icons/hi";
 import logo from "../../assets/images/logo.png";
 import appointment from "../../assets/images/appointment.png";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const PatientSidebar = ({ onMenuClick }) => {
+
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  const handleMenuClick = (label, path) => {
+    updateBreadcrumb([
+      { label: label, path: path },
+    ]);
+    if (onMenuClick) onMenuClick(label); // Call the onMenuClick if it's provided
+  };
+
   return (
     <div className="w-72 bg-white h-full shadow-lg flex flex-col justify-between ">
       {/* Logo */}
@@ -26,7 +37,7 @@ const PatientSidebar = ({ onMenuClick }) => {
           <NavLink
             to="/patient-dashboard"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => onMenuClick("Personal Health Record")}
+            onClick={() => handleMenuClick("Personal Health Record", "/patient-dashboard")}
           >
             <FaFileMedical className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Personal Health Record</span>
@@ -44,7 +55,7 @@ const PatientSidebar = ({ onMenuClick }) => {
           <NavLink
             to="/appointment-booking"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => onMenuClick("Appointment Booking")} // Update active menu
+            onClick={() => handleMenuClick("Appointment Booking", "/appointment-booking")}
           >
             <FaCalendarAlt className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Appointment Booking</span>
@@ -62,7 +73,7 @@ const PatientSidebar = ({ onMenuClick }) => {
           <NavLink
             to="/prescription-access"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => onMenuClick("Prescription Access")} // Update active menu
+            onClick={() => handleMenuClick("Prescription Access", "/prescription-access")}
           >
             <FaPills className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Prescription Access</span>
@@ -80,7 +91,7 @@ const PatientSidebar = ({ onMenuClick }) => {
           <NavLink
             to="/teleconsultation-access"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => onMenuClick("Teleconsultation Access")} // Update active menu
+            onClick={() => handleMenuClick("Teleconsultation Access", "/teleconsultation-access")}
           >
             <FaCommentDots className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Teleconsultation Access</span>
@@ -98,7 +109,7 @@ const PatientSidebar = ({ onMenuClick }) => {
           <NavLink
             to="/chat"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => onMenuClick("Chat")} // Update active menu
+            onClick={() => handleMenuClick("Chat", "/chat")}
           >
             <FaCommentDots className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Chat</span>
@@ -116,7 +127,7 @@ const PatientSidebar = ({ onMenuClick }) => {
           <NavLink
             to="/bills"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => onMenuClick("Bills")} // Update active menu
+            onClick={() =>handleMenuClick("Bills", "/bills")}
           >
             <FaFileInvoiceDollar className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Bills</span>
