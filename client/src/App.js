@@ -8,107 +8,35 @@ import ForgotPassword from "./components/Auth/ForgotPassword";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import AdminSignup from "./components/Auth/AdminSignup";
-import Layout from "./components/Layout";
-import CreateDoctor from "./pages/admin/CreateDoctor";
-import DoctorProfile from "./pages/doctor/DoctorProfile";
 import Otp from "./components/Auth/Otp";
 import ResetPassword from "./components/Auth/ResetPassword";
-import AdminLayout from "./components/Admin/AdminLayout";
-import DoctorLayout from "./components/Doctor/DoctorLayout";
-import PatientLayout from "./components/Patient/PatientLayout";
-import PatientDashboard from "./pages/Patient/PatientDashboard";
-import PatientEditProfile from "./pages/Patient/PatientEditProfile";
-import PrescriptionPage from "./pages/Patient/PrescriptionPage";
+import Layout from "./components/Layout";
+import AdminRoutes from "./routes/AdminRoutes";
+import DoctorRoutes from "./routes/DoctorRoutes";
+import PatientRoutes from "./routes/PatientRoutes";
 import { BreadcrumbProvider } from "./context/BreadcrumbContext";
 
 const App = () => {
-  const userRole = "patient";
-
-  const getLayout = (children) => {
-    switch (userRole) {
-      case "admin":
-        return <AdminLayout>{children}</AdminLayout>;
-      case "doctor":
-        return <DoctorLayout>{children}</DoctorLayout>;
-      case "patient":
-        return <PatientLayout>{children}</PatientLayout>;
-      default:
-        return <Login />;
-    }
-  };
+  const userRole = "patient"; // This should be dynamically set based on the logged-in user
 
   return (
     <BreadcrumbProvider>
       <Router>
         <Routes>
+          {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/enter-otp" element={<Otp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-signup" element={<AdminSignup />} />
-          <Route
-            path="/"
-            element={
-              <Layout>
-                <Home />
-              </Layout>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <Layout>
-                <Profile />
-              </Layout>
-            }
-          />
-          <Route
-            path="/create-doctor"
-            element={
-              <Layout>
-                <CreateDoctor />
-              </Layout>
-            }
-          />
-          {userRole === "patient" && (
-            <Route
-              path="/patient-dashboard"
-              element={
-                <PatientLayout>
-                  <PatientDashboard />
-                </PatientLayout>
-              }
-            />
-          )}
-          {userRole === "patient" && (
-            <Route
-              path="/edit-patient-profile"
-              element={
-                <PatientLayout>
-                  <PatientEditProfile />
-                </PatientLayout>
-              }
-            />
-          )}
-          {userRole === "patient" && (
-            <Route
-              path="/prescriptions"
-              element={
-                <PatientLayout>
-                  <PrescriptionPage />
-                </PatientLayout>
-              }
-            />
-          )}
-          <Route
-            path="/doctor-profile"
-            element={
-              <Layout>
-                <DoctorProfile />
-              </Layout>
-            }
-          />
+          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/profile" element={<Layout><Profile /></Layout>} />
+
+          {/* Role-Based Routes */}
+          {userRole === "admin" && <Route path="/admin/*" element={<AdminRoutes />} />}
+          {userRole === "doctor" && <Route path="/doctor/*" element={<DoctorRoutes />} />}
+          {userRole === "patient" && <Route path="/patient/*" element={<PatientRoutes />} />}
         </Routes>
       </Router>
     </BreadcrumbProvider>

@@ -12,8 +12,8 @@ const PatientNavbar = ({ activeMenu }) => {
     <div className="flex items-center justify-between bg-white shadow-md p-4">
       {/* Profile Setting Path */}
       <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full space-x-2">
-        <Link to={'/patient-dashboard'}>
-        <FaHome className="text-gray-500 text-lg" />
+        <Link to={"/patient/patient-dashboard"}>
+          <FaHome className="text-gray-500 text-lg" />
         </Link>
         {breadcrumb.map((item, index) => (
           <React.Fragment key={index}>

@@ -35,7 +35,7 @@ const PrescriptionList = () => {
   ];
 
   const handleViewAll = () => {
-    navigate("/prescriptions"); // Navigate to the PrescriptionPage
+    navigate("/patient/prescriptions"); 
   };
 
   return (

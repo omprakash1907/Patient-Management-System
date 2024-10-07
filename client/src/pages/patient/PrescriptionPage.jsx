@@ -7,8 +7,8 @@ const PrescriptionPage = () => {
 
   useEffect(() => {
     updateBreadcrumb([
-      { label: "Personal Health Record", path: "/patient-dashboard" },
-      { label: "Prescriptions", path: "/prescriptions" },
+      { label: "Personal Health Record", path: "/patient/patient-dashboard" },
+      { label: "Prescriptions", path: "/patient/prescriptions" },
     ]);
   }, [updateBreadcrumb]);
 

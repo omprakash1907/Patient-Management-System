@@ -35,7 +35,7 @@ const PatientSidebar = ({ onMenuClick }) => {
         {/* Personal Health Record */}
         <li>
           <NavLink
-            to="/patient-dashboard"
+            to="/patient/patient-dashboard"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
             onClick={() => handleMenuClick("Personal Health Record", "/patient-dashboard")}
           >
@@ -53,7 +53,7 @@ const PatientSidebar = ({ onMenuClick }) => {
         {/* Appointment Booking */}
         <li>
           <NavLink
-            to="/appointment-booking"
+            to="/patient/appointment-booking"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
             onClick={() => handleMenuClick("Appointment Booking", "/appointment-booking")}
           >
@@ -71,9 +71,9 @@ const PatientSidebar = ({ onMenuClick }) => {
         {/* Prescription Access */}
         <li>
           <NavLink
-            to="/prescription-access"
+            to="/patient/prescription-access"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => handleMenuClick("Prescription Access", "/prescription-access")}
+            onClick={() => handleMenuClick("Prescription Access", "/patient/prescription-access")}
           >
             <FaPills className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Prescription Access</span>
@@ -107,9 +107,9 @@ const PatientSidebar = ({ onMenuClick }) => {
         {/* Chat */}
         <li>
           <NavLink
-            to="/chat"
+            to="/patient/chat"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() => handleMenuClick("Chat", "/chat")}
+            onClick={() => handleMenuClick("Chat", "/patient/chat")}
           >
             <FaCommentDots className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Chat</span>
@@ -125,9 +125,9 @@ const PatientSidebar = ({ onMenuClick }) => {
         {/* Bills */}
         <li>
           <NavLink
-            to="/bills"
+            to="/patient/bills"
             className="relative flex items-center px-4 py-4 text-gray-700 font-semibold hover:text-customBlue group"
-            onClick={() =>handleMenuClick("Bills", "/bills")}
+            onClick={() =>handleMenuClick("Bills", "/patient/bills")}
           >
             <FaFileInvoiceDollar className="mr-3 group-hover:text-customBlue text-gray-500 transition duration-300 z-20 relative" />
             <span className="z-20 relative">Bills</span>

@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const MedicalHistory = () => {
+  const navigate = useNavigate();
+
   const history = [
     {
       name: "Dulce Schleifer",
@@ -32,11 +35,19 @@ const MedicalHistory = () => {
     },
   ];
 
+  const handleViewAll = () => {
+    navigate("/patient/medical-history"); 
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Medical History</h2>
-        <a href="#" className="text-blue-600   hover:underline">
+       <a
+          href="#"
+          className="text-blue-600 hover:underline"
+          onClick={handleViewAll}
+        >
           View All History
         </a>
       </div>
@@ -49,6 +60,7 @@ const MedicalHistory = () => {
               key={index}
               className="min-w-[300px] max-w-[300px] bg-white rounded-lg shadow-md border mb-4"
             >
+              
               {/* Gray Header with Name and Date */}
               <div className="bg-gray-100 px-4 py-2 rounded-t-lg">
                 <h4 className="font-semibold text-customBlue">{record.name}</h4>

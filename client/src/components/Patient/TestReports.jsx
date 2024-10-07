@@ -1,7 +1,10 @@
 import React from "react";
 import { FaEye } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const TestReports = () => {
+  const navigate = useNavigate();
+
   const reports = [
     {
       doctor: "Dr. Marcus Philips",
@@ -29,13 +32,21 @@ const TestReports = () => {
     },
   ];
 
+  const handleViewAll = () => {
+    navigate("/patient/test-report"); 
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
       {/* Heading and View All link */}
       <div className="flex justify-between items-center mb-4 border-b-2 pb-2">
         <h2 className="text-xl font-semibold">Test Reports</h2>
-        <a href="#" className="text-blue-600 hover:underline">
-          View All Reports
+        <a
+          href="#"
+          className="text-blue-600 hover:underline"
+          onClick={handleViewAll}
+        >
+          View All Test
         </a>
       </div>
 
