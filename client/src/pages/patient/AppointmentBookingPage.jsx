@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
-import {
-  FaCalendarAlt,
-  FaTrashAlt,
-  FaRedoAlt,
-  FaEye,
-  FaDailymotion,
-} from "react-icons/fa";
+import { FaCalendarAlt, FaTrashAlt, FaRedoAlt, FaEye } from "react-icons/fa";
+import DoctorDetailsSidebar from "../../components/Patient/DoctorDetailsSidebar";
 
 const AppointmentBookingPage = () => {
   const { updateBreadcrumb } = useBreadcrumb();
   const [activeTab, setActiveTab] = useState("Scheduled");
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   useEffect(() => {
     updateBreadcrumb([
@@ -21,55 +18,29 @@ const AppointmentBookingPage = () => {
   const appointments = [
     {
       doctor: "Dr. Nolan George",
-      type: "Online",
+      specialization: "General Physician",
       hospital: "Shambhu Hospital",
+      qualification: "MBBS",
+      experience: 10,
+      contactNumber: "995796557",
+      profileImage: "path-to-image",
+      description: "Specializes in general health issues.",
       date: "2 Jan, 2022",
       time: "10:20 AM",
       issue: "Feeling Tired",
       status: "Scheduled",
     },
-    {
-      doctor: "Dr. Cristofer Stanton",
-      type: "Online",
-      hospital: "Shambhu Hospital",
-      date: "2 Jan, 2022",
-      time: "10:20 AM",
-      issue: "Feeling Tired",
-      status: "Scheduled",
-    },
-    {
-      doctor: "Dr. Jaylon Stanton",
-      type: "Online",
-      hospital: "Shambhu Hospital",
-      date: "2 Jan, 2022",
-      time: "10:20 AM",
-      issue: "Feeling Tired",
-      status: "Previous",
-    },
-    {
-      doctor: "Dr. Terry Press",
-      type: "Online",
-      hospital: "Shambhu Hospital",
-      date: "2 Jan, 2022",
-      time: "10:20 AM",
-      issue: "Feeling Tired",
-      status: "Canceled",
-      cancelDate: "1 Jan, 2022",
-    },
-    {
-      doctor: "Dr. Davis Donin",
-      type: "Online",
-      hospital: "Shambhu Hospital",
-      date: "2 Jan, 2022",
-      time: "10:20 AM",
-      issue: "Feeling Tired",
-      status: "Pending",
-    },
+    // Additional appointment objects...
   ];
 
   const filteredAppointments = appointments.filter(
     (appointment) => appointment.status === activeTab
   );
+
+  const handleViewDetails = (doctor) => {
+    setSelectedDoctor(doctor);
+    setIsSidebarVisible(true);
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg m-6 h-full">
@@ -104,14 +75,15 @@ const AppointmentBookingPage = () => {
             key={index}
             className="border rounded-lg shadow-md bg-white transition"
           >
-            {/* Card header with doctor name and type */}
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded-t-lg">
               <h4 className="font-semibold ">{appointment.doctor}</h4>
-              <div className="text-customBlue p-2 rounded-lg bg-white shadow">
+              <div
+                className="text-customBlue p-2 rounded-lg bg-white shadow cursor-pointer"
+                onClick={() => handleViewDetails(appointment)}
+              >
                 <FaEye />
               </div>
             </div>
-
             {/* Card body with appointment details */}
             <div className="p-4 text-sm text-gray-700 space-y-1">
               <p className="flex justify-between items-center text-yellow-500 pb-2">
@@ -172,6 +144,15 @@ const AppointmentBookingPage = () => {
           </div>
         ))}
       </div>
+
+      {/* Doctor Details Sidebar */}
+      {selectedDoctor && (
+        <DoctorDetailsSidebar
+          doctor={selectedDoctor}
+          isVisible={isSidebarVisible}
+          onClose={() => setIsSidebarVisible(false)}
+        />
+      )}
     </div>
   );
 };

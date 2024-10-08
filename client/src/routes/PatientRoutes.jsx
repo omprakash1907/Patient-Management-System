@@ -13,6 +13,7 @@ import AppointmentBookingPage from "../pages/Patient/AppointmentBookingPage";
 import PrescriptionAccessPage from "../pages/Patient/PrescriptionAccessPage";
 import ChatPage from "../pages/Patient/ChatPage";
 import BillPage from "../pages/Patient/BillPage";
+import TeleAccess from "../pages/Patient/TeleAccess";
 
 const PatientRoutes = () => {
   return (
@@ -70,6 +71,14 @@ const PatientRoutes = () => {
         element={
           <PatientLayout>
             <PrescriptionAccessPage />
+          </PatientLayout>
+        }
+      />
+      <Route
+        path="/tele-access"
+        element={
+          <PatientLayout>
+            <TeleAccess />
           </PatientLayout>
         }
       />

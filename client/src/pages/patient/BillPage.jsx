@@ -52,17 +52,17 @@ const BillPage = () => {
   const filteredBills = bills.filter((bill) => bill.isPaid === (activeTab === "paid"));
 
   return (
-    <div className="p-6">
-      <div className="mb-4 flex space-x-4">
+    <div className="m-6 p-6 bg-white rounded-lg h-full">
+      <div className="mb-4 flex space-x-6">
         <button
           onClick={() => setActiveTab("unpaid")}
-          className={`text-lg font-semibold ${activeTab === "unpaid" ? "text-blue-500 border-b-2 border-blue-500" : "text-gray-500"}`}
+          className={`text-lg font-semibold px-3 ${activeTab === "unpaid" ? "text-customBlue border-b-4 border-customBlue" : "text-gray-500"}`}
         >
           Unpaid Bills
         </button>
         <button
           onClick={() => setActiveTab("paid")}
-          className={`text-lg font-semibold ${activeTab === "paid" ? "text-blue-500 border-b-2 border-blue-500" : "text-gray-500"}`}
+          className={`text-lg font-semibold px-3 ${activeTab === "paid" ? "text-customBlue border-b-4 border-customBlue" : "text-gray-500"}`}
         >
           Paid Bills
         </button>
@@ -71,21 +71,35 @@ const BillPage = () => {
       <div className="grid grid-cols-4 gap-4">
         {filteredBills.map((bill) => (
           <div key={bill.id} className="p-4 border rounded-md bg-white shadow-sm flex flex-col">
-            <p className="font-semibold">{bill.doctor}</p>
-            <p>Hospital: {bill.hospital}</p>
-            <p>Date: {bill.date}</p>
-            <p>Time: {bill.time}</p>
-            <p>Total: ₹{bill.amount.toLocaleString()}</p>
-            <div className="flex justify-between mt-2">
-              <button
-                onClick={() => handleViewInvoice(bill)}
-                className="bg-gray-100 p-2 rounded text-gray-600"
-              >
+            {/* Header Section */}
+            <div className="flex items-center justify-between bg-gray-100 p-2 rounded-t-md">
+              <p className="font-semibold">{bill.doctor}</p>
+              <button onClick={() => handleViewInvoice(bill)} className="text-lg p-1 bg-white text-customBlue">
                 <FaEye />
               </button>
+            </div>
+            
+            {/* Content Section */}
+            <div className="p-2 ">
+              <p className="text-gray-500 flex justify-between">
+                <strong>Hospital Name</strong> {bill.hospital}
+              </p>
+              <p className="text-gray-500 flex justify-between">
+                <strong>Bill Created Date</strong> {bill.date}
+              </p>
+              <p className="text-gray-500 flex justify-between">
+                <strong>Bill Created Time</strong> {bill.time}
+              </p>
+              <p className="text-red-500 font-semibold flex justify-between">
+                <strong className="font-medium text-gray-500">Total Bill Amount</strong> ₹{bill.amount.toLocaleString()}
+              </p>
+            </div>
+
+            {/* Footer Section */}
+            <div className="flex justify-end mt-2">
               {!bill.isPaid && (
                 <button
-                  className="bg-customBlue text-white py-2 px-4 rounded"
+                  className="bg-customBlue text-white py-2 px-4 rounded-lg font-semibold w-full"
                   onClick={() => handlePayNow(bill)}
                 >
                   Pay Now

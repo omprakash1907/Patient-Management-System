@@ -1,9 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaSearch } from "react-icons/fa";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
+import PrescritionModal from "../../components/Patient/PrescritionModal";
 
 const PrescriptionPage = () => {
   const { updateBreadcrumb } = useBreadcrumb();
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPrescription, setSelectedPrescription] = useState(null);
+
 
   useEffect(() => {
     updateBreadcrumb([
@@ -87,6 +91,16 @@ const PrescriptionPage = () => {
     },
   ];
 
+  const openModal = (prescription) => {
+    setSelectedPrescription(prescription);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedPrescription(null);
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg m-6 h-full">
       <div className="flex justify-between items-center mb-4">
@@ -113,7 +127,7 @@ const PrescriptionPage = () => {
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded-t-lg  mb-4">
               <h4 className="font-semibold">{prescription.doctor}</h4>
               <div className="text-customBlue p-2 rounded-full bg-white shadow">
-                <FaEye />
+                <FaEye onClick={() => openModal(prescription)}/>
               </div>
             </div>
 
@@ -135,6 +149,8 @@ const PrescriptionPage = () => {
           </div>
         ))}
       </div>
+      {/* Prescription Modal */}
+      {showModal && selectedPrescription && <PrescritionModal closeModal={closeModal}/>}
     </div>
   );
 };
