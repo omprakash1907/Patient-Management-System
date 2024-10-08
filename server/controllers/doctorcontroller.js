@@ -67,7 +67,8 @@ const registerDoctor = async (req, res) => {
 
     // Save doctor to the database
     await doctor.save();
-    res.status(201).json(doctor);
+    const token = jwt.sign({ id: Doctor._id }, process.env.DOCTOR_JWT_SECRET, { expiresIn: process.env.DOCTOR_JWT_EXPIRES_IN });
+    res.status(201).json(doctor,token);
 
   } catch (error) {
     res.status(500).json({
@@ -283,5 +284,42 @@ const loginDoctor = async (req, res) => {
   }
 };
 
+const doctorchangePassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
 
-module.exports = { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor, loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword };
+  try {
+    // Find the logged-in doctor by ID (from the `protect` middleware)
+    const doctor = await Doctor.findById(req.user.id);
+
+    if (!doctor) {
+      return res.status(404).json({ error: 'Doctor not found' });
+    }
+
+    // Check if current password matches
+    const isMatch = await doctor.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    // Check if newPassword matches confirmPassword
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'New password and confirmation do not match' });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    doctor.password = await bcrypt.hash(newPassword, salt);
+
+    // Save the updated doctor
+    await doctor.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error changing password' });
+  }
+};
+
+
+
+module.exports = { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor, loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword };

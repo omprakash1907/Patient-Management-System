@@ -8,7 +8,8 @@ const upload = multer({ storage });
 
 const router = express.Router();
 
-router.post('/register', protect, admin, upload.single('photo'), registerPatient);
+router.post('/register', upload.single('patientImage'), registerPatient); // 'photo' is the field name for the file
+
 router.put('/:id', protect, admin, upload.single('photo'), updatePatient);
 router.delete('/:id', protect, admin, deletePatient);
 router.get('/viewallpatient', protect, admin, viewallpatient);

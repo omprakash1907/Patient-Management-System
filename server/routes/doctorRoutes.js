@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor,loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword} = require('../controllers/doctorcontroller');
+const { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor,loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword} = require('../controllers/doctorcontroller');
 const { protect, admin } = require('../middlewares/authmiddleware');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -46,6 +46,8 @@ router.post('/login', loginDoctor);
 router.post('/doctorforgot-password', doctorsendOtp); // Route to send OTP
 router.post('/doctorverify-otp', doctorverifyOtp); // Route to verify OTP
 router.post('/doctorreset-password', doctorresetPassword); 
+
+router.put('/doctorchange-password', doctorchangePassword); 
 
 module.exports = router;
 

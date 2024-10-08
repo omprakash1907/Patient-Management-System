@@ -1,6 +1,6 @@
 const express = require('express');
 const { protect, admin } = require('../middlewares/authmiddleware');
-const { signUp, login, sendOtp, verifyOtp, resetPassword,getAllAdmins, updateAdmin, deleteAdmin  } = require('../controllers/authcontroller');
+const { signUp, login, sendOtp, verifyOtp, resetPassword,getAllAdmins, updateAdmin, deleteAdmin ,changeAdminPassword } = require('../controllers/authcontroller');
 
 const router = express.Router();
 
@@ -12,5 +12,8 @@ router.post('/reset-password', resetPassword); // Route to reset password
 router.get('/all', protect, admin, getAllAdmins); // Get all admins
 router.put('/updateAdmin/:id', protect, admin, updateAdmin);  
 router.delete('/:id', protect, admin, deleteAdmin);
+
+router.put('/change-password', protect, admin, changeAdminPassword);
+
 
 module.exports = router;

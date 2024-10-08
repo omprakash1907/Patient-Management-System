@@ -2,7 +2,7 @@ const User = require('../models/user');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
-const bcrypt=require('bcrypt');
+const bcrypt = require('bcrypt');
 
 const signUp = async (req, res) => {
   const { firstName, lastName, email, phoneNumber, country, state, city, hospital, password, isAdmin } = req.body;
@@ -48,13 +48,13 @@ const login = async (req, res) => {
     // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: 'Invalid email or passwords' });
+      return res.status(400).json({ error: 'Invalid email' });
     }
 
     // Check if the password matches
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid email or password' });
+      return res.status(400).json({ error: 'Invalid  password' });
     }
 
     // Ensure that this is an admin login
@@ -209,6 +209,41 @@ const deleteAdmin = async (req, res) => {
   }
 };
 
+const changeAdminPassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
 
-module.exports = { signUp, login, sendOtp, verifyOtp, resetPassword, getAllAdmins, updateAdmin, deleteAdmin };
+  try {
+    // Find the logged-in admin by ID (from the `protect` middleware)
+    const admin = await User.findById(req.user.id);
+
+    if (!admin || !admin.isAdmin) {
+      return res.status(404).json({ error: 'Admin not found' });
+    }
+
+    // Check if current password matches
+    const isMatch = await admin.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    // Check if newPassword matches confirmPassword
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ error: 'New password and confirmation do not match' });
+    }
+
+    // Hash the new password
+    const salt = await bcrypt.genSalt(10);
+    admin.password = await bcrypt.hash(newPassword, salt);
+
+    await admin.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error changing password' });
+  }
+}
+
+
+module.exports = { signUp, login, sendOtp, verifyOtp, resetPassword, getAllAdmins, updateAdmin, deleteAdmin, changeAdminPassword };
 
