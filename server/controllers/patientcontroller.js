@@ -90,9 +90,11 @@ async function loginPatient(req, res) {
       return res.status(400).json({ error: 'password not match' });
     }
 
-    const token = jwt.sign({ id: patient._id, email: patient.email }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN, // Set expiration time
-    });
+    // const token = jwt.sign({ id: patient._id, email: patient.email }, process.env.PATIENT_JWT_SECRET, {
+    //   expiresIn: process.env.PATIENT_JWT_EXPIRES_IN, // Set expiration time
+    // });
+
+    const token = jwt.sign({ id: patient._id }, process.env.PATIENT_JWT_SECRET, { expiresIn: process.env.PATIENT_JWT_EXPIRES_IN });
 
     // Return patient data without generating a token
     res.status(200).json({

@@ -45,7 +45,7 @@ const authenticatePatient = async (req, res, next) => {
       const token = authHeader.replace('Bearer ', '');
 
       // Verify the token
-      const decoded = jwt.verify(token, process.env.EMAIL_PATIENTUSER);
+      const decoded = jwt.verify(token, process.env.PATIENT_JWT_SECRET);
       const patient = await Patient.findById(decoded.id);
 
       if (!patient) {
