@@ -90,9 +90,14 @@ async function loginPatient(req, res) {
       return res.status(400).json({ error: 'password not match' });
     }
 
+    const token = jwt.sign({ id: patient._id, email: patient.email }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN, // Set expiration time
+    });
+
     // Return patient data without generating a token
     res.status(200).json({
       message: 'Login successful',
+      token,
       patient: {
         id: patient._id,
         firstName: patient.firstName,

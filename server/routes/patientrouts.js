@@ -1,6 +1,7 @@
 const express = require('express');
 const { registerPatient, updatePatient, deletePatient, viewallpatient, loginPatient,patientsendOtp,patientverifyOtp,patientresetPassword} = require('../controllers/patientcontroller');
-const { protect, admin } = require('../middlewares/authmiddleware');
+const { protect, admin ,authenticatePatient} = require('../middlewares/authmiddleware');
+const { bookAppointment } = require('../controllers/appointmentController');
 const multer = require('multer');
 
 const storage = multer.memoryStorage();
@@ -20,5 +21,6 @@ router.post('/patientlogin', loginPatient);
 router.post('/patientforgot-password', patientsendOtp); // Route to send OTP
 router.post('/patientverify-otp', patientverifyOtp); // Route to verify OTP
 router.post('/patientreset-password', patientresetPassword); 
+router.post('/appointments/book', authenticatePatient, bookAppointment);
 
 module.exports = router;
