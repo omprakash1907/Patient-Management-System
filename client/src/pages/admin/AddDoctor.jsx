@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AiOutlineCamera, AiOutlineClockCircle } from "react-icons/ai";
 import { FiUpload } from "react-icons/fi";
 
-const CreateDoctor = () => {
+const AddDoctor = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -40,8 +40,8 @@ const CreateDoctor = () => {
   };
 
   return (
-    <div >
-      <div className="flex flex-col w-full px-4 py-4 bg-white rounded-lg shadow-md ">
+    <div className="p-6 bg-gray-100">
+      <div className="flex flex-col w-full px-4 py-4 bg-white rounded-lg  ">
         <div className="border border-gray-300 rounded-lg px-4 py-4">
           <h2 className="text-2xl font-bold mb-4">Add New Doctor</h2>
 
@@ -400,4 +400,4 @@ const InputFieldWithIcon = ({ id, label, icon, value, onChange }) => (
   </div>
 );
 
-export default CreateDoctor;
+export default AddDoctor;

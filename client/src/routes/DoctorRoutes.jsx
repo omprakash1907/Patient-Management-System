@@ -9,7 +9,7 @@ const DoctorRoutes = () => {
   return (
     <Routes>
       <Route
-        path="/doctor/doctor-profile"
+        path="/doctor-profile"
         element={
           <DoctorLayout>
             <DoctorProfile />
