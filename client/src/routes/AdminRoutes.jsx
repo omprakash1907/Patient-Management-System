@@ -9,7 +9,7 @@ const AdminRoutes = () => {
   return (
     <Routes>
       <Route
-        path="/admin/create-doctor"
+        path="/create-doctor"
         element={
           <AdminLayout>
             <CreateDoctor />

@@ -39,7 +39,7 @@ const CreateDoctor = () => {
   };
 
   return (
-    <div className="p-6">
+    <div >
       <div className="flex flex-col w-full px-4 py-4 bg-white rounded-lg shadow-md ">
         <div className="border border-gray-300 rounded-lg px-4 py-4">
           <h2 className="text-2xl font-bold mb-4">Add New Doctor</h2>

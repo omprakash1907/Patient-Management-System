@@ -60,7 +60,7 @@ const PatientSidebar = ({ onMenuClick }) => {
       <div className="border-t border-gray-200 mx-5"></div>
       <ul className="mt-5 flex-grow">
         {menuItems.map((item) => (
-          <li key={item.label}>
+          <li className="py-2" key={item.label}>
             <NavLink
               to={item.path}
               className={`relative flex items-center px-4 py-4 text-gray-700 font-semibold ${
