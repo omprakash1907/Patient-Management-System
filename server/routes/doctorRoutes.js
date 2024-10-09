@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor,loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword} = require('../controllers/doctorcontroller');
+const { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor,loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword} = require('../controllers/doctorcontroller');
 const { protect, admin } = require('../middlewares/authmiddleware');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
@@ -38,14 +38,18 @@ router.put('/update/:id', protect, admin, upload.fields([
   { name: 'doctorImage', maxCount: 1 },
   { name: 'doctorSignature', maxCount: 1 },
 ]), updateDoctor); // Update doctor (only admin, with image upload)
-
 router.delete('/delete/:id', protect, admin, deleteDoctor);
-
 router.post('/login', loginDoctor);
 
+   // forgate-password //
 router.post('/doctorforgot-password', doctorsendOtp); // Route to send OTP
 router.post('/doctorverify-otp', doctorverifyOtp); // Route to verify OTP
-router.post('/doctorreset-password', doctorresetPassword); 
+router.post('/doctorreset-password', doctorresetPassword);
+
+    //change-password //
+router.put('/change-password/:id', doctorchangePassword);
+
+    
 
 module.exports = router;
 
