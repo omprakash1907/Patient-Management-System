@@ -9,6 +9,7 @@ import AdminEditProfile from "../components/Profile/AdminEditProfile";
 import DoctorManagement from "../pages/admin/DoctorManagement";
 import EditDoctor from "../pages/admin/EditDoctor";
 import AddDoctor from "../pages/admin/AddDoctor";
+import PatientManagement from "../pages/admin/PatientManagement";
 
 const AdminRoutes = () => {
   return (
@@ -58,6 +59,14 @@ const AdminRoutes = () => {
         element={
           <AdminLayout>
             <EditDoctor />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/patient-management"
+        element={
+          <AdminLayout>
+            <PatientManagement />
           </AdminLayout>
         }
       />
