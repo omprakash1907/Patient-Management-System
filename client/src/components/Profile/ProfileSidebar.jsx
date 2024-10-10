@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaUser, FaLock, FaFileContract, FaShieldAlt } from "react-icons/fa";
 import user from '../../assets/images/user.png';
+import api from "../../api/api";
 
 const ProfileSidebar = () => {
+  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [profileImage, setProfileImage] = useState("");
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await api.get("/users/profile");
+        setProfileImage(response.data.profileImage);
+      } catch (error) {
+        console.error("Failed to fetch profile data", error);
+      }
+    };
+    
+    fetchProfileData();
+  }, []);
+
   return (
     <div className="p-6 text-center">
       <img
-        src={user}
+        src={profileImage ? `http://localhost:8000/${profileImage}` : user}
         alt="Profile"
         className="w-48 h-48 mx-auto rounded-full mb-4"
       />
