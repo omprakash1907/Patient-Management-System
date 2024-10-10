@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // For password visibility toggle
 import RightBanner from "../commonComponent/RightBanner";
+import api from "../../api/api";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +25,8 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -35,78 +39,31 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let validationErrors = {};
 
-    // Validating firstName and lastName
-    if (!formData.firstName) {
+    // Frontend validation for required fields
+    if (!formData.firstName)
       validationErrors.firstName = "First name is required.";
-    }
-
-    if (!formData.lastName) {
+    if (!formData.lastName)
       validationErrors.lastName = "Last name is required.";
-    }
-
-    // Validating email
-    if (!formData.email) {
-      validationErrors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      validationErrors.email = "Email address is invalid.";
-    }
-
-    // Validating phoneNumber
-    if (!formData.phoneNumber) {
+    if (!formData.email) validationErrors.email = "Email is required.";
+    if (!formData.phoneNumber)
       validationErrors.phoneNumber = "Phone number is required.";
-    }
-
-    // Validating age, height, and weight
-    if (!formData.age) {
-      validationErrors.age = "Age is required.";
-    }
-    if (!formData.height) {
-      validationErrors.height = "Height is required.";
-    }
-    if (!formData.weight) {
-      validationErrors.weight = "Weight is required.";
-    }
-
-    // Validating gender and bloodGroup
-    if (!formData.gender) {
-      validationErrors.gender = "Gender is required.";
-    }
-    if (!formData.bloodGroup) {
+    if (!formData.age) validationErrors.age = "Age is required.";
+    if (!formData.height) validationErrors.height = "Height is required.";
+    if (!formData.weight) validationErrors.weight = "Weight is required.";
+    if (!formData.gender) validationErrors.gender = "Gender is required.";
+    if (!formData.bloodGroup)
       validationErrors.bloodGroup = "Blood group is required.";
-    }
-
-    // Validating dateOfBirth
-    if (!formData.dateOfBirth) {
+    if (!formData.dateOfBirth)
       validationErrors.dateOfBirth = "Date of birth is required.";
-    }
-
-    // Validating address
-    if (!formData.address) {
-      validationErrors.address = "Address is required.";
-    }
-
-    // Validating country, state, city
-    if (!formData.country) {
-      validationErrors.country = "Country is required.";
-    }
-    if (!formData.state) {
-      validationErrors.state = "State is required.";
-    }
-    if (!formData.city) {
-      validationErrors.city = "City is required.";
-    }
-
-    // Validating password and confirmPassword
-    if (!formData.password) {
-      validationErrors.password = "Password is required.";
-    } else if (formData.password.length < 6) {
-      validationErrors.password = "Password must be at least 6 characters.";
-    }
-
+    if (!formData.country) validationErrors.country = "Country is required.";
+    if (!formData.state) validationErrors.state = "State is required.";
+    if (!formData.city) validationErrors.city = "City is required.";
+    if (!formData.address) validationErrors.address = "Address is required.";
+    if (!formData.password) validationErrors.password = "Password is required.";
     if (formData.password !== formData.confirmPassword) {
       validationErrors.confirmPassword = "Passwords do not match.";
     }
@@ -114,9 +71,40 @@ const Signup = () => {
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      // Submit form
-      setErrors({});
-      console.log("Form submitted:", formData);
+      const dataToSubmit = {
+        ...formData,
+        age: formData.age ? parseInt(formData.age) : undefined,
+        height: formData.height ? parseInt(formData.height) : undefined,
+        weight: formData.weight ? parseInt(formData.weight) : undefined,
+      };
+
+      try {
+        const response = await api.post(
+          "/users/register-patient",
+          dataToSubmit
+        );
+        Swal.fire({
+          icon: 'success',
+          title: 'Patient registered successfully!!',
+          text: 'Your operation was successful.',
+          confirmButtonText: 'OK',
+        });
+        navigate("/");
+        setErrors({});
+      } catch (error) {
+        console.error("Registration failed:", error.response);
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration failed',
+          text: 'Something went wrong!',
+          confirmButtonText: 'Try Again',
+        }); 
+        if (error.response && error.response.data.message) {
+          setErrors({ apiError: error.response.data.message });
+        } else {
+          setErrors({ apiError: "An error occurred. Please try again." });
+        }
+      }
     }
   };
 
@@ -145,7 +133,11 @@ const Signup = () => {
                 >
                   First Name<span className="text-red-500">*</span>
                 </label>
-                {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.firstName}
+                  </p>
+                )}
               </div>
               <div className="relative mb-4">
                 <input
@@ -163,7 +155,9 @@ const Signup = () => {
                 >
                   Last Name<span className="text-red-500">*</span>
                 </label>
-                {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>
+                )}
               </div>
             </div>
 
@@ -185,7 +179,9 @@ const Signup = () => {
                 >
                   Email Address<span className="text-red-500">*</span>
                 </label>
-                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
               </div>
               <div className="relative mb-4">
                 <input
@@ -203,7 +199,11 @@ const Signup = () => {
                 >
                   Phone Number<span className="text-red-500">*</span>
                 </label>
-                {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.phoneNumber}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -225,7 +225,9 @@ const Signup = () => {
                 >
                   Age<span className="text-red-500">*</span>
                 </label>
-                {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
+                {errors.age && (
+                  <p className="text-red-500 text-sm mt-1">{errors.age}</p>
+                )}
               </div>
               <div className="relative mb-4">
                 <input
@@ -243,7 +245,9 @@ const Signup = () => {
                 >
                   Height (cm)<span className="text-red-500">*</span>
                 </label>
-                {errors.height && <p className="text-red-500 text-sm mt-1">{errors.height}</p>}
+                {errors.height && (
+                  <p className="text-red-500 text-sm mt-1">{errors.height}</p>
+                )}
               </div>
               <div className="relative mb-4">
                 <input
@@ -261,7 +265,9 @@ const Signup = () => {
                 >
                   Weight (kg)<span className="text-red-500">*</span>
                 </label>
-                {errors.weight && <p className="text-red-500 text-sm mt-1">{errors.weight}</p>}
+                {errors.weight && (
+                  <p className="text-red-500 text-sm mt-1">{errors.weight}</p>
+                )}
               </div>
             </div>
 
@@ -285,7 +291,9 @@ const Signup = () => {
                 >
                   Gender<span className="text-red-500">*</span>
                 </label>
-                {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
+                {errors.gender && (
+                  <p className="text-red-500 text-sm mt-1">{errors.gender}</p>
+                )}
               </div>
               <div className="relative mb-4">
                 <select
@@ -295,7 +303,7 @@ const Signup = () => {
                   value={formData.bloodGroup}
                   onChange={handleChange}
                 >
-                  <option value="">Select  Group</option>
+                  <option value="">Select Group</option>
                   <option value="A+">A+</option>
                   <option value="O+">O+</option>
                 </select>
@@ -305,7 +313,11 @@ const Signup = () => {
                 >
                   Blood Group<span className="text-red-500">*</span>
                 </label>
-                {errors.bloodGroup && <p className="text-red-500 text-sm mt-1">{errors.bloodGroup}</p>}
+                {errors.bloodGroup && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.bloodGroup}
+                  </p>
+                )}
               </div>
               <div className="relative mb-4">
                 <input
@@ -323,7 +335,11 @@ const Signup = () => {
                 >
                   Date of Birth<span className="text-red-500">*</span>
                 </label>
-                {errors.dateOfBirth && <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth}</p>}
+                {errors.dateOfBirth && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.dateOfBirth}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -342,7 +358,9 @@ const Signup = () => {
                 <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200 peer-focus:-top-2.5 peer-focus:left-3">
                   Address
                 </label>
-                {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                {errors.address && (
+                  <p className="text-red-500 text-sm mt-1">{errors.address}</p>
+                )}
               </div>
             </div>
 
@@ -357,8 +375,8 @@ const Signup = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select Country</option>
-                  <option value="Country1">Country1</option>
-                  <option value="Country2">Country2</option>
+                  <option value="India">India</option>
+                  <option value="USA">USA</option>
                 </select>
                 <label
                   htmlFor="country"
@@ -366,7 +384,9 @@ const Signup = () => {
                 >
                   Country<span className="text-red-500">*</span>
                 </label>
-                {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
+                {errors.country && (
+                  <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+                )}
               </div>
               <div className="relative mb-4">
                 <select
@@ -377,8 +397,8 @@ const Signup = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select State</option>
-                  <option value="State1">State1</option>
-                  <option value="State2">State2</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
                 </select>
                 <label
                   htmlFor="state"
@@ -386,7 +406,9 @@ const Signup = () => {
                 >
                   State<span className="text-red-500">*</span>
                 </label>
-                {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+                {errors.state && (
+                  <p className="text-red-500 text-sm mt-1">{errors.state}</p>
+                )}
               </div>
               <div className="relative mb-4">
                 <select
@@ -397,8 +419,8 @@ const Signup = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select City</option>
-                  <option value="City1">City1</option>
-                  <option value="City2">City2</option>
+                  <option value="Surat">Surat</option>
+                  <option value="Banaras">Banaras</option>
                 </select>
                 <label
                   htmlFor="city"
@@ -406,7 +428,9 @@ const Signup = () => {
                 >
                   City<span className="text-red-500">*</span>
                 </label>
-                {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                {errors.city && (
+                  <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+                )}
               </div>
             </div>
 
@@ -427,7 +451,9 @@ const Signup = () => {
               >
                 Password<span className="text-red-500">*</span>
               </label>
-              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+              )}
 
               <div
                 className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
@@ -458,8 +484,21 @@ const Signup = () => {
                 Confirm Password<span className="text-red-500">*</span>
               </label>
               {errors.confirmPassword && (
-                <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.confirmPassword}
+                </p>
               )}
+
+              <div
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? (
+                  <AiOutlineEyeInvisible className="text-gray-500" />
+                ) : (
+                  <AiOutlineEye className="text-gray-500" />
+                )}
+              </div>
             </div>
 
             {/* Agree to Terms */}
@@ -482,20 +521,24 @@ const Signup = () => {
                 </a>
               </label>
               {errors.agreeToTerms && (
-                <p className="text-red-500 text-sm mb-4">{errors.agreeToTerms}</p>
+                <p className="text-red-500 text-sm mb-4">
+                  {errors.agreeToTerms}
+                </p>
               )}
             </div>
-
+            {errors.apiError && (
+              <p className="text-red-500 text-sm mt-4">{errors.apiError}</p>
+            )}
             <button
               type="submit"
-              className="w-full py-2 bg-gray-200 text-gray-500 font-semibold rounded-md hover:bg-customBlue hover:text-white transition duration-200"
+              className="w-full font-medium  bg-gray-100 text-black py-2 rounded-md hover:bg-customBlue hover:text-white transition duration-200"
             >
               Register
             </button>
           </form>
           <p className="text-center mt-4 text-sm">
             Already have an account?{" "}
-            <a href="/login" className="text-blue-500 hover:underline">
+            <a href="/" className="text-blue-500 hover:underline">
               Login
             </a>
           </p>
@@ -503,7 +546,7 @@ const Signup = () => {
       </div>
 
       {/* Right Side - Banner & Vector Section */}
-      <RightBanner/>
+      <RightBanner />
     </div>
   );
 };

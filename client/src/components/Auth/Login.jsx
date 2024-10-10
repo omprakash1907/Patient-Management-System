@@ -1,38 +1,63 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import RightBanner from "../commonComponent/RightBanner";
+import AuthContext from "../../context/AuthContext";
+import Swal from 'sweetalert2';
 
 const Login = () => {
+  const { loginUser, authError } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(true);
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple validation logic
+    // Reset errors before validation
     let validationErrors = {};
+    setErrors({});
+
     if (!email) {
       validationErrors.email = "Email or Phone is required.";
     }
     if (!password) {
       validationErrors.password = "Password is required.";
-    } else if (password !== "123456") {
-      // Dummy password check
-      validationErrors.password = "Incorrect Password.";
     }
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
-      setErrors({});
-      // Perform successful login action here
+      try {
+        // Call login function from AuthContext
+        const { token, role } = await loginUser({ email, password });
+
+        // Store token and role in localStorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("role", role);
+        Swal.fire({
+          icon: 'success',
+          title: 'Login successfully!!',
+          text: 'Your operation was successful.',
+          confirmButtonText: 'OK',
+        });
+        // Redirect to the dashboard
+        navigate("/admin/edit-profile");
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Login failed',
+          text: 'Something went wrong!',
+          confirmButtonText: 'Try Again',
+        }); 
+        setErrors({ password: authError || "Login failed, try again" });
+      }
     }
   };
 
@@ -40,7 +65,7 @@ const Login = () => {
     <div className="min-h-screen flex">
       {/* Left Side - Form Section */}
       <div className="w-1/2 flex justify-center items-center bg-white p-10">
-        <div className="w-full max-w-md bg-white p-10 rounded-lg shadow-lg">
+        <div className="w-full max-w-xl bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold mb-6">Login</h2>
           <form onSubmit={handleSubmit}>
             {/* Email or Phone Input */}
@@ -110,9 +135,9 @@ const Login = () => {
                   Remember me
                 </label>
               </div>
-              <a href="#" className="text-sm text-blue-500 hover:underline">
+              <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
                 Forgot password?
-              </a>
+              </Link>
             </div>
             <button
               type="submit"

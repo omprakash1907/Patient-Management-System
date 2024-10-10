@@ -24,13 +24,13 @@ const App = () => {
       <Router>
         <Routes>
           {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/enter-otp" element={<Otp />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin-signup" element={<AdminSignup />} />
-          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/dashboard" element={<Layout><Home /></Layout>} />
           <Route path="/profile" element={<Layout><Profile /></Layout>} />
 
           {/* Role-Based Routes */}
