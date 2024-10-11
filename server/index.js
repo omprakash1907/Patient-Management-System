@@ -7,6 +7,7 @@ const hospitalrots = require('./routes/hospitalrouts');
 const doctorRoutes = require('./routes/doctorRoutes'); // Import doctor routes
 const patientRoutes = require('./routes/patientrouts');
 const appointmentRouts=require('./routes/appointmentRoutes')
+const PrescriptionRouts=require('./routes/PrescriptionRouts')
 
 
 dotenv.config(); // Load environment variables
@@ -32,6 +33,7 @@ app.use('/api/hospital', hospitalrots);
 app.use('/api/doctor', doctorRoutes);  
 app.use('/api/patients', patientRoutes); 
 app.use('/api/appointments', appointmentRouts); 
+app.use('/api/prescription', PrescriptionRouts); 
 
 // Error handling for invalid routes
 app.use((req, res, next) => {

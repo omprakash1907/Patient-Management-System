@@ -59,4 +59,22 @@ const authenticatePatient = async (req, res, next) => {
       res.status(401).json({ message: 'Unauthorized' });
   }
 };
-module.exports = { protect, admin,authenticatePatient};
+
+
+const doctorAuth = (req, res, next) => {
+  const token = req.header('Authorization').replace('Bearer ', '');
+
+  if (!token) {
+      return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+      const decoded = jwt.verify(token, process.env.DOCTOR_JWT_SECRET);
+      req.user = decoded;  // Set doctor ID to req.user
+      next();
+  } catch (err) {
+      res.status(401).json({ message: 'Token is not valid' });
+  }
+};
+
+module.exports = { protect, admin,authenticatePatient,doctorAuth};
