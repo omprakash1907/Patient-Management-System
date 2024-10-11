@@ -4,7 +4,7 @@ const { protect, admin ,authenticatePatient} = require('../middlewares/authmiddl
 const { bookAppointment } = require('../controllers/appointmentController');
 const multer = require('multer');
 
-const storage = multer.memoryStorage();
+ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 const router = express.Router();

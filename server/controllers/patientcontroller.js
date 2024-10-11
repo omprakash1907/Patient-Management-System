@@ -94,7 +94,7 @@ async function loginPatient(req, res) {
     //   expiresIn: process.env.PATIENT_JWT_EXPIRES_IN, // Set expiration time
     // });
 
-    const token = jwt.sign({ id: patient._id }, process.env.PATIENT_JWT_SECRET, { expiresIn: process.env.PATIENT_JWT_EXPIRES_IN });
+     const token = jwt.sign({ id: patient._id }, process.env.PATIENT_JWT_SECRET, { expiresIn: process.env.PATIENT_JWT_EXPIRES_IN });
 
     // Return patient data without generating a token
     res.status(200).json({
