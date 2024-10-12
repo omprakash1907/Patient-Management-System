@@ -12,6 +12,7 @@ import AddDoctor from "../pages/admin/AddDoctor";
 import PatientManagement from "../pages/admin/PatientManagement";
 import MonitorBilling from "../components/Admin/MonitorBilling";
 import Invoice from "../pages/admin/Invoice";
+import CreateBill from "../pages/admin/CreateBill";
 
 const AdminRoutes = () => {
   return (
@@ -92,7 +93,7 @@ const AdminRoutes = () => {
         path="/create-bill"
         element={
           <AdminLayout>
-            <Invoice />
+            <CreateBill />
           </AdminLayout>
         }
       />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../api/api";
-import selectImage from "../../assets/images/select-image.png";
 import AddFieldModal from "../../components/Admin/AddFieldModal";
+import { FiUpload } from "react-icons/fi";
 
 const CreateBill = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -224,25 +224,30 @@ const CreateBill = () => {
 
       <h2 className="text-lg font-semibold mb-4">Hospital Details</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="flex flex-col items-center">
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            id="upload-logo"
-            onChange={handleFileChange}
-          />
-          <label htmlFor="upload-logo" className="cursor-pointer">
-            <img
-              src={selectedFile ? URL.createObjectURL(selectedFile) : selectImage}
-              alt="Hospital Logo"
-              className="w-48 mb-4"
-            />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              Upload Logo
-            </button>
-          </label>
-        </div>
+      <div className="mb-4">
+                <label className="text-gray-700 text-sm font-medium">
+                  Upload Signature
+                </label>
+                <div className=" flex-col items-center justify-center border border-dashed border-gray-300 rounded-md p-10 w-full mt-2">
+                  <div className="flex align-middle justify-center">
+                    <FiUpload className="text-gray-500 text-2xl" />
+                  </div>
+                  <div className=" text-center">
+                    <label className="text-blue-500 cursor-pointer">
+                      <input
+                        type="file"
+                        className="hidden"
+                        name="signature"
+                        onChange={(e) => {
+                          // Handle file upload here
+                        }}
+                      />
+                      Upload a file
+                    </label>
+                    <p className="text-xs text-gray-400">PNG Up To 5MB</p>
+                  </div>
+                </div>
+              </div>
         <div>
           <label className="block font-semibold mb-2">Hospital</label>
           <select
