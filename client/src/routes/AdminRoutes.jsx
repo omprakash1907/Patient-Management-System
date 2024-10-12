@@ -10,6 +10,8 @@ import DoctorManagement from "../pages/admin/DoctorManagement";
 import EditDoctor from "../pages/admin/EditDoctor";
 import AddDoctor from "../pages/admin/AddDoctor";
 import PatientManagement from "../pages/admin/PatientManagement";
+import MonitorBilling from "../components/Admin/MonitorBilling";
+import Invoice from "../pages/admin/Invoice";
 
 const AdminRoutes = () => {
   return (
@@ -67,6 +69,30 @@ const AdminRoutes = () => {
         element={
           <AdminLayout>
             <PatientManagement />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/monitor-billing"
+        element={
+          <AdminLayout>
+            <MonitorBilling />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/invoice/:billId/:patientName"
+        element={
+          <AdminLayout>
+            <Invoice />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/create-bill"
+        element={
+          <AdminLayout>
+            <Invoice />
           </AdminLayout>
         }
       />

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { FaEye, FaEdit, FaTrash, FaSearch, FaUserPlus } from "react-icons/fa";
 import DoctorOffCanvas from "../../components/Admin/DoctorOffCanvas";
 import api from "../../api/api";
-import noRecordImage from '../../assets/images/nodoctor.png';
+import noRecordImage from "../../assets/images/nodoctor.png";
+import userImage from "../../assets/images/user.png";
 
 const DoctorManagement = () => {
   const [doctors, setDoctors] = useState([]);
@@ -65,7 +66,7 @@ const DoctorManagement = () => {
   return (
     <div className="p-6 bg-gray-100 h-full">
       <div className="bg-white p-4 rounded-lg">
-        {/* Header section: Always visible */}
+        {/* Header section */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Doctor Management</h2>
           <div className="flex items-center space-x-4">
@@ -90,7 +91,7 @@ const DoctorManagement = () => {
         </div>
 
         {/* Table structure with header */}
-        <table className="w-full bg-white rounded-lg overflow-hidden ">
+        <table className="w-full bg-white rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-6 py-3 text-left text-gray-600 font-semibold">
@@ -109,7 +110,7 @@ const DoctorManagement = () => {
                 Working Time
               </th>
               <th className="px-6 py-3 text-left text-gray-600 font-semibold">
-                Patient Check Up Time
+                Patient Check-Up Time
               </th>
               <th className="px-6 py-3 text-left text-gray-600 font-semibold">
                 Break Time
@@ -125,52 +126,67 @@ const DoctorManagement = () => {
                 <tr key={doctor._id} className="border-b">
                   <td className="px-6 py-4 flex items-center space-x-3">
                     <img
-                      src="https://via.placeholder.com/40"
+                      src={
+                        doctor.profileImage
+                          ? `http://localhost:8000/${doctor.profileImage}`
+                          : userImage
+                      }
                       alt="Doctor"
                       className="w-10 h-10 rounded-full"
                     />
                     <span>{`${doctor.firstName} ${doctor.lastName}`}</span>
                   </td>
-                  <td className="px-6 py-4">{doctor.gender}</td>
-                  <td className="px-6 py-4">{doctor.qualification}</td>
-                  <td className="px-6 py-4">{doctor.specialty}</td>
+                  <td className="px-6 py-4 ">
+                    <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
+                      {doctor.gender}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    {doctor.doctorDetails.qualification || "N/A"}
+                  </td>
+                  <td className="px-6 py-4">
+                    {doctor.doctorDetails.specialtyType || "N/A"}
+                  </td>
                   <td className="px-6 py-4 text-center">
                     <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
-                      {doctor.workingTime}
+                      {doctor.doctorDetails.workingHours?.workingTime || "N/A"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
-                      {doctor.checkUpTime}
+                      {doctor.doctorDetails.workingHours?.checkupTime || "N/A"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
-                      {doctor.breakTime}
+                      {doctor.doctorDetails.workingHours?.breakTime || "N/A"}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-center space-x-4 flex items-center justify-center">
-                    <button
-                      onClick={() => handleViewClick(doctor)}
-                      className="text-blue-500 hover:text-blue-600"
-                      title="View"
-                    >
-                      <FaEye />
-                    </button>
-                    <Link
-                      to={`/admin/doctor-management/edit/${doctor._id}`}
-                      className="text-green-500 hover:text-green-600 mx-2"
-                      title="Edit"
-                    >
-                      <FaEdit />
-                    </Link>
-                    <button
-                      onClick={() => handleDeleteDoctor(doctor._id)}
-                      className="text-red-500 hover:text-red-600"
-                      title="Delete"
-                    >
-                      <FaTrash />
-                    </button>
+                  <td className="px-6 py-4 text-xl text-center  h-full">
+                    <div className="flex items-center justify-center space-x-4">
+                      {" "}
+                      <button
+                        onClick={() => handleViewClick(doctor)}
+                        className="text-customBlue bg-gray-100 p-2 rounded-lg"
+                        title="View"
+                      >
+                        <FaEye />
+                      </button>
+                      <Link
+                        to={`/admin/doctor-management/edit/${doctor._id}`}
+                        className="text-green-500 hover:text-green-600 mx-2 bg-gray-100 p-2 rounded-lg"
+                        title="Edit"
+                      >
+                        <FaEdit />
+                      </Link>
+                      <button
+                        onClick={() => handleDeleteDoctor(doctor._id)}
+                        className="text-red-500 hover:text-red-600 bg-gray-100 p-2 rounded-lg"
+                        title="Delete"
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
