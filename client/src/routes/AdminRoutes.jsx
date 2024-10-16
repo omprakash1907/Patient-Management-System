@@ -13,6 +13,9 @@ import PatientManagement from "../pages/admin/PatientManagement";
 import MonitorBilling from "../components/Admin/MonitorBilling";
 import Invoice from "../pages/admin/Invoice";
 import CreateBill from "../pages/admin/CreateBill";
+import InsuranceClaims from "../pages/admin/InsuranceClaims";
+import PaymentProcess from "../pages/admin/PaymentProcess";
+import EditBillForm from "../pages/admin/EditBillForm";
 
 const AdminRoutes = () => {
   return (
@@ -94,6 +97,30 @@ const AdminRoutes = () => {
         element={
           <AdminLayout>
             <CreateBill />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/insaurance-claims"
+        element={
+          <AdminLayout>
+            <InsuranceClaims />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/payment-process"
+        element={
+          <AdminLayout>
+            <PaymentProcess />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/edit-bill"
+        element={
+          <AdminLayout>
+            <EditBillForm />
           </AdminLayout>
         }
       />

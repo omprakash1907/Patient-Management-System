@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import api from "../../api/api";
 import AddFieldModal from "../../components/Admin/AddFieldModal";
 import { FiUpload } from "react-icons/fi";
+import { AiOutlineMinusCircle } from "react-icons/ai";
+import { FaPlus } from "react-icons/fa";
 
 const CreateBill = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -144,7 +146,6 @@ const CreateBill = () => {
       formData.append("hospital", formValues.hospitalId);
       formData.append("patient", formValues.patientId);
       formData.append("doctor", formValues.doctorId);
-
       Object.keys(formValues).forEach((key) => {
         if (key !== "hospitalId" && key !== "patientId" && key !== "doctorId") {
           formData.append(key, formValues[key]);
@@ -162,7 +163,6 @@ const CreateBill = () => {
       });
 
       alert("Invoice created successfully!");
-
       setFormValues({
         hospitalId: "",
         patientId: "",
@@ -202,101 +202,320 @@ const CreateBill = () => {
     }
   };
 
-  const handleAddHospitalField = (field) => {
-    setHospitalFields([...hospitalFields, field]);
-  };
-
-  const handleAddPatientField = (field) => {
-    setPatientFields([...patientFields, field]);
-  };
-
-  const handleRemoveHospitalField = (index) => {
-    setHospitalFields(hospitalFields.filter((_, i) => i !== index));
-  };
-
-  const handleRemovePatientField = (index) => {
-    setPatientFields(patientFields.filter((_, i) => i !== index));
+  const handleRemoveField = (type, index) => {
+    if (type === "hospital") {
+      const newFields = [...hospitalFields];
+      newFields.splice(index, 1);
+      setHospitalFields(newFields);
+    } else if (type === "patient") {
+      const newFields = [...patientFields];
+      newFields.splice(index, 1);
+      setPatientFields(newFields);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-8 bg-white rounded-lg shadow-lg">
+    <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg m-6">
       <h1 className="text-2xl font-semibold mb-6">Create Bill</h1>
-
-      <h2 className="text-lg font-semibold mb-4">Hospital Details</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="mb-4">
-                <label className="text-gray-700 text-sm font-medium">
-                  Upload Signature
-                </label>
-                <div className=" flex-col items-center justify-center border border-dashed border-gray-300 rounded-md p-10 w-full mt-2">
-                  <div className="flex align-middle justify-center">
-                    <FiUpload className="text-gray-500 text-2xl" />
-                  </div>
-                  <div className=" text-center">
-                    <label className="text-blue-500 cursor-pointer">
-                      <input
-                        type="file"
-                        className="hidden"
-                        name="signature"
-                        onChange={(e) => {
-                          // Handle file upload here
-                        }}
-                      />
-                      Upload a file
-                    </label>
-                    <p className="text-xs text-gray-400">PNG Up To 5MB</p>
-                  </div>
-                </div>
-              </div>
-        <div>
-          <label className="block font-semibold mb-2">Hospital</label>
-          <select
-            name="hospitalId"
-            value={formValues.hospitalId}
-            onChange={handleHospitalSelect}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+      <div className=" border rounded p-4">
+        {/* Hospital Details */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold mb-4">Hospital Details</h2>
+          <button
+            type="button"
+            onClick={() => setIsHospitalModalOpen(true)}
+            className="flex justify-between items-center  bg-customBlue text-white p-2 rounded-lg font-medium text-sm mb-4"
           >
-            <option value="">Select Hospital</option>
-            {hospitals.map((hospital) => (
-              <option key={hospital._id} value={hospital._id}>
-                {hospital.name}
-              </option>
-            ))}
-          </select>
+            <FaPlus className="bg-white text-customBlue rounded mr-2" /> Add New
+            Field
+          </button>
         </div>
-        <div>
-          <label className="block font-semibold mb-2">Other Text</label>
-          <input
-            type="text"
-            name="otherText"
-            value={formValues.otherText}
+        <div className="flex gap-4">
+          <div className="mb-4 w-1/5">
+            <label className="text-gray-700 text-sm font-medium">
+              Upload Logo
+            </label>
+            <div className="flex-col items-center justify-center border border-dashed border-gray-300 rounded-md p-6 w-full mt-2">
+              <div className="flex align-middle justify-center">
+                <FiUpload className="text-gray-500 text-2xl" />
+              </div>
+              <div className="text-center">
+                <label className="text-blue-500 cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    name="logo"
+                    onChange={handleFileChange}
+                  />
+                  {selectedFile ? selectedFile.name : "Upload a file"}
+                </label>
+                <p className="text-xs text-gray-400">PNG Up To 5MB</p>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4 w-full">
+            <SelectField
+              id="hospitalId"
+              label="Hospital"
+              options={hospitals.map(hospital => ({ value: hospital._id, label: hospital.name }))}
+              value={formValues.hospitalId}
+              onChange={handleHospitalSelect}
+            />
+            <InputField
+              id="billDate"
+              label="Bill Date"
+              type="date"
+              value={formValues.billDate}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="otherText"
+              label="Other Text"
+              value={formValues.otherText}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="billTime"
+              label="Bill Time"
+              value={formValues.billTime}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="billNumber"
+              label="Bill Number"
+              value={formValues.billNumber}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="phoneNumber"
+              label="Phone Number"
+              value={formValues.phoneNumber}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="email"
+              label="Email"
+              type="email"
+              value={formValues.email}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="hospitalAddress"
+              label="Address"
+              value={formValues.hospitalAddress}
+              onChange={handleInputChange}
+              disabled
+            />
+          </div>
+        </div>
+        {/* Dynamic hospital fields */}
+        {hospitalFields.map((field, index) => (
+          <div key={index} className="flex items-center space-x-4 mb-4">
+            <InputField
+              id={`hospitalField${index}`}
+              label="Dynamic Field"
+              value={field}
+              onChange={e => {
+                const newFields = [...hospitalFields];
+                newFields[index] = e.target.value;
+                setHospitalFields(newFields);
+              }}
+            />
+            <AiOutlineMinusCircle
+              className="text-red-500 cursor-pointer"
+              onClick={() => handleRemoveField("hospital", index)}
+            />
+          </div>
+        ))}
+
+        {/* Patient Details */}
+        <div className="flex justify-between items-center">
+          <h2 className="text-lg font-semibold mt-6 mb-4">Patient Details</h2>
+          <button
+            type="button"
+            onClick={() => setIsPatientModalOpen(true)}
+            className="flex justify-between items-center  bg-customBlue text-white p-2 rounded-lg font-medium text-sm mb-4"
+          >
+            <FaPlus className="bg-white text-customBlue rounded mr-2" /> Add New
+            Field
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <SelectField
+            id="patientId"
+            label="Patient"
+            options={patients.map(patient => ({ value: patient._id, label: `${patient.firstName} ${patient.lastName}` }))}
+            value={formValues.patientId}
+            onChange={handlePatientSelect}
+          />
+          <SelectField
+            id="doctorId"
+            label="Doctor"
+            options={doctors.map(doctor => ({ value: doctor._id, label: `${doctor.firstName} ${doctor.lastName}` }))}
+            value={formValues.doctorId}
+            onChange={handleDoctorSelect}
+          />
+          <InputField
+            id="diseaseName"
+            label="Disease Name"
+            value={formValues.diseaseName}
             onChange={handleInputChange}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+          />
+          <InputField
+            id="description"
+            label="Description"
+            value={formValues.description}
+            onChange={handleInputChange}
+          />
+          <InputField
+            id="amount"
+            label="Amount"
+            value={formValues.amount}
+            onChange={handleInputChange}
+          />
+          <InputField
+            id="tax"
+            label="Tax"
+            value={formValues.tax}
+            onChange={handleInputChange}
+          />
+          <InputField
+            id="discount"
+            label="Discount"
+            value={formValues.discount}
+            onChange={handleInputChange}
+          />
+          <InputField
+            id="totalAmount"
+            label="Total Amount"
+            value={formValues.totalAmount}
+            onChange={handleInputChange}
+          />
+          <SelectField
+            id="paymentType"
+            label="Payment Type"
+            options={[
+              { value: "Cash", label: "Cash" },
+              { value: "Online", label: "Online" },
+              { value: "Insurance", label: "Insurance" },
+            ]}
+            value={formValues.paymentType}
+            onChange={handleInputChange}
           />
         </div>
-        {/* More fields here... */}
+
+        {/* Insurance details - only displayed when paymentType is "Insurance" */}
+        {formValues.paymentType === "Insurance" && (
+          <div className="grid grid-cols-3 gap-4 mt-4">
+            <InputField
+              id="insuranceCompany"
+              label="Insurance Company"
+              value={formValues.insuranceCompany}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="insurancePlan"
+              label="Insurance Plan"
+              value={formValues.insurancePlan}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="claimAmount"
+              label="Claim Amount"
+              value={formValues.claimAmount}
+              onChange={handleInputChange}
+            />
+            <InputField
+              id="claimedAmount"
+              label="Claimed Amount"
+              value={formValues.claimedAmount}
+              onChange={handleInputChange}
+            />
+          </div>
+        )}
+
+        {/* Modals for adding new fields */}
+        <AddFieldModal
+          open={isHospitalModalOpen}
+          handleClose={() => setIsHospitalModalOpen(false)}
+          handleAddField={(field) =>
+            setHospitalFields([...hospitalFields, field])
+          }
+        />
+        <AddFieldModal
+          open={isPatientModalOpen}
+          handleClose={() => setIsPatientModalOpen(false)}
+          handleAddField={(field) =>
+            setPatientFields([...patientFields, field])
+          }
+        />
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="mt-6 px-6 bg-customBlue text-white py-2 rounded-md"
+          >
+            Save
+          </button>
+        </div>
       </div>
-
-      {/* Add more sections as needed */}
-
-      <AddFieldModal
-        open={isHospitalModalOpen}
-        handleClose={() => setIsHospitalModalOpen(false)}
-        handleAddField={handleAddHospitalField}
-      />
-      <AddFieldModal
-        open={isPatientModalOpen}
-        handleClose={() => setIsPatientModalOpen(false)}
-        handleAddField={handleAddPatientField}
-      />
-      <button
-        type="submit"
-        className="w-full bg-blue-500 text-white font-semibold px-4 py-2 mt-6 rounded"
-      >
-        Save
-      </button>
     </form>
   );
 };
+
+// InputField component
+const InputField = ({
+  id,
+  label,
+  type = "text",
+  placeholder = "",
+  value,
+  onChange,
+  disabled = false
+}) => (
+  <div className="relative mb-4">
+    <input
+      type={type}
+      id={id}
+      name={id}
+      className="peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none"
+      placeholder={placeholder || `Enter ${label}`}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+    />
+    <label
+      htmlFor={id}
+      className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
+    >
+      {label}
+    </label>
+  </div>
+);
+
+// SelectField component
+const SelectField = ({ id, label, options, value, onChange }) => (
+  <div className="relative mb-4">
+    <select
+      id={id}
+      name={id}
+      className="peer w-full px-4 py-2 border border-gray-300 rounded-md text-gray-500 focus:outline-none"
+      value={value}
+      onChange={onChange}
+    >
+      <option value="">{`Select ${label}`}</option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+    <label
+      htmlFor={id}
+      className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 peer-focus:-top-2.5 peer-focus:left-3 transition-all duration-200"
+    >
+      {label}
+    </label>
+  </div>
+);
 
 export default CreateBill;

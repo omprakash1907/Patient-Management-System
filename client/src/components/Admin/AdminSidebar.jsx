@@ -25,8 +25,8 @@ const AdminSidebar = () => {
       icon: FaFileInvoiceDollar,
       submenu: [
         { label: "Monitor Billing", path: "/admin/monitor-billing" },
-        { label: "Insurance Claims", path: "/admin/billing/insurance" },
-        { label: "Payment Process", path: "/admin/billing/payment" },
+        { label: "Insurance Claims", path: "/admin/insaurance-claims" },
+        { label: "Payment Process", path: "/admin/payment-process" },
       ],
     },
     { label: "Reporting And Analytics", path: "/admin/reporting", icon: FaChartBar },
