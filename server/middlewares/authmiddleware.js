@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Patient = require('../models/patient');
-
+const Doctor=require('../models/doctor')
 const protect = async (req, res, next) => {
   let token;
 
@@ -61,20 +61,46 @@ const authenticatePatient = async (req, res, next) => {
 };
 
 
-const doctorAuth = (req, res, next) => {
-  const token = req.header('Authorization').replace('Bearer ', '');
+// const doctorAuth = (req, res, next) => {
+//   const token = req.header('Authorization').replace('Bearer ', '');
 
-  if (!token) {
+//   if (!token) {
+//       return res.status(401).json({ message: 'No token, authorization denied' });
+//   }
+
+//   try {
+//       const decoded = jwt.verify(token, process.env.DOCTOR_JWT_SECRET);
+//       req.user = decoded;  // Set doctor ID to req.user
+//       next();
+//   } catch (err) {
+//     console.log(err);
+//       res.status(401).json({ message: 'Token is not valid' });
+//   }
+// };
+
+const doctorAuth = async (req, res, next) => {
+  const authHeader = req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'No token, authorization denied' });
   }
 
   try {
+      const token = authHeader.replace('Bearer ', '');
       const decoded = jwt.verify(token, process.env.DOCTOR_JWT_SECRET);
-      req.user = decoded;  // Set doctor ID to req.user
+      
+      // Fetch the doctor details from the database
+      req.user = await Doctor.findById(decoded.id).select('-password'); // Assuming you have a Doctor model
+
+      if (!req.user) {
+          return res.status(404).json({ message: 'Doctor not found' });
+      }
       next();
   } catch (err) {
+      console.error(err);
       res.status(401).json({ message: 'Token is not valid' });
   }
 };
+
+
 
 module.exports = { protect, admin,authenticatePatient,doctorAuth};

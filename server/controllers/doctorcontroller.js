@@ -265,7 +265,7 @@ const loginDoctor = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: doctor._id, email: doctor.email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: doctor._id, email: doctor.email }, process.env.DOCTOR_JWT_SECRET, {
       expiresIn: '30d',
     });
 
