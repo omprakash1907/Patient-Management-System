@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { FaEye, FaEdit, FaSearch, FaCashRegister } from "react-icons/fa";
 import api from "../../api/api";
 import CashPaymentModal from "../../components/Admin/CashPaymentModal";
-import EditBillForm from "./EditBillForm";
+import { useNavigate } from "react-router-dom";
 
 const PaymentProcess = () => {
+  const navigate = useNavigate(); // Initialize navigate
   const [billingData, setBillingData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedBill, setSelectedBill] = useState(null);
   const [isCashModalOpen, setCashModalOpen] = useState(false);
+  const [selectedBill, setSelectedBill] = useState(null);
 
   // Fetch billing data from API
   useEffect(() => {
@@ -33,7 +34,7 @@ const PaymentProcess = () => {
   );
 
   const handleEditBill = (bill) => {
-    setSelectedBill(bill);
+    navigate(`/admin/payment-process/edit-bill/${bill._id}`); 
   };
 
   const handleOpenCashModal = (bill) => {
@@ -140,12 +141,6 @@ const PaymentProcess = () => {
         <CashPaymentModal
           bill={selectedBill}
           closeModal={() => setCashModalOpen(false)}
-        />
-      )}
-      {selectedBill && (
-        <EditBillForm
-          bill={selectedBill}
-          closeForm={() => setSelectedBill(null)}
         />
       )}
     </div>

@@ -15,7 +15,8 @@ import Invoice from "../pages/admin/Invoice";
 import CreateBill from "../pages/admin/CreateBill";
 import InsuranceClaims from "../pages/admin/InsuranceClaims";
 import PaymentProcess from "../pages/admin/PaymentProcess";
-import EditBillForm from "../pages/admin/EditBillForm";
+import EditBill from "../pages/admin/EditBill";
+import ReportingAndAnalytics from "../pages/admin/ReportingAndAnalytics";
 
 const AdminRoutes = () => {
   return (
@@ -117,10 +118,18 @@ const AdminRoutes = () => {
         }
       />
       <Route
-        path="/edit-bill"
+        path="/payment-process/edit-bill/:id"
         element={
           <AdminLayout>
-            <EditBillForm />
+            <EditBill />
+          </AdminLayout>
+        }
+      />
+      <Route
+        path="/report-analysis"
+        element={
+          <AdminLayout>
+            <ReportingAndAnalytics />
           </AdminLayout>
         }
       />

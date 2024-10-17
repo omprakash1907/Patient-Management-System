@@ -29,7 +29,7 @@ const AdminSidebar = () => {
         { label: "Payment Process", path: "/admin/payment-process" },
       ],
     },
-    { label: "Reporting And Analytics", path: "/admin/reporting", icon: FaChartBar },
+    { label: "Reporting And Analytics", path: "/admin/report-analysis", icon: FaChartBar },
   ];
 
   const handleMenuClick = (label) => {
