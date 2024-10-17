@@ -33,7 +33,7 @@ app.use('/api/hospital', hospitalrots);
 app.use('/api/doctor', doctorRoutes);  
 app.use('/api/patients', patientRoutes); 
 app.use('/api/appointments', appointmentRouts); 
-app.use('/api/prescription', PrescriptionRouts); 
+app.use('/api/prescription',  PrescriptionRouts); 
 
 // Error handling for invalid routes
 app.use((req, res, next) => {

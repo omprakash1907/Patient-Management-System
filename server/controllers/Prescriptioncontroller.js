@@ -40,6 +40,7 @@ exports.CreatePrescription = async (req, res) => {
             insurancePlan,
             claimAmount,
             totalPrice // Add total price to the prescription
+            
         });
 
         await prescription.save();
