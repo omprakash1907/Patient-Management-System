@@ -145,7 +145,7 @@ const CommonSidebar = ({ role }) => {
         ))}
       </ul>
 
-      <div className="mb-5">
+      <div className="mb-5 p-0">
         <button
           onClick={handleLogout}
           className="flex items-center justify-start py-3 text-red-500 font-semibold bg-red-100 px-6 w-full"
