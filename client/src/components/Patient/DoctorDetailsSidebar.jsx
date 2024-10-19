@@ -5,6 +5,7 @@ import user from "../../assets/images/user.png";
 import { AiOutlineLeft } from "react-icons/ai";
 
 const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
+  console.log(doctor)
   return (
     <div
       className={`fixed inset-y-0 right-0 w-1/4 bg-white shadow-lg transform ${
@@ -13,11 +14,8 @@ const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
     >
       {/* Sidebar Header */}
       <div className="flex items-center justify-between p-4 ">
-        <AiOutlineLeft />
+        <AiOutlineLeft onClick={onClose}/>
         <h2 className="text-xl font-semibold"> Doctor Management</h2>
-        <button onClick={onClose} className="text-white">
-          <FaTimes />
-        </button>
       </div>
 
       {/* Sidebar Body */}
@@ -32,10 +30,10 @@ const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
             />
             <div>
               <h3 className="text-xl font-semibold text-white">
-                {doctor.doctor}
+                {doctor.doctorName}
               </h3>
               <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
-                {doctor.specialization}
+                {doctor.doctorSpecialty}
               </span>
             </div>
           </div>
@@ -53,29 +51,29 @@ const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
           <div className="grid grid-cols-2 gap-4">
             <p>
               <strong className="text-gray-500">Hospital Name:</strong>{" "}
-              <span className="block">{doctor.hospital}</span>
+              <span className="block">{doctor.hospitalName}</span>
             </p>
             <p>
               <strong className="text-gray-500">Doctor Qualification:</strong>{" "}
-              <span className="block">{doctor.qualification}</span>
+              <span className="block">{doctor.doctorQualification}</span>
             </p>
-            <p>
+            {/* <p>
               <strong className="text-gray-500">Break Time:</strong>{" "}
               <span className="block">{doctor.breakTime}</span>
             </p>
             <p>
               <strong className="text-gray-500">Working Time:</strong>{" "}
               <span className="block">{doctor.workingTime}</span>
-            </p>
+            </p> */}
             <p>
               <strong className="text-gray-500">Years Of Experience:</strong>{" "}
-              <span className="block">{doctor.experience}+</span>
+              <span className="block">{doctor.doctorExperience}+</span>
             </p>
             <p>
               <strong className="text-gray-500">
                 Emergency Contact Number:
               </strong>{" "}
-              <span className="block">{doctor.contactNumber}</span>
+              <span className="block">{doctor.contactNumber}9913138325</span>
             </p>
           </div>
 

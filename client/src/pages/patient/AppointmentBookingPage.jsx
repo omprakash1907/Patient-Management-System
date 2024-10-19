@@ -1,52 +1,98 @@
 import React, { useState, useEffect } from "react";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
-import { FaCalendarAlt, FaTrashAlt, FaRedoAlt, FaEye } from "react-icons/fa";
+import { FaCalendarAlt, FaTrashAlt, FaEye } from "react-icons/fa";
 import DoctorDetailsSidebar from "../../components/Patient/DoctorDetailsSidebar";
+import api from "../../api/api";
+import Swal from "sweetalert2";
 
 const AppointmentBookingPage = () => {
   const { updateBreadcrumb } = useBreadcrumb();
   const [activeTab, setActiveTab] = useState("Scheduled");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [appointments, setAppointments] = useState([]);
 
   useEffect(() => {
     updateBreadcrumb([
       { label: "Appointment Booking", path: "/patient/appointment-booking" },
     ]);
-  }, [updateBreadcrumb]);
+  }, []);
 
-  const appointments = [
-    {
-      doctor: "Dr. Nolan George",
-      specialization: "General Physician",
-      hospital: "Shambhu Hospital",
-      qualification: "MBBS",
-      experience: 10,
-      contactNumber: "995796557",
-      profileImage: "path-to-image",
-      description: "Specializes in general health issues.",
-      date: "2 Jan, 2022",
-      time: "10:20 AM",
-      issue: "Feeling Tired",
-      status: "Scheduled",
-    },
-    // Additional appointment objects...
-  ];
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await api.get("/appointments");
+        console.log("API Response:", response.data); // Log to check the response structure
+        setAppointments(response.data.data || []); // Set to an empty array if data is undefined
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
 
-  const filteredAppointments = appointments.filter(
-    (appointment) => appointment.status === activeTab
-  );
+    fetchAppointments();
+    console.log(appointments);
+  }, []);
 
-  const handleViewDetails = (doctor) => {
-    setSelectedDoctor(doctor);
+  const filteredAppointments = Array.isArray(appointments)
+    ? activeTab === "Scheduled"
+      ? appointments // Show all appointments if "Scheduled" is active
+      : appointments.filter((appointment) => appointment.status === activeTab)
+    : [];
+
+  const handleViewDetails = (appointment) => {
+    setSelectedDoctor(appointment);
     setIsSidebarVisible(true);
   };
 
+  const handleCancelAppointment = async (appointmentId) => {
+    console.log(appointmentId)
+    try {
+      // Confirm the action with the user
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, cancel it!",
+        cancelButtonText: "No, keep it",
+      });
+
+      if (result.isConfirmed) {
+        // Call the cancel appointment API
+        const response = await api.patch(`/appointments/cancel/${appointmentId}`);
+        console.log("Cancel response:", response.data);
+
+        // Update the local state to reflect the cancellation
+        setAppointments((prevAppointments) =>
+          prevAppointments.map((appointment) =>
+            appointment._id === appointmentId
+              ? { ...appointment, status: "Cancelled" }
+              : appointment
+          )
+        );
+
+        // Success message
+        Swal.fire({
+          icon: "success",
+          title: "Cancelled",
+          text: "Your appointment has been cancelled.",
+        });
+      }
+    } catch (error) {
+      console.error("Error cancelling appointment:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "There was an issue cancelling the appointment. Please try again.",
+      });
+    }
+  };
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg m-6 h-full">
+    <div className="bg-white p-6 rounded-xl m-6">
       {/* Tabs for Appointment Types */}
       <div className="flex space-x-4 border-b mb-4">
-        {["Scheduled", "Previous", "Canceled", "Pending"].map((tab) => (
+        {["Scheduled", "Previous", "Cancelled", "Pending"].map((tab) => (
           <button
             key={tab}
             className={`py-2 px-4 focus:outline-none font-medium ${
@@ -62,7 +108,7 @@ const AppointmentBookingPage = () => {
       </div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold">My Appointment</h2>
-        <button className="flex items-center space-x-2 bg-customBlue text-white px-4 py-2 rounded">
+        <button className="flex items-center space-x-2 bg-customBlue text-white px-4 py-2 rounded-lg">
           <FaCalendarAlt />
           <span>Book Appointment</span>
         </button>
@@ -70,15 +116,17 @@ const AppointmentBookingPage = () => {
 
       {/* Appointment List */}
       <div className="grid grid-cols-4 gap-4 overflow-y-auto custom-scroll">
-        {filteredAppointments.map((appointment, index) => (
+        {filteredAppointments.map((appointment) => (
           <div
-            key={index}
-            className="border rounded-lg shadow-md bg-white transition"
+            key={appointment._id}
+            className="border-gray-100 border rounded-xl bg-white transition"
           >
             <div className="flex justify-between items-center p-2 bg-gray-50 rounded-t-lg">
-              <h4 className="font-semibold ">{appointment.doctor}</h4>
+              <h4 className="font-semibold">
+                {appointment.doctorName || "Doctor Name"}
+              </h4>
               <div
-                className="text-customBlue p-2 rounded-lg bg-white shadow cursor-pointer"
+                className="text-customBlue p-2 rounded-lg bg-white cursor-pointer"
                 onClick={() => handleViewDetails(appointment)}
               >
                 <FaEye />
@@ -89,40 +137,30 @@ const AppointmentBookingPage = () => {
               <p className="flex justify-between items-center text-yellow-500 pb-2">
                 <span className="font-semibold text-gray-500">
                   Appointment Type
-                </span>{" "}
-                {appointment.type}
+                </span>
+                {appointment.appointmentType}
               </p>
               <p className="flex justify-between items-center pb-2">
                 <span className="font-semibold text-gray-500">
                   Hospital Name
-                </span>{" "}
-                {appointment.hospital}
+                </span>
+                {appointment.hospitalName}
               </p>
               <p className="flex justify-between items-center pb-2">
                 <span className="font-semibold text-gray-500">
                   Appointment Date
-                </span>{" "}
-                {appointment.date}
+                </span>
+                {new Date(appointment.appointmentDate).toLocaleDateString()}
               </p>
-              {appointment.status === "Canceled" && (
-                <p className="flex justify-between items-center pb-2">
-                  <span className="font-semibold text-gray-500">
-                    Cancel Date
-                  </span>{" "}
-                  {appointment.cancelDate}
-                </p>
-              )}
               <p className="flex justify-between items-center pb-2">
                 <span className="font-semibold text-gray-500">
                   Appointment Time
-                </span>{" "}
-                {appointment.time}
+                </span>
+                {appointment.appointmentTime}
               </p>
               <p className="flex justify-between items-center pb-2">
-                <span className="font-semibold text-gray-500">
-                  Patient Issue
-                </span>{" "}
-                {appointment.issue}
+                <span className="font-semibold text-gray-500">Patient Issue</span>
+                {appointment.diseaseName || "Not specified"}
               </p>
             </div>
 
@@ -130,12 +168,15 @@ const AppointmentBookingPage = () => {
             <div className="flex justify-between space-x-2 p-4 bg-white rounded-b-lg">
               {activeTab === "Scheduled" || activeTab === "Pending" ? (
                 <>
-                  <button className="flex items-center justify-center space-x-1 border-2 px-3 py-2 rounded-md text-gray-600 w-1/2 ">
+                  <button
+                    className="flex items-center justify-center space-x-1 border px-3 py-2 rounded-lg font-medium text-gray-600 w-1/2"
+                    onClick={() => handleCancelAppointment(appointment.id)}
+                  >
                     <FaTrashAlt />
                     <span>Cancel</span>
                   </button>
-                  <button className="flex items-center justify-center space-x-1 bg-customBlue px-3 py-2 rounded-md text-white w-1/2 ">
-                    <FaRedoAlt />
+                  <button className="flex items-center justify-center space-x-1 hover:bg-customBlue bg-gray-100 transition-all px-3 py-2 rounded-lg font-medium hover:text-white w-1/2">
+                    <FaCalendarAlt />
                     <span>Reschedule</span>
                   </button>
                 </>

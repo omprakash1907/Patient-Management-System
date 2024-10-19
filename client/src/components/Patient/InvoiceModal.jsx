@@ -1,179 +1,181 @@
 import React from "react";
 import { FaTimes } from "react-icons/fa";
-import bg from "../../assets/images/Maskgroup.png";
-import logo from "../../assets/images/logo.png";
+import mask from "../../assets/images/invoice-mask.png";
+import logo from "../../assets/images/logo.png";   // Hospital logo
 
 const InvoiceModal = ({ bill, onClose, onPay, showPayButton }) => {
+  const items = bill?.items || []; // Ensure items are defined
+
   return (
-    <div
-      className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
-      style={{
-        backgroundImage: `url(${bg})`, // Use the imported image variable
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
-      <div className="bg-white p-6 rounded-md shadow-lg w-2/5 relative z-10">
+    <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+      <div className="bg-white p-6 rounded-2xl max-w-3xl relative z-10 overflow-y-auto max-h-screen">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-red-500 hover:text-red-700"
+          className="absolute top-4 right-4 text-red-500 hover:text-red-700 cursor-pointer z-10"
         >
           <FaTimes size={20} />
         </button>
-        
+
+        {/* Logo and Header */}
+        <div>
+          <img src={mask} alt="mask" className=" absolute top-0 left-0" />
+          <div className="flex justify-between ">
+            <div className="py-4">
+              <img
+                src={logo}
+                alt="Hospital Logo"
+                className="w-48 mx-auto mb-4"
+              />
+            </div>
+            <h1 className="text-4xl font-semibold text-customBlue pr-8">
+              Invoice
+            </h1>
+          </div>
+        </div>
+
         {/* Hospital and Patient Details */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center">
-            <img src={logo} alt="logo" />
-            <h2 className="text-6xl font-semibold text-customBlue">Invoice</h2>
+        <div className="flex justify-between mb-3">
+          <div className="w-2/3">
+            <h2 className="font-semibold text-lg text-gray-700">
+              Dr. {bill?.doctor?.firstName} {bill?.doctor?.lastName}
+            </h2>
+            <p className="text-sm text-gray-600">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin
+              mattis turpis nulla, finibus sodales est porta eu.
+            </p>
           </div>
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="font-bold text-2xl">Dr. {bill.doctor}</p>
-              <p className="text-gray-600">{bill.hospital}</p>
-            </div>
+          <div>
             <div>
               <p>
-                <strong>Bill No:</strong> 1234
+                <strong>Bill No:</strong> {bill?.billNumber}
               </p>
               <p>
-                <strong>Bill Date:</strong> 20 June, 2020
+                <strong>Bill Date:</strong> {new Date(bill?.billDate).toLocaleDateString()}
               </p>
               <p>
-                <strong>Bill Time:</strong> 10:45 PM
+                <strong>Bill Time:</strong> {bill?.billTime}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Patient Information */}
-        <div className="grid grid-cols-2 mb-4 bg-gray-50 rounded-lg p-4">
-          {/* First Column */}
-          <div>
-            <p className="py-1">
-              <strong>Name:</strong> Miracle Kenter
+        {/* Doctor and Patient Information */}
+        <div className="bg-gray-100 p-4 rounded-lg mb-6">
+          <div className="grid grid-cols-2 gap-4">
+            <p>
+              <strong>Name : </strong> {bill?.patient?.firstName} {bill?.patient?.lastName}
             </p>
-            <p className="py-1">
-              <strong>Disease Name:</strong> Stomach Pain
-            </p>
-            <p className="py-1">
-              <strong>Gender:</strong> Male
+            <p>
+              <strong>Disease Name : </strong> {bill?.diseaseName}
             </p>
           </div>
-
-          {/* Second Column */}
-          <div>
-            <p className="py-1">
-              <strong>Phone Number:</strong> 995796557
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <p>
+              <strong>Gender : </strong> {bill?.patient?.gender}
             </p>
-            <p className="py-1">
-              <strong>Age:</strong> 36 Years
-            </p>
-            <p className="py-1 text-customBlue">
-              <strong className="text-black">Payment Type:</strong> Insurance
+            <p>
+              <strong>Phone Number : </strong> {bill?.patient?.phoneNumber}
             </p>
           </div>
-
-          {/* Last Row Spanning Full Width */}
-          <div className="col-span-2">
-            <p className="py-1">
-              <strong>Address:</strong> B-105 Virat Bungalows, Jamnagar
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <p>
+              <strong>Age : </strong> {bill?.patient?.age} Years
+            </p>
+            <p>
+              <strong>Payment Type : </strong>
+              <span className="text-blue-500">{bill?.paymentType}</span>
+            </p>
+          </div>
+          <div className="mt-2">
+            <p>
+              <strong>Address : </strong> {bill?.patient?.address}
             </p>
           </div>
         </div>
 
-        {/* Itemized List of Services */}
-        <div className="rounded-md mb-4">
-          <table className="w-full text-left rounded-t-lg">
-            <thead>
-              <tr className="border-b-2 border-gray-200 bg-customBlue">
-                <th className="p-2">Description</th>
-                <th className="p-2">Amount</th>
-                <th className="p-2">Qty</th>
-                <th className="p-2">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b border-gray-200">
-                <td className="p-2">Neuromuscular blockers</td>
-                <td>₹ 12,000.00</td>
-                <td>2</td>
-                <td>₹ 24,000.00</td>
-              </tr>
-              <tr className="border-b border-gray-200">
-                <td className="p-2">Neuromuscular blockers</td>
-                <td>₹ 800.00</td>
-                <td>2</td>
-                <td>₹ 1,600.00</td>
-              </tr>
-              <tr className="border-b border-gray-200">
-                <td className="p-2">Methotrexate (HDMTX)</td>
-                <td>₹ 1,000.00</td>
-                <td>2</td>
-                <td>₹ 2,000.00</td>
-              </tr>
+        {/* Invoice Table */}
+        <table className="w-full bg-white rounded-lg mb-6 overflow-hidden">
+          <thead className="bg-customBlue text-white text-left rounded-t-lg">
+            <tr>
+              <th className="px-4 py-2">Description</th>
+              <th className="px-4 py-2">Amount</th>
+              <th className="px-4 py-2">Qty</th>
+              <th className="px-4 py-2">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.length > 0 ? (
+              items.map((item, index) => (
+                <tr key={index} className="border-b">
+                  <td className="px-4 py-2">{item.description}</td>
+                  <td className="px-4 py-2">₹ {item.amount}</td>
+                  <td className="px-4 py-2">{item.qty}</td>
+                  <td className="px-4 py-2">₹ {item.total}</td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td className="p-2">Hydroxyurea for sickle cell</td>
-                <td>₹ 20.00</td>
-                <td>2</td>
-                <td>₹ 40.00</td>
+                <td colSpan="4" className="text-center p-4 text-gray-500">
+                  No items found.
+                </td>
               </tr>
-            </tbody>
-          </table>
-        </div>
+            )}
+          </tbody>
+        </table>
 
-        {/* Payment Summary */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        {/* Summary with Conditional Insurance Section */}
+        <div className="flex justify-between">
+          {bill?.insuranceDetails?.insuranceCompany ? (
+            <div className="mb-4 text-left">
+              <p>
+                <strong>Insurance Company : </strong> {bill.insuranceDetails.insuranceCompany}
+              </p>
+              <p>
+                <strong>Insurance Plan : </strong> {bill.insuranceDetails.insurancePlan}
+              </p>
+              <p>
+                <strong>Claim Amount : </strong> ₹ {bill.insuranceDetails.claimAmount}
+              </p>
+              <p>
+                <strong>Claimed Amount : </strong> ₹ {bill.insuranceDetails.claimedAmount}
+              </p>
+            </div>
+          ) : null}
           <div>
             <p>
-              <strong>Insurance Company:</strong> HDFC Life Insurance
+              <strong>Amount : </strong> ₹ {bill?.amount}
             </p>
             <p>
-              <strong>Insurance Plan:</strong> Health Insurance
+              <strong>Discount 5% : </strong> ₹ {bill?.discount}
             </p>
             <p>
-              <strong>Claim Amount:</strong> ₹ 2,000.00
+              <strong>Tax : </strong> ₹ {bill?.tax}
             </p>
-            <p>
-              <strong>Claimed Amount:</strong> ₹ 2,500.00
-            </p>
-          </div>
-          <div className="text-right">
-            <p>
-              <strong>Amount:</strong> ₹ 25,840.00
-            </p>
-            <p>
-              <strong>Discount 5%:</strong> -₹ 1,292.00
-            </p>
-            <p>
-              <strong>Tax:</strong> ₹ 120.00
-            </p>
-            <p className="text-xl font-semibold">
-              <strong>Total:</strong> ₹ 24,668.00
+            <p className="font-semibold text-customBlue">
+              <strong>Total Amount : </strong> ₹ {bill?.totalAmount}
             </p>
           </div>
         </div>
 
-        {/* Footer with Pay Now Button */}
-        {showPayButton && (
-          <div className="text-center">
-            <button
-              className="bg-customBlue text-white py-2 px-6 rounded"
-              onClick={onPay}
-            >
-              Pay Now
-            </button>
-          </div>
-        )}
+        {/* Pay Button */}
+        {
+          showPayButton && (
+            <div className="text-center mt-4">
+              <button className="bg-customBlue text-white py-2 px-6 rounded" onClick={onPay}>
+                Pay Now
+              </button>
+            </div>
+          )
+        }
 
-        {/* Contact Info */}
-        <div className="text-center mt-6">
-          <p>Call: +90854 22354 | Email: hello@gmail.com</p>
+        {/* Footer */}
+        <div className="text-center text-sm bg-customBlue p-2 rounded-b-lg text-white flex justify-between mt-4">
+          <p>Call: +90854 22354</p>
+          <p>Email: Hello@Gmail.com</p>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

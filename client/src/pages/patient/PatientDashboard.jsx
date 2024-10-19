@@ -16,12 +16,12 @@ const PatientDashboard = () => {
   }, [updateBreadcrumb]);
 
   return (
-    <div className="flex flex-col h-screen p-6"> 
+    <div className="flex flex-col p-6"> 
       {/* Patient Details at the top */}
       <PatientDetails />
 
       {/* Grid Layout for Medical History, Prescriptions, Test Reports, and Patient Status */}
-      <div className="grid grid-cols-8 gap-4 flex-1"> 
+      <div className="grid grid-cols-8 gap-4 "> 
         {/* Left Column: Medical History */}
         <div className="col-span-5 flex flex-col">
           <MedicalHistory className="flex-1 h-full" />
