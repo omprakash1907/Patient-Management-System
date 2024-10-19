@@ -48,7 +48,7 @@ const Login = () => {
           confirmButtonText: 'OK',
         });
         // Redirect to the dashboard
-        navigate("/admin/edit-profile");
+        navigate("/patient/patient-dashboard");
       } catch (error) {
         Swal.fire({
           icon: 'error',
@@ -130,7 +130,7 @@ const Login = () => {
 
             <div className="flex justify-between items-center mb-4">
               <div>
-                <input type="checkbox" id="remember" className="mr-2" />
+                <input type="checkbox" id="remember" className="mr-2" required/>
                 <label htmlFor="remember" className="text-sm">
                   Remember me
                 </label>

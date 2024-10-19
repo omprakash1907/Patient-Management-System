@@ -1,19 +1,16 @@
-// src/routes/PatientRoutes.jsx
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import PatientLayout from "../components/Patient/PatientLayout";
 import PatientDashboard from "../pages/Patient/PatientDashboard";
 import PatientEditProfile from "../pages/Patient/PatientEditProfile";
 import PrescriptionPage from "../pages/Patient/PrescriptionPage";
 import TestReportPage from "../pages/Patient/TestReportPage";
-import MedicalHistory from "../components/Patient/MedicalHistory";
 import MedicalHistoryPage from "../pages/Patient/MedicalHistoryPage";
 import AppointmentBookingPage from "../pages/Patient/AppointmentBookingPage";
 import PrescriptionAccessPage from "../pages/Patient/PrescriptionAccessPage";
 import ChatPage from "../pages/Patient/ChatPage";
 import BillPage from "../pages/Patient/BillPage";
 import TeleAccess from "../pages/Patient/TeleAccess";
+import CommonLayout from "../components/Layout/CommonLayout";
 
 const PatientRoutes = () => {
   return (
@@ -21,81 +18,81 @@ const PatientRoutes = () => {
       <Route
         path="/patient-dashboard"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <PatientDashboard />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/edit-patient-profile"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <PatientEditProfile />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/prescriptions"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <PrescriptionPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/test-report"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <TestReportPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/medical-history"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <MedicalHistoryPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/appointment-booking"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <AppointmentBookingPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/prescription-access"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <PrescriptionAccessPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/tele-access"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <TeleAccess />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/chat"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <ChatPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/bills"
         element={
-          <PatientLayout>
+          <CommonLayout role="patient">
             <BillPage />
-          </PatientLayout>
+          </CommonLayout>
         }
       />
     </Routes>

@@ -37,7 +37,7 @@ const TestReports = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-4 rounded-2xl">
       {/* Heading and View All link */}
       <div className="flex justify-between items-center mb-4 border-b-2 pb-2">
         <h2 className="text-xl font-semibold">Test Reports</h2>

@@ -1,8 +1,5 @@
-// src/routes/AdminRoutes.jsx
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import AdminLayout from "../components/Admin/AdminLayout";
 import CreateDoctor from "../pages/admin/CreateDoctor";
 import AdminProfile from "../components/Admin/AdminProfile";
 import AdminEditProfile from "../components/Profile/AdminEditProfile";
@@ -17,6 +14,8 @@ import InsuranceClaims from "../pages/admin/InsuranceClaims";
 import PaymentProcess from "../pages/admin/PaymentProcess";
 import EditBill from "../pages/admin/EditBill";
 import ReportingAndAnalytics from "../pages/admin/ReportingAndAnalytics";
+import AdminDashbord from "../pages/admin/AdminDashbord";
+import CommonLayout from "../components/Layout/CommonLayout";
 
 const AdminRoutes = () => {
   return (
@@ -24,116 +23,123 @@ const AdminRoutes = () => {
       <Route
         path="/create-doctor"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <CreateDoctor />
-          </AdminLayout>
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <CommonLayout role="admin">
+            <AdminDashbord />
+          </CommonLayout>
         }
       />
       <Route
         path="/profile-setting/*"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <AdminProfile />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/edit-profile"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <AdminEditProfile />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/doctor-management"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <DoctorManagement />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/doctor-management/add-doctor"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <AddDoctor />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/doctor-management/edit/:id"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <EditDoctor />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/patient-management"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <PatientManagement />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/monitor-billing"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <MonitorBilling />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/invoice/:billId/:patientName"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <Invoice />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/create-bill"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <CreateBill />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
-        path="/insaurance-claims"
+        path="/insurance-claims"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <InsuranceClaims />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/payment-process"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <PaymentProcess />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/payment-process/edit-bill/:id"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <EditBill />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
       <Route
         path="/report-analysis"
         element={
-          <AdminLayout>
+          <CommonLayout role="admin">
             <ReportingAndAnalytics />
-          </AdminLayout>
+          </CommonLayout>
         }
       />
-      {/* Add more admin-specific routes here */}
     </Routes>
   );
 };

@@ -40,7 +40,7 @@ const MedicalHistory = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg mt-6">
+    <div className="bg-white p-4 rounded-2xl  mt-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Medical History</h2>
        <a
