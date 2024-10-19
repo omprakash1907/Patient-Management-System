@@ -4,6 +4,6 @@ const prescriptionController = require('../controllers/Prescriptioncontroller');
 const { doctorAuth } = require('../middlewares/authmiddleware');
 
 // Add prescription - Doctor token required
-router.post('/CreatePrescription/:patientId', doctorAuth, prescriptionController.CreatePrescription);
+router.post('/CreatePrescription/:patientId', doctorAuth , prescriptionController.CreatePrescription);
 
 module.exports = router;
