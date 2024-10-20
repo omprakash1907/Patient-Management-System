@@ -17,7 +17,7 @@ import PatientRoutes from "./routes/PatientRoutes";
 import { BreadcrumbProvider } from "./context/BreadcrumbContext";
 
 const App = () => {
-  const userRole = "patient"; // This should be dynamically set based on the logged-in user
+  const userRole = "doctor"; // This should be dynamically set based on the logged-in user
 
   return (
     <BreadcrumbProvider>

@@ -1,121 +1,39 @@
 import React from "react";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import PrivacyPolicy from "../components/Profile/PrivacyPolicy";
+import TermsAndConditions from "../components/Profile/TermsAndConditions";
+import ChangePassword from "../components/Profile/ChangePassword";
+import ProfileView from "../components/Profile/ProfileView";
+import ProfileSidebar from "../components/Profile/ProfileSidebar";
+import ProfileHeader from "../components/ProfileHeader";
+
 
 const Profile = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex">
-      <div className="flex-1">
-        <div className="p-6 bg-gray-100 h-screen">
-          <div className="bg-white shadow-lg rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">Profile</h2>
-              <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
-                Edit Profile
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  value="Lincoln"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  value="Philips"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value="lincoln@gmail.com"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  Phone Number
-                </label>
-                <input
-                  type="text"
-                  value="99130 53322"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  Hospital Name
-                </label>
-                <input
-                  type="text"
-                  value="Silver Peak Medical Center"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  Gender
-                </label>
-                <input
-                  type="text"
-                  value="Male"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  City
-                </label>
-                <input
-                  type="text"
-                  value="Ahmedabad"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  State
-                </label>
-                <input
-                  type="text"
-                  value="Gujarat"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-600">
-                  Country
-                </label>
-                <input
-                  type="text"
-                  value="India"
-                  className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none"
-                  readOnly
-                />
-              </div>
-            </div>
-          </div>
+    <div className="relative bg-gray-100  py-16 px-36  h-full">
+      {/* Header */}
+      <ProfileHeader title="Profile Setting" />
+
+      {/* Main Container */}
+      <div className="flex flex-col md:flex-row w-full mt-8  mx-auto bg-white shadow-lg rounded-lg overflow-hidden z-10 relative">
+        {/* Sidebar */}
+        <div className="w-full md:w-1/4 bg-white p-6 border-r">
+          <ProfileSidebar />
+        </div>
+
+        {/* Content Area */}
+        <div className="w-full md:w-3/4">
+          <Routes>
+            <Route
+              path="/"
+              element={<ProfileView onEdit={() => navigate("/edit-profile")} />}
+            />
+            <Route path="change-password" element={<ChangePassword />} />
+            <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          </Routes>
         </div>
       </div>
     </div>

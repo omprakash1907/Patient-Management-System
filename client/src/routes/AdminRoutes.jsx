@@ -1,8 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import CreateDoctor from "../pages/admin/CreateDoctor";
-import AdminProfile from "../components/Admin/AdminProfile";
-import AdminEditProfile from "../components/Profile/AdminEditProfile";
 import DoctorManagement from "../pages/admin/DoctorManagement";
 import EditDoctor from "../pages/admin/EditDoctor";
 import AddDoctor from "../pages/admin/AddDoctor";
@@ -16,6 +14,8 @@ import EditBill from "../pages/admin/EditBill";
 import ReportingAndAnalytics from "../pages/admin/ReportingAndAnalytics";
 import AdminDashbord from "../pages/admin/AdminDashbord";
 import CommonLayout from "../components/Layout/CommonLayout";
+import Profile from "../pages/Profile";
+import EditProfile from "../components/Profile/EditProfile";
 
 const AdminRoutes = () => {
   return (
@@ -40,7 +40,7 @@ const AdminRoutes = () => {
         path="/profile-setting/*"
         element={
           <CommonLayout role="admin">
-            <AdminProfile />
+            <Profile />
           </CommonLayout>
         }
       />
@@ -48,7 +48,7 @@ const AdminRoutes = () => {
         path="/edit-profile"
         element={
           <CommonLayout role="admin">
-            <AdminEditProfile />
+            <EditProfile />
           </CommonLayout>
         }
       />

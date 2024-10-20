@@ -2,18 +2,27 @@
 
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import DoctorLayout from "../components/Doctor/DoctorLayout";
-import DoctorProfile from "../pages/doctor/DoctorProfile";
+import CommonLayout from "../components/Layout/CommonLayout";
+import Profile from "../pages/Profile";
+import EditProfile from "../components/Profile/EditProfile";
 
 const DoctorRoutes = () => {
   return (
     <Routes>
       <Route
-        path="/doctor-profile"
+        path="/profile-setting/*"
         element={
-          <DoctorLayout>
-            <DoctorProfile />
-          </DoctorLayout>
+          <CommonLayout role="doctor">
+            <Profile />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/edit-profile"
+        element={
+          <CommonLayout role="doctor">
+            <EditProfile />
+          </CommonLayout>
         }
       />
       {/* Add more doctor-specific routes here */}

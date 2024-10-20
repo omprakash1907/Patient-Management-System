@@ -48,7 +48,7 @@ const Login = () => {
           confirmButtonText: 'OK',
         });
         // Redirect to the dashboard
-        navigate("/patient/patient-dashboard");
+        navigate("/doctor/profile-setting");
       } catch (error) {
         Swal.fire({
           icon: 'error',
