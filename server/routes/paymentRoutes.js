@@ -1,8 +1,12 @@
+// routes/paymentRoutes.js
 const express = require('express');
 const router = express.Router();
-const paymentController = require('../controllers/paymentController'); // Ensure the path is correct
+const paymentController = require('../controllers/paymentController');
 
 // Pay route
-router.post('/pay/:prescriptionId', paymentController.initiatePayment); // Make sure `initiatePayment` is defined in `paymentController`
+router.post('/pay/:billId', paymentController.initiatePayment); 
+
+// Capture payment route
+router.post('/capture', paymentController.capturePayment);
 
 module.exports = router;
