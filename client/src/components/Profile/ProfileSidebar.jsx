@@ -7,12 +7,17 @@ import api from "../../api/api";
 const ProfileSidebar = () => {
   const [activeTab, setActiveTab] = useState("Dashboard");
   const [profileImage, setProfileImage] = useState("");
+  const [profileData, setProfileData] = useState({
+    firstName: "",
+    lastName: "",
+});
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         const response = await api.get("/users/profile");
         setProfileImage(response.data.profileImage);
+        setProfileData(response.data);
       } catch (error) {
         console.error("Failed to fetch profile data", error);
       }
@@ -28,7 +33,7 @@ const ProfileSidebar = () => {
         alt="Profile"
         className="w-48 h-48 mx-auto rounded-full mb-4"
       />
-      <h3 className="text-xl font-semibold">Lincoln Philips</h3>
+      <h3 className="text-xl font-semibold">{profileData.firstName} {profileData.lastName}</h3>
 
       {/* Navigation Links */}
       <div className="mt-8 space-y-3">

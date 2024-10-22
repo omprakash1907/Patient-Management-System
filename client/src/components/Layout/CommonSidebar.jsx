@@ -17,6 +17,7 @@ import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 const CommonSidebar = ({ role }) => {
   const [activeTab, setActiveTab] = useState('');
   const [submenuOpen, setSubmenuOpen] = useState(false);
+  const [prescriptionSubmenuOpen, setPrescriptionSubmenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const adminMenu = [
@@ -45,10 +46,18 @@ const CommonSidebar = ({ role }) => {
   ];
 
   const doctorMenu = [
-    { label: 'Dashboard', path: '/doctor/dashboard', icon: FaChartBar },
-    { label: 'Appointments', path: '/doctor/appointments', icon: FaCalendarAlt },
-    { label: 'Patient Records', path: '/doctor/patient-records', icon: FaFileMedical },
+    { label: 'Appointement Management', path: '/doctor/appointments', icon: FaChartBar },
+    { label: 'Patient Records Access', path: '/doctor/patient-records', icon: FaFileMedical },
+    {
+      label: 'Prescription Tools',
+      icon: FaPills,
+      submenu: [
+        { label: 'Create', path: '/doctor/create-prescription' },
+        { label: 'Manage', path: '/doctor/manage-prescription' },
+      ],
+    },
     { label: 'Teleconsultation', path: '/doctor/teleconsultation', icon: FaCommentDots },
+    { label: 'Chat', path: '/doctor/chat', icon: FaCommentDots },
   ];
 
   // Function to get menu items based on role
@@ -72,6 +81,12 @@ const CommonSidebar = ({ role }) => {
     } else {
       setSubmenuOpen(false);
     }
+
+    if (label === 'Prescription Tools') {
+      setPrescriptionSubmenuOpen(!prescriptionSubmenuOpen);
+    } else {
+      setPrescriptionSubmenuOpen(false);
+    }
   };
 
   // Handle logout
@@ -87,7 +102,7 @@ const CommonSidebar = ({ role }) => {
       </div>
 
       <ul className="flex-grow">
-        {getMenuItems().map((item, index) => (
+        {getMenuItems().map((item) => (
           <li className="py-2" key={item.label}>
             <NavLink
               to={item.path}
@@ -105,7 +120,7 @@ const CommonSidebar = ({ role }) => {
 
               {item.submenu && (
                 <span className="ml-auto text-gray-500 z-20">
-                  {submenuOpen && activeTab === 'Billing And Payments' ? (
+                  {activeTab === item.label && (submenuOpen || prescriptionSubmenuOpen) ? (
                     <FiChevronUp />
                   ) : (
                     <FiChevronDown />
@@ -127,7 +142,7 @@ const CommonSidebar = ({ role }) => {
               ></div>
             </NavLink>
 
-            {item.submenu && submenuOpen && activeTab === 'Billing And Payments' && (
+            {item.submenu && activeTab === item.label && (submenuOpen || prescriptionSubmenuOpen) && (
               <ul className="ml-12">
                 {item.submenu.map((subItem) => (
                   <li key={subItem.label} className="py-2">

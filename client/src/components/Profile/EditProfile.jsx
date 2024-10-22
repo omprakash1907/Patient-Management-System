@@ -12,8 +12,6 @@ const EditProfile = ({ onCancel }) => {
 
     useEffect(() => {
         const userRole = localStorage.getItem("role");
-
-        console.log(userRole)
         // Navigate dynamically based on the user's role
         if (userRole === "admin") {
             updateBreadcrumb([
@@ -43,14 +41,12 @@ const EditProfile = ({ onCancel }) => {
         city: "",
         state: "",
         country: "",
-        profileImage: "",
+        profileImage: null,
     });
 
     const [hospitals, setHospitals] = useState([]);
     const fileInputRef = React.useRef();
     const navigate = useNavigate();
-
-    console.log(formData)
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -65,6 +61,7 @@ const EditProfile = ({ onCancel }) => {
                             hospitalName: doctorDetails?.hospital?.hospitalName || "",
                         },
                     },
+                    profileImage: response.data.profileImage ? response.data.profileImage : null
                 });
             } catch (error) {
                 console.error("Failed to fetch profile data", error);
@@ -116,7 +113,7 @@ const EditProfile = ({ onCancel }) => {
         if (file) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                profileImage: file,
+                profileImage: file, // Store the file object for FormData
             }));
         }
     };
@@ -134,14 +131,12 @@ const EditProfile = ({ onCancel }) => {
             }
         });
 
+        // Add profile image only if it's a File object (i.e., user selected a new file)
         if (formData.profileImage instanceof File) {
             formDataObj.append("profileImage", formData.profileImage);
         }
 
         const userRole = localStorage.getItem("role");
-
-
-
 
         try {
             await api.patch("/users/profile", formDataObj, {
@@ -173,10 +168,10 @@ const EditProfile = ({ onCancel }) => {
         <div className="relative bg-gray-100 py-16 px-36 pb-48 h-full">
             <ProfileHeader title="Profile Setting" />
             <div className="flex flex-col md:flex-row w-full mt-8 mx-auto bg-white shadow-lg rounded-lg overflow-hidden z-10 relative h-full">
-                <div className="w-1/4 p-12 text-center border-r">
+            <div className="w-1/4 p-12 text-center border-r">
                     <img
                         src={
-                            formData.profileImage
+                            formData.profileImage && !(formData.profileImage instanceof File)
                                 ? `http://localhost:8000/${formData.profileImage}`
                                 : userImage
                         }

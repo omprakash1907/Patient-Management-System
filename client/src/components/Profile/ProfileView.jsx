@@ -10,7 +10,6 @@ const ProfileView = ({ onEdit }) => {
     useEffect(() => {
         const userRole = localStorage.getItem("role");
 
-        console.log(userRole)
         // Navigate dynamically based on the user's role
         if (userRole === "admin") {
             updateBreadcrumb([

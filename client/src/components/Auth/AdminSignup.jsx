@@ -24,7 +24,7 @@ const AdminSignup = () => {
     country: "",
     state: "",
     city: "",
-    hospital: "",
+    hospital: "",  // This will now store the hospital ID
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -49,23 +49,23 @@ const AdminSignup = () => {
       try {
         const response = await axios.get("http://localhost:8000/api/hospitals");
 
-        // Check if response has a data property that holds the array
         if (response.data && Array.isArray(response.data.data)) {
-          setHospitals(response.data.data); // Access the array inside 'data' property
-          console.log("Hospitals fetched successfully", response.data.data); // Log the hospitals array
+          setHospitals(response.data.data);
         } else {
           throw new Error("Data is not an array");
         }
+
+        console.log(hospitals)
 
         setLoading(false);
       } catch (error) {
         setHospitalError("Failed to load hospitals.");
         setLoading(false);
-        console.error(error); // Log the error
+        console.error(error);
       }
     };
     fetchHospitals();
-  }, [hospitals]);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -76,49 +76,50 @@ const AdminSignup = () => {
   };
 
   const [hospitalError, setHospitalError] = useState(null);
-  // Handle input changes for the hospital form
+
   const handleHospitalChange = (e) => {
     const { name, value } = e.target;
     setHospitalData({ ...hospitalData, [name]: value });
   };
-  // Create Hospital API Call
+
   const handleCreateHospital = async (e) => {
     e.preventDefault();
+    
+    // Validate required fields before making the request
+    if (!hospitalData.name || !hospitalData.address || !hospitalData.country || !hospitalData.state || !hospitalData.city || !hospitalData.zipCode) {
+      setHospitalError("All fields are required to create a hospital.");
+      return;
+    }
+  
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/hospitals",
-        hospitalData
-      );
-  
+      const response = await axios.post("http://localhost:8000/api/hospitals", hospitalData);
       if (response.status === 201) {
-        alert("Hospital created successfully!");
-  
-        // Explicitly access the newly created hospital from response.data
-        const newHospital = response.data;
-  
+        Swal.fire("Hospital created successfully!");
+        const newHospital = response.data.hospital;
+        
         // Update hospitals state with the new hospital
         setHospitals((prevHospitals) => [...prevHospitals, newHospital]);
   
-        // Set the hospital name in formData to reflect immediately
+        // Set the hospital in formData using the newly created hospital ID
         setFormData((prevFormData) => ({
           ...prevFormData,
-          hospital: newHospital.name,
+          hospital: newHospital._id,  // Use hospital ID from the response
         }));
   
-        // Close modal
         closeModal();
       }
     } catch (error) {
+      // Log full error object to console for more details
+      console.error("Failed to create hospital:", error.response ? error.response.data : error);
       setHospitalError("Failed to create hospital. Please try again.");
-      console.error(error);
     }
   };
-  
   
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
   const closeModal = () => {
     setShowCreateModal(false);
     setHospitalData({
@@ -130,6 +131,7 @@ const AdminSignup = () => {
       zipCode: "",
     });
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -170,7 +172,7 @@ const AdminSignup = () => {
         country: formData.country,
         state: formData.state,
         city: formData.city,
-        hospital: formData.hospital,
+        hospital: formData.hospital,  // Send the hospital ID here
       };
 
       try {
@@ -188,11 +190,12 @@ const AdminSignup = () => {
           title: 'Registration failed',
           text: 'Something went wrong!',
           confirmButtonText: 'Try Again',
-        });        
+        });
         console.error("Registration failed:", authError);
       }
     }
   };
+
 
   return (
     <div className="min-h-screen flex">
@@ -209,9 +212,8 @@ const AdminSignup = () => {
                   type="text"
                   id="firstName"
                   name="firstName"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
-                    errors.firstName ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${errors.firstName ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter First Name"
                   value={formData.firstName || ""}
                   onChange={handleChange}
@@ -233,9 +235,8 @@ const AdminSignup = () => {
                   type="text"
                   id="lastName"
                   name="lastName"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
-                    errors.lastName ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${errors.lastName ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter Last Name"
                   value={formData.lastName || ""}
                   onChange={handleChange}
@@ -258,9 +259,8 @@ const AdminSignup = () => {
                   type="email"
                   id="email"
                   name="email"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
-                    errors.email ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${errors.email ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter Email Address"
                   value={formData.email || ""}
                   onChange={handleChange}
@@ -280,9 +280,8 @@ const AdminSignup = () => {
                   type="text"
                   id="phoneNumber"
                   name="phoneNumber"
-                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
-                    errors.phoneNumber ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${errors.phoneNumber ? "border-red-500" : "border-gray-300"
+                    }`}
                   placeholder="Enter Phone Number"
                   value={formData.phoneNumber || ""}
                   onChange={handleChange}
@@ -306,9 +305,8 @@ const AdminSignup = () => {
                 <select
                   id="country"
                   name="country"
-                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${
-                    errors.country ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${errors.country ? "border-red-500" : "border-gray-300"
+                    }`}
                   value={formData.country}
                   onChange={handleChange}
                 >
@@ -330,9 +328,8 @@ const AdminSignup = () => {
                 <select
                   id="state"
                   name="state"
-                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${
-                    errors.state ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${errors.state ? "border-red-500" : "border-gray-300"
+                    }`}
                   value={formData.state}
                   onChange={handleChange}
                 >
@@ -354,9 +351,8 @@ const AdminSignup = () => {
                 <select
                   id="city"
                   name="city"
-                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${
-                    errors.city ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0 ${errors.city ? "border-red-500" : "border-gray-300"
+                    }`}
                   value={formData.city}
                   onChange={handleChange}
                 >
@@ -393,7 +389,6 @@ const AdminSignup = () => {
 
               {isDropdownOpen && (
                 <div className="absolute px-4 py-2 w-full mt-2 bg-white border border-gray-300 rounded-md max-h-48 overflow-y-auto custom-scroll shadow-md z-10">
-                  {/* Show loading state if the hospitals are being fetched */}
                   {loading ? (
                     <div className="px-4 py-2 text-sm text-gray-700">
                       Loading...
@@ -408,7 +403,7 @@ const AdminSignup = () => {
                       <div
                         key={index}
                         onClick={() => {
-                          setFormData({ ...formData, hospital: hospital.name });
+                          setFormData({ ...formData, hospital: hospital._id });  // Save the hospital ID
                           setIsDropdownOpen(false);
                         }}
                         className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer font-normal rounded-lg"
@@ -417,15 +412,16 @@ const AdminSignup = () => {
                       </div>
                     ))
                   )}
-                    <button
-                      onClick={() => setShowCreateModal(true)}
-                      className="w-full bg-gray-100 text-black py-2 rounded-md font-medium hover:bg-customBlue hover:text-white transition mt-2"
-                    >
-                      Create Hospital
-                    </button>
+                  <button
+                    onClick={() => setShowCreateModal(true)}
+                    className="w-full bg-gray-100 text-black py-2 rounded-md font-medium hover:bg-customBlue hover:text-white transition mt-2"
+                  >
+                    Create Hospital
+                  </button>
                 </div>
               )}
             </div>
+
 
             {/* Modal Popup for Creating New Hospital */}
             {showCreateModal && (
@@ -461,6 +457,7 @@ const AdminSignup = () => {
                         required
                       />
                     </div>
+
                     <div className="grid grid-cols-2 gap-4 mb-4 ">
                       <div className="relative">
                         <label className="absolute left-3 -top-2.5 px-1 bg-white text-sm font-medium text-gray-500 transition-all duration-200  peer-focus:-top-2.5 peer-focus:left-3">
@@ -550,9 +547,8 @@ const AdminSignup = () => {
                 type={showPassword ? "password" : "text"}
                 id="password"
                 name="password"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
-                  errors.password ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
                 placeholder="Enter Password"
                 value={formData.password || ""}
                 onChange={handleChange}
@@ -582,9 +578,8 @@ const AdminSignup = () => {
                 type={showPassword ? "password" : "text"}
                 id="confirmPassword"
                 name="confirmPassword"
-                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${
-                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0  ${errors.confirmPassword ? "border-red-500" : "border-gray-300"
+                  }`}
                 placeholder="Confirm Password"
                 value={formData.confirmPassword || ""}
                 onChange={handleChange}
