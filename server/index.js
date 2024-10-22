@@ -9,12 +9,11 @@ const patientRoutes = require('./routes/patientrouts');
 const appointmentRouts=require('./routes/appointmentRoutes')
 const PrescriptionRouts=require('./routes/PrescriptionRouts')
 const paymentRoutes = require('./routes/paymentRoutes');
+const billRoutes = require('./routes/billRoutes');
 
 
 dotenv.config(); // Load environment variables
 
-console.log('PayPal Client ID:', process.env.PAYPAL_CLIENT_ID);
-console.log('PayPal Client Secret:', process.env.PAYPAL_CLIENT_SECRET);
 
 connectDB(); // Connect to the database
 
@@ -39,6 +38,7 @@ app.use('/api/patients', patientRoutes);
 app.use('/api/appointments', appointmentRouts); 
 app.use('/api/prescription',  PrescriptionRouts); 
 app.use('/api/payment', paymentRoutes);
+app.use('/api', billRoutes);
 
 // Error handling for invalid routes
 app.use((req, res, next) => {

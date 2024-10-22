@@ -17,6 +17,7 @@ const prescriptionSchema = new mongoose.Schema({
     medicines: [medicineSchema],  // Array of medicines
     doctorId: { type: mongoose.Schema.Types.ObjectId, ref: 'Doctor', required: true },
     totalPrice: { type: Number, required: true },  // Add totalPrice field
+    status: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' }, 
 }, { timestamps: true });
 
 const Prescription = mongoose.model('Prescription', prescriptionSchema);

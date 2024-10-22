@@ -1,12 +1,16 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Patient = require('../models/patient');
-const Doctor=require('../models/doctor')
+const Doctor=require('../models/doctor');
+
+
 const protect = async (req, res, next) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
+      console.log(2);
+      
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -35,6 +39,8 @@ const admin = (req, res, next) => {
 
 const authenticatePatient = async (req, res, next) => {
   try {
+    console.log(1);
+    
       // Check if the Authorization header is present
       const authHeader = req.header('Authorization');
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
