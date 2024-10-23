@@ -15,7 +15,7 @@
     <div id="chatMessages"></div>
 
     <script>
-        const socket = io('http://localhost:4000'); // Connect to your server
+        const socket = io('http://localhost:4000');
 
         socket.on('connect', () => {
             console.log('Connected to the server:', socket.id);

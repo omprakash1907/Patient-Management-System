@@ -68,7 +68,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const cloudinary = require('cloudinary').v2;
 const connectDB = require('./config/db');
-const Chat = require('./models/Chat'); // Import the Chat model
+const Chat = require('./models/Chat'); 
 
 // Import route files
 const authRoutes = require('./routes/authrouts');
