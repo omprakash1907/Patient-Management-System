@@ -78,6 +78,7 @@ exports.capturePayment = async (req, res) => {
 
         if (!bill) {
             return res.status(404).json({ error: 'Bill not found' });
+            
         }
 
         res.status(200).json({

@@ -8,7 +8,7 @@ const paymentSchema = new mongoose.Schema({
     currency: { type: String, default: 'USD' },
     status: { type: String, required: true }, // e.g., 'COMPLETED', 'FAILED'
     paymentDate: { type: Date, default: Date.now },
-}, { timestamps: true });
+},{ timestamps: true });
 
 const Payment = mongoose.model('Payment', paymentSchema);
 
