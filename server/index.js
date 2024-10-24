@@ -70,6 +70,7 @@ const cloudinary = require('cloudinary').v2;
 const connectDB = require('./config/db');
 const Chat = require('./models/Chat'); 
 
+
 // Import route files
 const authRoutes = require('./routes/authrouts');
 const hospitalRouts = require('./routes/hospitalrouts');
