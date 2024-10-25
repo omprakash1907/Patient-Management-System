@@ -1,6 +1,5 @@
-// src/App.js
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
@@ -17,7 +16,12 @@ import PatientRoutes from "./routes/PatientRoutes";
 import { BreadcrumbProvider } from "./context/BreadcrumbContext";
 
 const App = () => {
-  const userRole = "admin"; // This should be dynamically set based on the logged-in user
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    const role = localStorage.getItem("role"); 
+    setUserRole(role);
+  }, []);
 
   return (
     <BreadcrumbProvider>

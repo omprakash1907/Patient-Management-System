@@ -46,7 +46,7 @@ const CommonSidebar = ({ role }) => {
   ];
 
   const doctorMenu = [
-    { label: 'Appointement Management', path: '/doctor/appointments', icon: FaChartBar },
+    { label: 'Appointement Management', path: '/doctor/appointment-management', icon: FaChartBar },
     { label: 'Patient Records Access', path: '/doctor/patient-records', icon: FaFileMedical },
     {
       label: 'Prescription Tools',

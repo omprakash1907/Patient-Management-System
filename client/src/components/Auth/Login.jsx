@@ -41,14 +41,26 @@ const Login = () => {
         // Store token and role in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+
         Swal.fire({
           icon: 'success',
           title: 'Login successfully!!',
           text: 'Your operation was successful.',
           confirmButtonText: 'OK',
         });
-        // Redirect to the dashboard
-        navigate("/doctor/profile-setting");
+
+        // Navigate based on the user role
+        if (role === 'doctor') {
+          navigate("/doctor/profile-setting");
+        } else if (role === 'admin') {
+          navigate("/admin/profile-setting");
+        } else if (role === 'patient') {
+          navigate("/patient/patient-dashboard");
+        } else {
+          // Fallback in case role is unrecognized
+          navigate("/dashboard");
+        }
+        
       } catch (error) {
         Swal.fire({
           icon: 'error',
@@ -130,7 +142,7 @@ const Login = () => {
 
             <div className="flex justify-between items-center mb-4">
               <div>
-                <input type="checkbox" id="remember" className="mr-2" required/>
+                <input type="checkbox" id="remember" className="mr-2" required />
                 <label htmlFor="remember" className="text-sm">
                   Remember me
                 </label>
