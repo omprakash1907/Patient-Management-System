@@ -55,8 +55,6 @@ const AdminSignup = () => {
           throw new Error("Data is not an array");
         }
 
-        console.log(hospitals)
-
         setLoading(false);
       } catch (error) {
         setHospitalError("Failed to load hospitals.");

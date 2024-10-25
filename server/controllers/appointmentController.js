@@ -99,7 +99,8 @@ exports.bookAppointment = async (req, res) => {
             country,
             state,
             city,
-            hospital
+            hospital,
+            roomID,// Add the generated room ID to the appointment
         });
 
         await appointment.save();

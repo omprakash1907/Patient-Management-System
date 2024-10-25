@@ -39,6 +39,10 @@ const appointmentSchema = new mongoose.Schema({
     state: String,
     city: String,
     hospital: String,
+    roomID: {
+        type: String, // Room ID for video call
+        required: true,
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);
