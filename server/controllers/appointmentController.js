@@ -50,13 +50,13 @@ exports.bookAppointment = async (req, res) => {
         }
 
         // Log doctor timings for debugging
-        console.log('Doctor workingTime:', doctor.workingTime);
-        console.log('Doctor checkupTime:', doctor.checkupTime);
-        console.log('Doctor breakTime:', doctor.breakTime);
+        // console.log('Doctor workingTime:', doctor.workingTime);
+        // console.log('Doctor checkupTime:', doctor.checkupTime);
+        // console.log('Doctor breakTime:', doctor.breakTime);
 
         // Convert workingTime to 24-hour format
         const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
-        console.log('Formatted workingTime:', workingTimeFormatted);
+        // console.log('Formatted workingTime:', workingTimeFormatted);
 
         // Ensure doctor timings exist and are valid
         if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
@@ -104,6 +104,90 @@ exports.bookAppointment = async (req, res) => {
 
         await appointment.save();
         res.status(201).json({ message: 'Appointment booked successfully', appointment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.updateAppointment = async (req, res) => {
+// console.log(req.params);
+
+    try {
+        const appointmentId = req.params.id;
+        const { newAppointmentDate, newAppointmentTime } = req.body;
+
+        // Find the existing appointment
+        const appointment = await Appointment.findById(appointmentId);
+        console.log("appointment"+appointment);
+        
+        if (!appointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        const doctorId = appointment.doctorId;
+        console.log("Doctor ID:", doctorId);
+        // Find the doctor
+        const doctor = await Doctor.findById(doctorId);
+        console.log(doctor);
+        
+        if (!doctor) {
+            return res.status(404).json({ message: 'Doctor not found' });
+        }
+
+        // Convert doctor's working time to 24-hour format
+        const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
+        const workingStart = timeToMinutes(workingTimeFormatted.split('-')[0]);
+        const workingEnd = timeToMinutes(workingTimeFormatted.split('-')[1]);
+
+        // Ensure doctor timings exist and are valid
+        if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
+            return res.status(400).json({ message: 'Doctor availability times are not set properly' });
+        }
+
+        const newAppointmentMinutes = timeToMinutes(newAppointmentTime);
+
+        // Check if the new time falls within the doctor's working hours
+        if (newAppointmentMinutes < workingStart || newAppointmentMinutes > workingEnd) {
+            return res.status(400).json({ message: 'Doctor is not available at this time' });
+        }
+
+        // Check for overlapping appointments
+        const overlappingAppointment = await Appointment.findOne({
+            doctorId,
+            appointmentDate: newAppointmentDate,
+            appointmentTime: newAppointmentTime,
+            _id: { $ne: appointmentId } // Exclude the current appointment
+        });
+
+        if (overlappingAppointment) {
+            return res.status(400).json({ message: 'Another appointment exists at this time' });
+        }
+
+        // Update the appointment date and time
+        appointment.appointmentDate = newAppointmentDate;
+        appointment.appointmentTime = newAppointmentTime;
+
+        await appointment.save();
+
+        res.status(200).json({ message: 'Appointment updated successfully', appointment });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+exports.deleteAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.params;
+
+        // Find and delete the appointment
+        const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId);
+        if (!deletedAppointment) {
+            return res.status(404).json({ message: 'Appointment not found' });
+        }
+
+        res.status(200).json({ message: 'Appointment deleted successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error', error: error.message });
