@@ -1,6 +1,6 @@
 const Appointment = require('../models/Appointment');
 const Doctor = require('../models/doctor');
-
+const Patient = require('../models/patient')
 // Helper function to convert "HH:MM" or "HH:MM AM/PM" to minutes
 const timeToMinutes = (time) => {
     if (!time) {
@@ -32,16 +32,105 @@ const convertHumanReadableTime = (timeRange) => {
 };
 
 // Book appointment function
+// exports.bookAppointment = async (req, res) => {
+//     console.log(req.body);
+
+//     try {
+//         const { 
+//             appointmentDate, appointmentTime, appointmentType, patientIssue, 
+//             diseaseName, country, state, city, hospital, doctorId 
+//         } = req.body;
+
+//         const patientId = req.user._id; // From authenticatePatient middleware (JWT token)
+//         const patientName=req.user.name; 
+//         // Find the doctor
+//         const {doctor} = await Doctor.findById(doctorId);
+//         if (!doctor) {
+//             return res.status(404).json({ message: 'Doctor not found' });
+//         }
+
+//         // Log doctor timings for debugging
+//         // console.log('Doctor workingTime:', doctor.workingTime);
+//         // console.log('Doctor checkupTime:', doctor.checkupTime);
+//         // console.log('Doctor breakTime:', doctor.breakTime);
+
+//         // Convert workingTime to 24-hour format
+//         const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
+//         // console.log('Formatted workingTime:', workingTimeFormatted);
+
+//         // Ensure doctor timings exist and are valid
+//         if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
+//             return res.status(400).json({ message: 'Doctor availability times are not set properly' });
+//         }
+
+//         const appointmentHourMinutes = timeToMinutes(appointmentTime);
+
+//         // Extract doctor timings
+//         const workingStart = timeToMinutes(workingTimeFormatted.split('-')[0]);
+//         const workingEnd = timeToMinutes(workingTimeFormatted.split('-')[1]);
+
+//         // Check if appointment falls within doctor's working hours
+//         if (appointmentHourMinutes < workingStart || appointmentHourMinutes > workingEnd) {
+//             return res.status(400).json({ message: 'Doctor is not available at this time' });
+//         }
+
+//         // For simplicity, let's assume checkupTime and breakTime are being standardized elsewhere in your logic
+//         // Check if another appointment exists for the same doctor at the same date and time
+//         const existingAppointment = await Appointment.findOne({
+//             doctorId,
+//             appointmentDate,
+//             appointmentTime
+//         });
+
+//         if (existingAppointment) {
+//             return res.status(400).json({ message: 'The doctor already has an appointment at this time' });
+//         }
+
+//         // Create appointment
+//         const appointment = new Appointment({
+//             patientId,
+//             doctorId,
+//             patientName,
+//             appointmentDate,
+//             appointmentTime,
+//             appointmentType,
+//             patientIssue,
+//             diseaseName,
+//             country,
+//             state,
+//             city,
+//             hospital
+//         });
+
+//         await appointment.save();
+//         res.status(201).json({ message: 'Appointment booked successfully', appointment });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'Server error', error: error.message });
+//     }
+// };
+
+
 exports.bookAppointment = async (req, res) => {
-    console.log(req.body);
+    console.log(req.user);
 
     try {
-        const { 
-            patientName, appointmentDate, appointmentTime, appointmentType, patientIssue, 
-            diseaseName, country, state, city, hospital, doctorId 
+        const {
+            appointmentDate,
+            appointmentTime,
+            appointmentType,
+            patientIssue,
+            diseaseName,
+            country,
+            state,
+            city,
+            hospital,
+            doctorId
         } = req.body;
 
-        const patientId = req.user._id; // From authenticatePatient middleware (JWT token)
+        const patientId = req.user._id; // Get the patient's ID from req.user
+        const patientName = req.user.firstName + req.user.lastName; // Fetch patient's name from req.user
+        // console.log(req.user.firstName+req.user.lastName);
 
         // Find the doctor
         const doctor = await Doctor.findById(doctorId);
@@ -49,33 +138,24 @@ exports.bookAppointment = async (req, res) => {
             return res.status(404).json({ message: 'Doctor not found' });
         }
 
-        // Log doctor timings for debugging
-        // console.log('Doctor workingTime:', doctor.workingTime);
-        // console.log('Doctor checkupTime:', doctor.checkupTime);
-        // console.log('Doctor breakTime:', doctor.breakTime);
-
-        // Convert workingTime to 24-hour format
-        const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
-        // console.log('Formatted workingTime:', workingTimeFormatted);
-
-        // Ensure doctor timings exist and are valid
+        // Ensure doctor's working time is valid
         if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
             return res.status(400).json({ message: 'Doctor availability times are not set properly' });
         }
 
-        const appointmentHourMinutes = timeToMinutes(appointmentTime);
+        // Convert workingTime to 24-hour format
+        const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
 
-        // Extract doctor timings
+        // Check if the appointment falls within the doctor's working hours
+        const appointmentHourMinutes = timeToMinutes(appointmentTime);
         const workingStart = timeToMinutes(workingTimeFormatted.split('-')[0]);
         const workingEnd = timeToMinutes(workingTimeFormatted.split('-')[1]);
 
-        // Check if appointment falls within doctor's working hours
         if (appointmentHourMinutes < workingStart || appointmentHourMinutes > workingEnd) {
             return res.status(400).json({ message: 'Doctor is not available at this time' });
         }
 
-        // For simplicity, let's assume checkupTime and breakTime are being standardized elsewhere in your logic
-        // Check if another appointment exists for the same doctor at the same date and time
+        // Check for existing appointments at the same time
         const existingAppointment = await Appointment.findOne({
             doctorId,
             appointmentDate,
@@ -90,7 +170,7 @@ exports.bookAppointment = async (req, res) => {
         const appointment = new Appointment({
             patientId,
             doctorId,
-            patientName,
+            patientName, // Use name from req.user
             appointmentDate,
             appointmentTime,
             appointmentType,
@@ -102,7 +182,21 @@ exports.bookAppointment = async (req, res) => {
             hospital
         });
 
+        // Save the appointment
         await appointment.save();
+
+        // Update the patient's record to include the new appointment ID
+        await Patient.findByIdAndUpdate(
+            patientId,
+            { $push: { appointments: appointment._id } }, // Push the appointment ID to the appointments array
+            { new: true } // Return the updated patient document
+        );
+        await Doctor.findByIdAndUpdate(
+            doctorId,
+            { $addToSet: { patients: patientId } }, // Use $addToSet to avoid duplicate patient entries
+            { new: true } // Return the updated doctor document
+        );
+
         res.status(201).json({ message: 'Appointment booked successfully', appointment });
     } catch (error) {
         console.error(error);
@@ -110,8 +204,9 @@ exports.bookAppointment = async (req, res) => {
     }
 };
 
+
 exports.updateAppointment = async (req, res) => {
-// console.log(req.params);
+    // console.log(req.params);
 
     try {
         const appointmentId = req.params.id;
@@ -119,8 +214,8 @@ exports.updateAppointment = async (req, res) => {
 
         // Find the existing appointment
         const appointment = await Appointment.findById(appointmentId);
-        console.log("appointment"+appointment);
-        
+        console.log("appointment" + appointment);
+
         if (!appointment) {
             return res.status(404).json({ message: 'Appointment not found' });
         }
@@ -130,7 +225,7 @@ exports.updateAppointment = async (req, res) => {
         // Find the doctor
         const doctor = await Doctor.findById(doctorId);
         console.log(doctor);
-        
+
         if (!doctor) {
             return res.status(404).json({ message: 'Doctor not found' });
         }
