@@ -22,6 +22,11 @@ const doctorSchema = new mongoose.Schema({
   address: { type: String, required: true },
   description: { type: String },
   onlineConsultationRate: { type: Number, required: true },
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Patient',
+    required: true
+  },
   otp: { type: String },
   otpExpires: { type: Date },
   doctorImage: {

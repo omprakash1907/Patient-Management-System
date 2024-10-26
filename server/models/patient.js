@@ -43,6 +43,7 @@ const patientSchema = new mongoose.Schema({
     patientImage: { type: String, required: true },
     publicId: { type: String, required: true },
     password: { type: String, required: true },
+    appointments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' }],
     otp: { type: String },
     otpExpires: { type: Date }
 });

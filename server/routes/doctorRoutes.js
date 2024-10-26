@@ -1,9 +1,10 @@
 const express = require('express');
-const { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor,loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword} = require('../controllers/doctorcontroller');
+const { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor,loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword,reshedualappointment} = require('../controllers/doctorcontroller');
 const { protect, admin } = require('../middlewares/authmiddleware');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { login } = require('../controllers/authcontroller');
+const { doctorAuth } = require('../middlewares/authmiddleware');
 const cloudinary = require('cloudinary').v2;
 
 // Cloudinary config
@@ -40,6 +41,9 @@ router.put('/update/:id', protect, admin, upload.fields([
 ]), updateDoctor); // Update doctor (only admin, with image upload)
 router.delete('/delete/:id', protect, admin, deleteDoctor);
 router.post('/login', loginDoctor);
+
+router.put('/reshedualappointment/:id', reshedualappointment);
+
 
    // forgate-password //
 router.post('/doctorforgot-password', doctorsendOtp); // Route to send OTP
