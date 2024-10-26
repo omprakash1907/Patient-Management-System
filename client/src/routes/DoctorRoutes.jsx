@@ -8,6 +8,9 @@ import EditProfile from "../components/Profile/EditProfile";
 import AppointmentManagement from "../pages/doctor/AppointmentManagement";
 import AppointmentTimeSlot from "../pages/doctor/AppointmentTimeSlot";
 import EditAppointment from "../pages/doctor/EditAppointment";
+import PatientRecordAccess from "../pages/doctor/PatientRecordAccess";
+import CreatePrescriptionPage from "../pages/doctor/CreatePrescriptionPage";
+import CreatePrescriptionForm from "../pages/doctor/CreatePrescriptionForm";
 
 const DoctorRoutes = () => {
   return (
@@ -49,6 +52,30 @@ const DoctorRoutes = () => {
         element={
           <CommonLayout role="doctor">
             <EditAppointment />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/patient-record-access"
+        element={
+          <CommonLayout role="doctor">
+            <PatientRecordAccess />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/create-prescription"
+        element={
+          <CommonLayout role="doctor">
+            <CreatePrescriptionPage />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/create-prescription/:id"
+        element={
+          <CommonLayout role="doctor">
+            <CreatePrescriptionForm />
           </CommonLayout>
         }
       />

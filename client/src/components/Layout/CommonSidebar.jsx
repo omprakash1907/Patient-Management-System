@@ -47,7 +47,7 @@ const CommonSidebar = ({ role }) => {
 
   const doctorMenu = [
     { label: 'Appointement Management', path: '/doctor/appointment-management', icon: FaChartBar },
-    { label: 'Patient Records Access', path: '/doctor/patient-records', icon: FaFileMedical },
+    { label: 'Patient Records Access', path: '/doctor/patient-record-access', icon: FaFileMedical },
     {
       label: 'Prescription Tools',
       icon: FaPills,
@@ -136,7 +136,7 @@ const CommonSidebar = ({ role }) => {
               ></div>
 
               <div
-                className={`absolute top-0 right-0 h-10 bg-customBlue ${
+                className={`absolute top-50 right-0 h-10 bg-customBlue ${
                   activeTab === item.label ? 'w-2 opacity-100' : 'group-hover:w-2 opacity-0'
                 } rounded-tl-lg rounded-bl-lg transition-all duration-300 clip-button z-10`}
               ></div>
