@@ -40,7 +40,7 @@ const appointmentSchema = new mongoose.Schema({
     hospital: String,
     roomID: {
         type: String, // Room ID for video call
-        required: true,
+        required: false,
     },
 }, { timestamps: true });
 

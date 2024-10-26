@@ -4,6 +4,41 @@ const Doctor = require('../models/doctor');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const Appointment = require('../models/Appointment');
+const Patient = require('../models/patient')
+
+
+
+const timeToMinutes = (time) => {
+  if (!time) {
+      throw new Error('Invalid time value');
+  }
+  const [hours, minutes] = time.split(':').map(Number);
+  return hours * 60 + minutes;
+};
+
+// Helper function to convert "9 AM - 5 PM" format to "09:00-17:00"
+const convertHumanReadableTime = (timeRange) => {
+  const [startTime, endTime] = timeRange.split('-').map(t => t.trim());
+
+  const convertTo24HourFormat = (time) => {
+      const [timePart, period] = time.split(' ');
+      let [hours, minutes] = timePart.split(':').map(Number);
+
+      if (!minutes) minutes = 0; // Handle case where minutes are not provided (e.g., "9 AM")
+      if (period === 'PM' && hours < 12) hours += 12;
+      if (period === 'AM' && hours === 12) hours = 0; // Handle midnight case
+
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  };
+
+  const start24Hour = convertTo24HourFormat(startTime);
+  const end24Hour = convertTo24HourFormat(endTime);
+
+  return `${start24Hour}-${end24Hour}`;
+};
+
+
 
 // Register a new doctor
 const registerDoctor = async (req, res) => {
@@ -284,41 +319,72 @@ const loginDoctor = async (req, res) => {
   }
 };
 
-// const doctorchangePassword = async (req, res) => {
-//   const { currentPassword, newPassword, confirmPassword } = req.body;
+const reshedualappointment= async(req,res)=>{
+  console.log(req.body);  
+  try {
+    const appointmentId = req.params.id;
+    const { newAppointmentDate, newAppointmentTime } = req.body;
 
-//   try {
-//     // Find the logged-in doctor by ID (from the `protect` middleware)
-//     const doctor = await Doctor.findById(req.user.id);
+    // Find the existing appointment
+    const appointment = await Appointment.findById(appointmentId);
+    // console.log("appointment" + appointment);
 
-//     if (!doctor) {
-//       return res.status(404).json({ error: 'Doctor not found' });
-//     }
+    if (!appointment) {
+        return res.status(404).json({ message: 'Appointment not found' });
+    }
 
-//     // Check if current password matches
-//     const isMatch = await doctor.matchPassword(currentPassword);
-//     if (!isMatch) {
-//       return res.status(400).json({ error: 'Current password is incorrect' });
-//     }
+    const doctorId = appointment.doctorId;
+    // console.log("Doctor ID:", doctorId);
+    // Find the doctor
+    const doctor = await Doctor.findById(doctorId);
+    // console.log(doctor);
 
-//     // Check if newPassword matches confirmPassword
-//     if (newPassword !== confirmPassword) {
-//       return res.status(400).json({ error: 'New password and confirmation do not match' });
-//     }
+    if (!doctor) {
+        return res.status(404).json({ message: 'Doctor not found' });
+    }
 
-//     // Hash the new password
-//     const salt = await bcrypt.genSalt(10);
-//     doctor.password = await bcrypt.hash(newPassword, salt);
+    // Convert doctor's working time to 24-hour format
+    const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
+    const workingStart = timeToMinutes(workingTimeFormatted.split('-')[0]);
+    const workingEnd = timeToMinutes(workingTimeFormatted.split('-')[1]);
 
-//     // Save the updated doctor
-//     await doctor.save();
+    // Ensure doctor timings exist and are valid
+    if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
+        return res.status(400).json({ message: 'Doctor availability times are not set properly' });
+    }
 
-//     res.status(200).json({ message: 'Password updated successfully' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Error changing password' });
-//   }
-// };
+    const newAppointmentMinutes = timeToMinutes(newAppointmentTime);
+
+    // Check if the new time falls within the doctor's working hours
+    if (newAppointmentMinutes < workingStart || newAppointmentMinutes > workingEnd) {
+        return res.status(400).json({ message: 'Doctor is not available at this time' });
+    }
+
+    // Check for overlapping appointments
+    const overlappingAppointment = await Appointment.findOne({
+        doctorId,
+        appointmentDate: newAppointmentDate,
+        appointmentTime: newAppointmentTime,
+        _id: { $ne: appointmentId } // Exclude the current appointment
+    });
+
+    if (overlappingAppointment) {
+        return res.status(400).json({ message: 'Another appointment exists at this time' });
+    }
+
+    // Update the appointment date and time
+    appointment.appointmentDate = newAppointmentDate;
+    appointment.appointmentTime = newAppointmentTime;
+
+    await appointment.save();
+
+    res.status(200).json({ message: 'Appointment updated successfully', appointment });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+}
+  
+};
 
 
 
@@ -361,4 +427,4 @@ const doctorchangePassword = async (req, res) => {
 
 
 
-module.exports = { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor, loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword };
+module.exports = { registerDoctor, viewAllDoctors, deleteDoctor, updateDoctor, loginDoctor,doctorsendOtp,doctorverifyOtp,doctorresetPassword,doctorchangePassword,reshedualappointment };
