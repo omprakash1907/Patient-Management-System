@@ -11,6 +11,8 @@ import EditAppointment from "../pages/doctor/EditAppointment";
 import PatientRecordAccess from "../pages/doctor/PatientRecordAccess";
 import CreatePrescriptionPage from "../pages/doctor/CreatePrescriptionPage";
 import CreatePrescriptionForm from "../pages/doctor/CreatePrescriptionForm";
+import PrescriptionView from "../pages/doctor/PrescriptionView";
+import ManagePrescription from "../pages/doctor/ManagePrescription";
 
 const DoctorRoutes = () => {
   return (
@@ -76,6 +78,22 @@ const DoctorRoutes = () => {
         element={
           <CommonLayout role="doctor">
             <CreatePrescriptionForm />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/prescription-view/:id"
+        element={
+          <CommonLayout role="doctor">
+            <PrescriptionView />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/manage-prescription"
+        element={
+          <CommonLayout role="doctor">
+            <ManagePrescription />
           </CommonLayout>
         }
       />

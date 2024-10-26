@@ -4,6 +4,7 @@ import RightBanner from "../commonComponent/RightBanner";
 import api from "../../api/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import countryData from '../../country-json/countries+states+cities.json';  // Assuming it's in the `countryjson` folder
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -26,6 +27,8 @@ const Signup = () => {
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(true);
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [filteredCities, setFilteredCities] = useState([]);
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -38,6 +41,30 @@ const Signup = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  // Handle country change to populate states
+  const handleCountryChange = (e) => {
+    const selectedCountry = e.target.value;
+    setFormData({ ...formData, country: selectedCountry, state: "", city: "" });
+
+    const country = countryData.find((item) => item.name === selectedCountry);
+    if (country) {
+      setFilteredStates(country.states || []);
+      setFilteredCities([]); // Reset cities when a new country is selected
+    }
+  };
+
+  // Handle state change to populate cities
+  const handleStateChange = (e) => {
+    const selectedState = e.target.value;
+    setFormData({ ...formData, state: selectedState, city: "" });
+
+    const state = filteredStates.find((item) => item.name === selectedState);
+    if (state) {
+      setFilteredCities(state.cities || []);
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -98,7 +125,7 @@ const Signup = () => {
           title: 'Registration failed',
           text: 'Something went wrong!',
           confirmButtonText: 'Try Again',
-        }); 
+        });
         if (error.response && error.response.data.message) {
           setErrors({ apiError: error.response.data.message });
         } else {
@@ -305,7 +332,13 @@ const Signup = () => {
                 >
                   <option value="">Select Group</option>
                   <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
                   <option value="O+">O+</option>
+                  <option value="O-">O-</option>
                 </select>
                 <label
                   htmlFor="bloodGroup"
@@ -366,17 +399,21 @@ const Signup = () => {
 
             {/* Country, State, City */}
             <div className="grid grid-cols-3 gap-4 ">
+              {/* Country */}
               <div className="relative mb-4">
                 <select
                   id="country"
                   name="country"
                   className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0`}
                   value={formData.country}
-                  onChange={handleChange}
+                  onChange={handleCountryChange}
                 >
                   <option value="">Select Country</option>
-                  <option value="India">India</option>
-                  <option value="USA">USA</option>
+                  {countryData.map((country) => (
+                    <option key={country.id} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
                 </select>
                 <label
                   htmlFor="country"
@@ -388,17 +425,22 @@ const Signup = () => {
                   <p className="text-red-500 text-sm mt-1">{errors.country}</p>
                 )}
               </div>
+
+              {/* State */}
               <div className="relative mb-4">
                 <select
                   id="state"
                   name="state"
                   className={`peer w-full px-4 py-2 border border-gray-300 text-sm font-normal text-gray-500 rounded-md focus:outline-none focus:ring-0`}
                   value={formData.state}
-                  onChange={handleChange}
+                  onChange={handleStateChange}
                 >
                   <option value="">Select State</option>
-                  <option value="Gujarat">Gujarat</option>
-                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  {filteredStates.map((state) => (
+                    <option key={state.id} value={state.name}>
+                      {state.name}
+                    </option>
+                  ))}
                 </select>
                 <label
                   htmlFor="state"
@@ -410,6 +452,8 @@ const Signup = () => {
                   <p className="text-red-500 text-sm mt-1">{errors.state}</p>
                 )}
               </div>
+
+              {/* City */}
               <div className="relative mb-4">
                 <select
                   id="city"
@@ -419,8 +463,11 @@ const Signup = () => {
                   onChange={handleChange}
                 >
                   <option value="">Select City</option>
-                  <option value="Surat">Surat</option>
-                  <option value="Banaras">Banaras</option>
+                  {filteredCities.map((city) => (
+                    <option key={city.id} value={city.name}>
+                      {city.name}
+                    </option>
+                  ))}
                 </select>
                 <label
                   htmlFor="city"

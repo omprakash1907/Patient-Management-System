@@ -20,7 +20,7 @@ const CreatePrescription = ({ id, patientid, prescriptionId, name, age, gender, 
                     )}
                     <div className='bg-white p-1 rounded-lg'>
                         <FaEye
-                            onClick={() => navigate(`/doctor/prescription-view/${id}`)}
+                            onClick={() => navigate(`/doctor/prescription-view/${patientid}`)}
                             className="text-gray-400 cursor-pointer text-xl" />
                     </div>
                 </div>

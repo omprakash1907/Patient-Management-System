@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import RightBanner from "../commonComponent/RightBanner";
@@ -13,6 +13,25 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(true);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Check if the user is already logged in on component mount
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+    if (token && role) {
+      // Redirect based on the stored role
+      if (role === "doctor") {
+        navigate("/doctor/profile-setting");
+      } else if (role === "admin") {
+        navigate("/admin/profile-setting");
+      } else if (role === "patient") {
+        navigate("/patient/patient-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [navigate]);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -20,7 +39,6 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset errors before validation
     let validationErrors = {};
     setErrors({});
 
@@ -35,10 +53,8 @@ const Login = () => {
       setErrors(validationErrors);
     } else {
       try {
-        // Call login function from AuthContext
         const { token, role } = await loginUser({ email, password });
 
-        // Store token and role in localStorage
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
 
@@ -49,7 +65,6 @@ const Login = () => {
           confirmButtonText: 'OK',
         });
 
-        // Navigate based on the user role
         if (role === 'doctor') {
           navigate("/doctor/profile-setting");
         } else if (role === 'admin') {
@@ -57,7 +72,6 @@ const Login = () => {
         } else if (role === 'patient') {
           navigate("/patient/patient-dashboard");
         } else {
-          // Fallback in case role is unrecognized
           navigate("/dashboard");
         }
         
@@ -107,7 +121,7 @@ const Login = () => {
             {/* Password Input */}
             <div className="relative mb-4">
               <input
-                type={showPassword ? "password" : "text"} // Conditionally set the type
+                type={showPassword ? "password" : "text"}
                 id="password"
                 name="password"
                 className={`peer w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0 ${
@@ -126,8 +140,6 @@ const Login = () => {
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">{errors.password}</p>
               )}
-
-              {/* Add the icon */}
               <div
                 className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
                 onClick={togglePasswordVisibility}
