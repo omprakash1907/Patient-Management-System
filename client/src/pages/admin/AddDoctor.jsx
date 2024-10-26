@@ -3,40 +3,44 @@ import { AiOutlineCamera, AiOutlineClockCircle } from "react-icons/ai";
 import { FiUpload } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import api from "../../api/api";
+import countryData from "../../country-json/countries+states+cities.json"; 
 
 const AddDoctor = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    qualification: "", 
+    qualification: "",
     specialtyType: "",
-    checkupTime: "", 
+    checkupTime: "",
     phoneNumber: "",
     country: "",
     zipCode: "",
     onlineConsultationRate: "",
     gender: "",
-    workType: "", 
+    workType: "",
     state: "",
     city: "",
-    address: "", 
+    address: "",
     description: "",
     experience: "",
-    workingTime: "", 
-    breakTime: "", 
+    workingTime: "",
+    breakTime: "",
     age: "",
-    email: "", 
+    email: "",
     hospitalName: "",
     hospitalAddress: "",
-    emergencyContactNumber: "", 
-    websiteLink: "", 
-    password: "", 
+    emergencyContactNumber: "",
+    websiteLink: "",
+    password: "",
   });
 
   const navigate = useNavigate();
-
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [signature, setSignature] = useState(null);
+  const [showHospitalFields, setShowHospitalFields] = useState(false);
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [filteredCities, setFilteredCities] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,6 +48,24 @@ const AddDoctor = () => {
       ...formData,
       [name]: value,
     });
+
+    // Show/hide hospital fields based on Work Type
+    if (name === "workType") {
+      setShowHospitalFields(value === "Online" || value === "Both");
+    }
+
+    // Handle country change and populate states
+    if (name === "country") {
+      const selectedCountry = countryData.find((country) => country.name === value);
+      setFilteredStates(selectedCountry ? selectedCountry.states : []);
+      setFilteredCities([]); // Reset cities when country changes
+    }
+
+    // Handle state change and populate cities
+    if (name === "state") {
+      const selectedState = filteredStates.find((state) => state.name === value);
+      setFilteredCities(selectedState ? selectedState.cities : []);
+    }
   };
 
   const handlePhotoUpload = (e) => {
@@ -67,55 +89,19 @@ const AddDoctor = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        "http://localhost:8000/api/users/add-doctor",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: data,
-        }
-      );
+      const response = await api.post("/users/add-doctor", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      if (!response.ok) {
-        const error = await response.json();
+      if (response.status !== 201) {
+        const error = response.data;
         console.error("Server error:", error);
         alert(`Error: ${error.message}`);
         return;
       }
 
-      setFormData({
-        firstName: "",
-        lastName: "",
-        qualification: "",
-        specialtyType: "",
-        checkupTime: "",
-        phoneNumber: "",
-        country: "",
-        zipCode: "",
-        onlineConsultationRate: "",
-        gender: "",
-        workType: "",
-        state: "",
-        city: "",
-        address: "",
-        description: "",
-        experience: "",
-        workingTime: "",
-        breakTime: "",
-        age: "",
-        email: "",
-        hospitalName: "",
-        hospitalAddress: "",
-        emergencyContactNumber: "",
-        websiteLink: "",
-      });
-      setProfilePhoto(null);
-      setSignature(null);
-
-      const result = await response.json();
-      console.log("Doctor added:", result);
       Swal.fire({
         icon: "success",
         title: "Doctor added successfully!",
@@ -123,7 +109,6 @@ const AddDoctor = () => {
       });
       navigate("/admin/doctor-management");
     } catch (error) {
-      console.error("Error adding doctor:", error);
       Swal.fire({
         icon: "error",
         title: "Error in adding doctor",
@@ -303,21 +288,21 @@ const AddDoctor = () => {
               <SelectField
                 id="country"
                 label="Country"
-                options={["India", "USA"]}
+                options={countryData.map((country) => country.name)}
                 value={formData.country}
                 onChange={handleInputChange}
               />
               <SelectField
                 id="state"
                 label="State"
-                options={["Gujarat", "New York"]}
+                options={filteredStates.map((state) => state.name)}
                 value={formData.state}
                 onChange={handleInputChange}
               />
               <SelectField
                 id="city"
                 label="City"
-                options={["Surat", "Celifonia"]}
+                options={filteredCities.map((city) => city.name)}
                 value={formData.city}
                 onChange={handleInputChange}
               />
@@ -349,38 +334,41 @@ const AddDoctor = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <InputField
-              id="doctorCurrentHospital"
-              label="Doctor Current Hospital"
-              value={formData.doctorCurrentHospital}
-              onChange={handleInputChange}
-            />
-            <InputField
-              id="hospitalName"
-              label="Hospital Name"
-              value={formData.hospitalName}
-              onChange={handleInputChange}
-            />
-            <InputField
-              id="hospitalAddress"
-              label="Hospital Address"
-              value={formData.hospitalAddress}
-              onChange={handleInputChange}
-            />
-            <InputField
-              id="websiteLink"
-              label="Hospital Website Link"
-              value={formData.websiteLink}
-              onChange={handleInputChange}
-            />
-            <InputField
-              id="emergencyContactNumber"
-              label="Emergency Contact Number"
-              value={formData.emergencyContactNumber}
-              onChange={handleInputChange}
-            />
-          </div>
+          {/* Hospital fields (conditionally rendered based on Work Type) */}
+          {showHospitalFields && (
+            <div className="grid grid-cols-3 gap-4 mt-6">
+              <InputField
+                id="doctorCurrentHospital"
+                label="Doctor Current Hospital"
+                value={formData.doctorCurrentHospital}
+                onChange={handleInputChange}
+              />
+              <InputField
+                id="hospitalName"
+                label="Hospital Name"
+                value={formData.hospitalName}
+                onChange={handleInputChange}
+              />
+              <InputField
+                id="hospitalAddress"
+                label="Hospital Address"
+                value={formData.hospitalAddress}
+                onChange={handleInputChange}
+              />
+              <InputField
+                id="websiteLink"
+                label="Hospital Website Link"
+                value={formData.websiteLink}
+                onChange={handleInputChange}
+              />
+              <InputField
+                id="emergencyContactNumber"
+                label="Emergency Contact Number"
+                value={formData.emergencyContactNumber}
+                onChange={handleInputChange}
+              />
+            </div>
+          )}
 
           <div className="flex justify-end mt-4">
             <button
@@ -471,5 +459,6 @@ const InputFieldWithIcon = ({ id, label, icon, value, onChange }) => (
     {icon}
   </div>
 );
+
 
 export default AddDoctor;

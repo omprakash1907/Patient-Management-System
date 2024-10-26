@@ -10,6 +10,7 @@
     "axios": "^1.7.7",
     "chart.js": "^4.4.5",
     "datepicker": "^0.0.0",
+    "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",

@@ -32,16 +32,12 @@ const EditProfile = ({ onCancel }) => {
         lastName: "",
         email: "",
         phoneNumber: "",
-        doctorDetails: {
-            hospital: {
-                hospitalName: "",
-            },
-        },
+        adminhospital: "", // Updated to use the adminhospital field
         gender: "Male", // Default selection
         city: "",
         state: "",
         country: "",
-        profileImage: null,
+        profileImage: "",
     });
 
     const [hospitals, setHospitals] = useState([]);
@@ -52,16 +48,17 @@ const EditProfile = ({ onCancel }) => {
         const fetchProfileData = async () => {
             try {
                 const response = await api.get("/users/profile");
-                const { doctorDetails, ...otherData } = response.data;
-
                 setFormData({
-                    ...otherData,
-                    doctorDetails: {
-                        hospital: {
-                            hospitalName: doctorDetails?.hospital?.hospitalName || "",
-                        },
-                    },
-                    profileImage: response.data.profileImage ? response.data.profileImage : null
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    email: response.data.email,
+                    phoneNumber: response.data.phoneNumber,
+                    adminhospital: response.data.adminhospital?._id || "", // Set the hospital ID
+                    gender: response.data.gender || "Male", // Default gender to Male if undefined
+                    city: response.data.city,
+                    state: response.data.state,
+                    country: response.data.country,
+                    profileImage: response.data.profileImage,
                 });
             } catch (error) {
                 console.error("Failed to fetch profile data", error);
@@ -90,31 +87,22 @@ const EditProfile = ({ onCancel }) => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === "doctorDetails.hospital.hospitalName") {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                doctorDetails: {
-                    ...prevFormData.doctorDetails,
-                    hospital: {
-                        hospitalName: value,
-                    },
-                },
-            }));
-        } else {
-            setFormData((prevFormData) => ({
-                ...prevFormData,
-                [name]: value,
-            }));
-        }
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value,
+        }));
     };
+
+    const [previewImage, setPreviewImage] = useState(null);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                profileImage: file, // Store the file object for FormData
+                profileImage: file,
             }));
+            setPreviewImage(URL.createObjectURL(file));
         }
     };
 
@@ -124,36 +112,30 @@ const EditProfile = ({ onCancel }) => {
 
         // Add main fields to FormData
         Object.entries(formData).forEach(([key, value]) => {
-            if (key === "doctorDetails") {
-                formDataObj.append("doctorDetails.hospital.hospitalName", value.hospital.hospitalName);
-            } else {
+            if (key !== "profileImage") {
                 formDataObj.append(key, value);
             }
         });
 
-        // Add profile image only if it's a File object (i.e., user selected a new file)
+        // Add profile image if it's a File instance
         if (formData.profileImage instanceof File) {
             formDataObj.append("profileImage", formData.profileImage);
         }
 
-        const userRole = localStorage.getItem("role");
-
         try {
+            // Add the Authorization header with the token
             await api.patch("/users/profile", formDataObj, {
-                headers: { "Content-Type": "multipart/form-data" },
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`, // Assuming token is stored in localStorage
+                },
             });
             Swal.fire({
                 icon: "success",
                 title: "Profile Updated successfully!!",
                 confirmButtonText: "OK",
             });
-            if (userRole === "admin") {
-                navigate("/admin/profile-setting");
-            } else if (userRole === "doctor") {
-                navigate("/doctor/profile-setting");
-            } else {
-                console.error("Invalid user role");
-            }
+            navigate("/admin/profile-setting");
         } catch (error) {
             console.error("Error updating profile", error);
             Swal.fire({
@@ -168,12 +150,14 @@ const EditProfile = ({ onCancel }) => {
         <div className="relative bg-gray-100 py-16 px-36 pb-48 h-full">
             <ProfileHeader title="Profile Setting" />
             <div className="flex flex-col md:flex-row w-full mt-8 mx-auto bg-white shadow-lg rounded-lg overflow-hidden z-10 relative h-full">
-            <div className="w-1/4 p-12 text-center border-r">
+                <div className="w-1/4 p-12 text-center border-r">
                     <img
                         src={
-                            formData.profileImage && !(formData.profileImage instanceof File)
-                                ? `http://localhost:8000/${formData.profileImage}`
-                                : userImage
+                            previewImage
+                                ? previewImage
+                                : formData.profileImage && !(formData.profileImage instanceof File)
+                                    ? `http://localhost:8000/${formData.profileImage}`
+                                    : userImage
                         }
                         alt="Profile"
                         className="w-48 h-48 mx-auto rounded-full mb-4"
@@ -256,14 +240,14 @@ const EditProfile = ({ onCancel }) => {
 
                         <div className="relative mb-4">
                             <select
-                                name="doctorDetails.hospital.hospitalName"
-                                value={formData.doctorDetails.hospital.hospitalName || ""}
+                                name="adminhospital"
+                                value={formData.adminhospital}
                                 onChange={handleChange}
                                 className="w-full border border-gray-300 p-2 rounded-md"
                             >
                                 <option value="">Select Hospital</option>
                                 {hospitals.map((hospital) => (
-                                    <option key={hospital._id} value={hospital.name}>
+                                    <option key={hospital._id} value={hospital._id}>
                                         {hospital.name}
                                     </option>
                                 ))}

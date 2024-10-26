@@ -4,13 +4,12 @@ import { FiUpload } from "react-icons/fi";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import Swal from "sweetalert2";
+import countryData from "../../country-json/countries+states+cities.json";
 
 const EditDoctor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  console.log(id)
-  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -39,15 +38,18 @@ const EditDoctor = () => {
     doctorCurrentHospital: "",
   });
 
+  const [showHospitalFields, setShowHospitalFields] = useState(false);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [signatureImagePreview, setSignatureImagePreview] = useState(null);
+  const [filteredStates, setFilteredStates] = useState([]);
+  const [filteredCities, setFilteredCities] = useState([]);
 
   useEffect(() => {
     const fetchDoctorData = async () => {
       try {
         const response = await api.get(`/users/doctors/${id}`);
         const doctor = response.data;
-        
+
         setFormData({
           firstName: doctor.firstName,
           lastName: doctor.lastName,
@@ -76,8 +78,19 @@ const EditDoctor = () => {
           doctorCurrentHospital: doctor.doctorDetails.hospital.currentHospital,
         });
 
+        // Set preview images
         setProfileImagePreview(`http://localhost:8000/${doctor.profileImage}`);
         setSignatureImagePreview(`http://localhost:8000/${doctor.signatureImage}`);
+
+        // Conditionally show hospital fields
+        setShowHospitalFields(doctor.doctorDetails.workType === "Online" || doctor.doctorDetails.workType === "Both");
+
+        // Populate states and cities based on the country and state in doctor data
+        const country = countryData.find((item) => item.name === doctor.doctorDetails.country);
+        setFilteredStates(country ? country.states : []);
+        const state = country && country.states.find((item) => item.name === doctor.state);
+        setFilteredCities(state ? state.cities : []);
+
       } catch (error) {
         console.error("Error fetching doctor details:", error);
       }
@@ -89,6 +102,25 @@ const EditDoctor = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    if (name === "workOn") {
+      setShowHospitalFields(value === "Online" || value === "Both");
+    }
+
+    // Handle country change and populate states
+    if (name === "country") {
+      const selectedCountry = countryData.find((country) => country.name === value);
+      setFilteredStates(selectedCountry ? selectedCountry.states : []);
+      setFilteredCities([]);
+      setFormData({ ...formData, state: "", city: "" });
+    }
+
+    // Handle state change and populate cities
+    if (name === "state") {
+      const selectedState = filteredStates.find((state) => state.name === value);
+      setFilteredCities(selectedState ? selectedState.cities : []);
+      setFormData({ ...formData, city: "" });
+    }
   };
 
   const handleImageChange = (e) => {
@@ -107,13 +139,11 @@ const EditDoctor = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     const formDataToSend = new FormData();
-  
-    // Log formData to check for data before appending it to FormData
-    console.log("Form Data before submission:", formData);
-  
+    
     Object.keys(formData).forEach((key) => {
-      if (formData[key]) {
+      if (formData[key] !== null && formData[key] !== undefined) {
         formDataToSend.append(key, formData[key]);
       }
     });
@@ -122,17 +152,15 @@ const EditDoctor = () => {
       const response = await api.patch(`/users/doctors/${id}`, formDataToSend, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      
-      console.log("Server response:", response.data);
-      
+  
       Swal.fire({
         icon: "success",
         title: "Doctor Edited successfully!",
         confirmButtonText: "OK",
       });
+  
       navigate("/admin/doctor-management");
     } catch (error) {
-      console.error("Error updating doctor:", error.response?.data || error);
       Swal.fire({
         icon: "error",
         title: "Error in editing doctor",
@@ -140,16 +168,17 @@ const EditDoctor = () => {
       });
     }
   };
-  
 
   return (
-    <div className="p-6 bg-gray-100">
-      <div className="flex flex-col w-full px-4 py-4 bg-white rounded-lg shadow-lg">
+    <div className="p-6 bg-gray-100 h-full">
+      <div className="flex flex-col w-full px-4 py-4 bg-white rounded-lg h-full">
         <div className="border border-gray-300 rounded-lg px-4 py-4">
           <h2 className="text-2xl font-bold mb-4">Edit Doctor Detail</h2>
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <div className="flex justify-between gap-8">
+              {/* Profile Image Section */}
               <div className="flex flex-col w-1/6">
+                {/* Profile Image Upload */}
                 <div className="relative mb-4 flex flex-col items-center">
                   <div className="w-48 h-48 bg-gray-200 rounded-full flex items-center justify-center">
                     {profileImagePreview ? (
@@ -173,10 +202,9 @@ const EditDoctor = () => {
                   </label>
                 </div>
 
+                {/* Signature Image Upload */}
                 <div className="mb-4">
-                  <label className="text-gray-700 text-sm font-medium">
-                    Upload Signature
-                  </label>
+                  <label className="text-gray-700 text-sm font-medium">Upload Signature</label>
                   <div className="flex-col items-center justify-center border border-dashed border-gray-300 rounded-md p-10 w-full mt-2">
                     {signatureImagePreview ? (
                       <img
@@ -205,6 +233,7 @@ const EditDoctor = () => {
                 </div>
               </div>
 
+              {/* Doctor Info Section */}
               <div className="w-10/12 grid grid-cols-3 gap-4">
                 <InputField id="firstName" label="First Name" value={formData.firstName} onChange={handleChange} />
                 <InputField id="lastName" label="Last Name" value={formData.lastName} onChange={handleChange} />
@@ -229,17 +258,19 @@ const EditDoctor = () => {
               </div>
             </div>
 
-            {/* Hospital Information */}
-            <div className="grid grid-cols-3 gap-4 mt-6">
-              <InputField id="doctorCurrentHospital" label="Doctor Current Hospital" value={formData.doctorCurrentHospital} onChange={handleChange} />
-              <InputField id="hospitalName" label="Hospital Name" value={formData.hospitalName} onChange={handleChange} />
-              <InputField id="hospitalAddress" label="Hospital Address" value={formData.hospitalAddress} onChange={handleChange} />
-              <InputField id="hospitalWebsite" label="Hospital Website Link" value={formData.hospitalWebsite} onChange={handleChange} />
-              <InputField id="emergencyContact" label="Emergency Contact Number" value={formData.emergencyContact} onChange={handleChange} />
-            </div>
-            
+            {/* Conditionally Render Hospital Information */}
+            {showHospitalFields && (
+              <div className="grid grid-cols-3 gap-4 mt-6">
+                <InputField id="doctorCurrentHospital" label="Doctor Current Hospital" value={formData.doctorCurrentHospital} onChange={handleChange} />
+                <InputField id="hospitalName" label="Hospital Name" value={formData.hospitalName} onChange={handleChange} />
+                <InputField id="hospitalAddress" label="Hospital Address" value={formData.hospitalAddress} onChange={handleChange} />
+                <InputField id="hospitalWebsite" label="Hospital Website Link" value={formData.hospitalWebsite} onChange={handleChange} />
+                <InputField id="emergencyContact" label="Emergency Contact Number" value={formData.emergencyContact} onChange={handleChange} />
+              </div>
+            )}
+
             <div className="flex justify-end">
-              <button type="submit" className="mt-4 py-2 px-6 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+              <button type="submit" className="mt-4 py-2 px-6 bg-customBlue text-white rounded-lg ">
                 Save Changes
               </button>
             </div>
@@ -277,5 +308,6 @@ const InputFieldWithIcon = ({ id, label, icon, value, onChange }) => (
     {icon}
   </div>
 );
+
 
 export default EditDoctor;
