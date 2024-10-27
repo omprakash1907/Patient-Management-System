@@ -110,7 +110,7 @@ const PatientsStatistics = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg ">
+    <div className="bg-white p-6 rounded-xl ">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">Patients Statistics</h2>
         <div className="flex gap-2">

@@ -33,7 +33,7 @@ const AppointmentsList = () => {
   }, []);
 
   return (
-    <div className="bg-white p-6 rounded-lg ">
+    <div className="bg-white p-6 rounded-xl ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Today's Appointments List</h2>
         {/* <a href="/appointments" className="text-blue-600">

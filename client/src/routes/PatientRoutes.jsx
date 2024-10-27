@@ -11,6 +11,7 @@ import ChatPage from "../pages/Patient/ChatPage";
 import BillPage from "../pages/Patient/BillPage";
 import TeleAccess from "../pages/Patient/TeleAccess";
 import CommonLayout from "../components/Layout/CommonLayout";
+import BookAppointment from "../pages/Patient/BookAppointment";
 
 const PatientRoutes = () => {
   return (
@@ -60,6 +61,14 @@ const PatientRoutes = () => {
         element={
           <CommonLayout role="patient">
             <AppointmentBookingPage />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/appointment-booking/book-appointment"
+        element={
+          <CommonLayout role="patient">
+            <BookAppointment />
           </CommonLayout>
         }
       />

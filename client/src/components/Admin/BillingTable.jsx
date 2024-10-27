@@ -34,7 +34,7 @@ const BillingTable = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg  h-full">
+    <div className="bg-white p-6 rounded-xl  h-full">
       {/* Header Section */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Billing & Payments</h2>
@@ -47,8 +47,8 @@ const BillingTable = () => {
 
       {/* Pending Bills Info */}
       <Link to="/admin/pending-invoice">
-        <div className="mb-4 text-sm text-red-500">
-          <strong></strong> Pending Bills :{bills.filter(bill => bill.status === "Unpaid").length}
+        <div className="mb-4  ">
+          <strong> Pending Bills :{bills.filter(bill => bill.status === "Unpaid").length}</strong>
         </div>
       </Link>
 

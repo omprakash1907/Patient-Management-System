@@ -7,7 +7,7 @@ import PatientsSummary from "../../components/Admin/PatientsSummary";
 
 const AdminDashboard = () => {
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-100 min-h-screen">
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
         {/* Row 1: Statistics Cards and Billing Table */}

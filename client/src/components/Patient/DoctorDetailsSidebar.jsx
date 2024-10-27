@@ -8,7 +8,7 @@ const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
   console.log(doctor)
   return (
     <div
-      className={`fixed inset-y-0 right-0 w-1/4 bg-white shadow-lg transform ${
+      className={`fixed inset-y-0 right-0 w-1/4 bg-white  transform ${
         isVisible ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300 ease-in-out z-50`}
     >
@@ -41,7 +41,7 @@ const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
           <img
             src={mask}
             alt="Background"
-            className="absolute top-0 right-0 h-full opacity-25 z-0"
+            className="absolute top-0 right-0 h-full opacity-70 z-0"
           />
         </div>
 
@@ -57,14 +57,7 @@ const DoctorDetailsSidebar = ({ doctor, isVisible, onClose }) => {
               <strong className="text-gray-500">Doctor Qualification:</strong>{" "}
               <span className="block">{doctor.doctorQualification}</span>
             </p>
-            {/* <p>
-              <strong className="text-gray-500">Break Time:</strong>{" "}
-              <span className="block">{doctor.breakTime}</span>
-            </p>
-            <p>
-              <strong className="text-gray-500">Working Time:</strong>{" "}
-              <span className="block">{doctor.workingTime}</span>
-            </p> */}
+       
             <p>
               <strong className="text-gray-500">Years Of Experience:</strong>{" "}
               <span className="block">{doctor.doctorExperience}+</span>
