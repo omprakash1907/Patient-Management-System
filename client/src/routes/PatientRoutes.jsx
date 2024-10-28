@@ -12,6 +12,7 @@ import BillPage from "../pages/Patient/BillPage";
 import TeleAccess from "../pages/Patient/TeleAccess";
 import CommonLayout from "../components/Layout/CommonLayout";
 import BookAppointment from "../pages/Patient/BookAppointment";
+import RescheduleAppointment from "../pages/Patient/RescheduleAppointment ";
 
 const PatientRoutes = () => {
   return (
@@ -69,6 +70,14 @@ const PatientRoutes = () => {
         element={
           <CommonLayout role="patient">
             <BookAppointment />
+          </CommonLayout>
+        }
+      />
+        <Route
+        path="/reschedule-appointment"
+        element={
+          <CommonLayout role="patient">
+            <RescheduleAppointment />
           </CommonLayout>
         }
       />

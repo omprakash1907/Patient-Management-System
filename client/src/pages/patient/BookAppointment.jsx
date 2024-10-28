@@ -6,6 +6,9 @@ import countryData from "../../country-json/countries+states+cities.json"; // As
 import noappointmentrecord from "../../assets/images/norecord.png"; // Placeholder image
 import mask from "../../assets/images/offcanvas.png";
 import { FaMars, FaVenus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
 // Initialize the Modal
 Modal.setAppElement('#root');
@@ -62,6 +65,16 @@ const BookAppointment = () => {
     const [appointmentSuccess, setAppointmentSuccess] = useState(false);
     const [specialty, setSpecialty] = useState("");
     const [specialties, setSpecialties] = useState([]);
+
+    const navigate = useNavigate()
+
+    const { updateBreadcrumb } = useBreadcrumb();
+
+    useEffect(() => {
+        updateBreadcrumb([
+            { label: "Book Appointment", path: "/patient/appointment-booking/book-appointment" },
+        ]);
+    }, []);
 
 
     // Fetch hospitals when the component mounts
@@ -276,6 +289,7 @@ const BookAppointment = () => {
             const response = await api.post("/appointment", appointmentData);
             setAppointmentSuccess(true); // Success message
             console.log("Appointment booked successfully:", response.data);
+            navigate('/patient/appointment-booking')
         } catch (error) {
             console.error("Error booking appointment", error); // Log the error for debugging
             alert("Failed to book appointment");
@@ -313,23 +327,25 @@ const BookAppointment = () => {
                 {/* Time Slots Table - Left Side 70% */}
                 {doctorDetails && (
                     <div className="w-full border rounded-xl p-4">
-                        <div className="flex justify-between items-center bg-gray-50 mb-4 overflow-hidden rounded-xl">
-                            <button className="px-4 py-2  rounded text-customBlue" onClick={handlePreviousWeek} disabled={moment(currentWeekStart).isSameOrBefore(moment(), 'day')}>
-                                &lt;
-                            </button>
-                            <h1 className="text-xl font-bold text-customBlue">
-                                {moment(currentWeekStart).format('DD MMMM, YYYY')} - {moment(currentWeekStart).add(6, 'days').format('DD MMMM, YYYY')}
-                            </h1>
-                            <button className="px-4 py-2 rounded text-customBlue" onClick={handleNextWeek}>
-                                &gt;
-                            </button>
+                        <div className="flex justify-center text-customBlue  bg-gray-100 rounded-tr-xl rounded-tl-xl">
+                            <div className="flex items-center  my-2 overflow-hidden rounded-xl">
+                                <button className="px-4 py-2  rounded text-customBlue" onClick={handlePreviousWeek} disabled={moment(currentWeekStart).isSameOrBefore(moment(), 'day')}>
+                                    <AiOutlineLeft />
+                                </button>
+                                <h1 className="text-xl font-bold text-customBlue">
+                                    {moment(currentWeekStart).format('DD MMMM, YYYY')} - {moment(currentWeekStart).add(6, 'days').format('DD MMMM, YYYY')}
+                                </h1>
+                                <button className="px-4 py-2 rounded text-customBlue" onClick={handleNextWeek}>
+                                    <AiOutlineRight />
+                                </button>
+                            </div>
                         </div>
-                        <table className="min-w-full table-auto border-collapse bg-white rounded-xl overflow-hidden">
-                            <thead className="bg-gray-100">
+                        <table className="min-w-full table-auto border-collapse  overflow-hidden">
+                            <thead className="border border-gray-100">
                                 <tr>
-                                    <th className="px-6 py-3 text-sm font-semibold text-gray-600 border-b">Time</th>
+                                    <th className="px-6 py-3 text-sm font-semibold text-customBlue  border border-gray-100">Time</th>
                                     {days.map((day) => (
-                                        <th key={day} className="px-6 py-3 text-sm font-semibold text-gray-600 border-b">{moment(day).format('ddd D')}</th>
+                                        <th key={day} className="px-6 py-3 text-sm font-semibold text-gray-600 border border-gray-100">{moment(day).format('ddd D')}</th>
                                     ))}
                                 </tr>
                             </thead>
@@ -342,18 +358,18 @@ const BookAppointment = () => {
                                     </tr>
                                 ) : (
                                     timeSlots.map((slot) => (
-                                        <tr key={slot.time} className="hover:bg-gray-50">
-                                            <td className="px-2 py-2 text-gray-700 text-sm border-b text-center">{slot.time}</td>
+                                        <tr key={slot.time} className="hover:bg-gray-50 ">
+                                            <td className="px-2 py-2 text-customBlue font-medium text-sm border border-gray-100 text-center">{slot.time}</td>
                                             {days.map((day) => (
-                                                <td key={day} className="px-1 py-4 text-center border-b">
+                                                <td key={day} className=" text-center border border-gray-100">
                                                     {isSlotBooked(slot.time, day) ? (
                                                         <span className="text-gray-400">Booked</span>
                                                     ) : slot.status === 'Available' ? (
-                                                        <span className="bg-customBlue bg-opacity-50 text-gray-500 font-medium rounded-xl px-3 py-1  cursor-pointer" onClick={() => handleSlotClick(slot.time, day)}>
+                                                        <span className="bg-customBlue bg-opacity-50   text-white font-medium px-4 py-4 flex justify-center  cursor-pointer" onClick={() => handleSlotClick(slot.time, day)}>
                                                             Available
                                                         </span>
                                                     ) : slot.status === 'Lunch Break' ? (
-                                                        <span className="text-white bg-gray-500 font-medium rounded-xl px-3 py-1">Lunch Break</span>
+                                                        <span className=" bg-gray-100 font-medium  px-4 py-4 flex justify-center">Lunch Break</span>
                                                     ) : (
                                                         <span className="text-gray-400">{slot.status}</span>
                                                     )}
@@ -453,11 +469,11 @@ const BookAppointment = () => {
                         <>
                             <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b">Appointment</h2>
                             <div className="grid grid-cols-1 gap-4 mb-4 bg-gray-50 p-2 rounded-xl">
-                                <div  className='flex justify-between items-center'>
+                                <div className='flex justify-between items-center'>
                                     <p className="text-sm text-gray-600">Appointment Type</p>
                                     <p className="font-semibold text-yellow-500 rounded-full bg-yellow-200 px-2 bg-opacity-30">{appointmentType}</p>
                                 </div>
-                                <div  className='flex justify-between items-center'>
+                                <div className='flex justify-between items-center'>
                                     <p className="text-sm text-gray-600">Patient Name</p>
                                     <p className="font-semibold">John Doe</p> {/* Placeholder name or dynamically fill */}
                                 </div>
