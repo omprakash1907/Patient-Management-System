@@ -72,7 +72,7 @@ const BookAppointment = () => {
 
     useEffect(() => {
         updateBreadcrumb([
-            { label: "Book Appointment", path: "/patient/appointment-booking/book-appointment" },
+            { label: "Book Appointment", path: "/doctor/appointment-timeslot" },
         ]);
     }, []);
 

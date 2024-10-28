@@ -17,6 +17,7 @@ const ManagePrescription = () => {
       try {
         const response = await api.get('/prescription');
         const prescriptions = response.data.prescriptions;
+        console.log(prescriptions)
 
         const today = new Date().setHours(0, 0, 0, 0);
         const todayData = prescriptions.filter(

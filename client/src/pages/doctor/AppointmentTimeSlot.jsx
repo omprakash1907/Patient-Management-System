@@ -3,6 +3,8 @@ import moment from 'moment';
 import { jwtDecode } from 'jwt-decode'; // Ensure you're importing jwt-decode correctly
 import api from "../../api/api"; // Assuming you have an API setup
 import {  FaBook,  FaClock,  FaTrash } from 'react-icons/fa';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
 
 const WriteNoteModal = ({ show, onClose, appointment, onSaveNote }) => {
     const [note, setNote] = useState(""); // Track the note content
@@ -124,6 +126,14 @@ const AppointmentTimeSlot = () => {
     const [disabledSlots, setDisabledSlots] = useState([]);
     const [noteContent, setNoteContent] = useState("");
 
+    const { updateBreadcrumb } = useBreadcrumb();
+
+    useEffect(() => {
+        updateBreadcrumb([
+            { label: "Appointment Time Slot", path: "/doctor/appointment-timeslot" },
+        ]);
+    }, []);
+
     // Fetch appointments for the logged-in doctor
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -231,13 +241,13 @@ const AppointmentTimeSlot = () => {
             <h1 className="text-2xl font-bold mb-4">Appointment Time Slot</h1>
 
             {/* Week Navigation */}
-            <div className="flex justify-center  bg-gray-200 p-1 rounded-tl-lg rounded-tr-lg">
+            <div className="flex justify-center  bg-gray-100 py-2 rounded-tl-lg rounded-tr-lg">
                 <div className='flex items-center'>
                     <button
                         className="px-4 py-1 text-customBlue font-bold"
                         onClick={() => setCurrentWeekStart(moment(currentWeekStart).subtract(7, 'days'))}
                     >
-                        &lt;
+                        <AiOutlineLeft />
                     </button>
                     <h1 className="text-lg font-semibold text-customBlue">
                         {moment(currentWeekStart).format('DD MMMM, YYYY')} - {moment(currentWeekStart).add(6, 'days').format('DD MMMM, YYYY')}
@@ -246,7 +256,7 @@ const AppointmentTimeSlot = () => {
                         className="px-4 py-2 text-customBlue font-bold"
                         onClick={() => setCurrentWeekStart(moment(currentWeekStart).add(7, 'days'))}
                     >
-                        &gt;
+                       <AiOutlineRight />
                     </button>
                 </div>
             </div>
@@ -255,21 +265,21 @@ const AppointmentTimeSlot = () => {
             <table className="min-w-full table-auto bg-white  rounded-lg">
                 <thead>
                     <tr>
-                        <th className="border px-4 py-2 text-customBlue">Time</th>
+                        <th className="border border-gray-100 px-4 py-2 text-customBlue">Time</th>
                         {Array.from({ length: 7 }, (_, i) => moment(currentWeekStart).add(i, 'days').format('ddd D')).map((day) => (
-                            <th key={day} className="border px-4 py-2 text-gray-700">{day}</th>
+                            <th key={day} className="border border-gray-100 px-4 py-2 text-gray-700">{day}</th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {timeSlots.map((time) => (
                         <tr key={time}>
-                            <td className="border px-4 py-2 text-center text-customBlue">{time}</td>
+                            <td className="border border-gray-100 px-4 py-2 text-center text-customBlue">{time}</td>
                             {Array.from({ length: 7 }, (_, i) => moment(currentWeekStart).add(i, 'days').format('YYYY-MM-DD')).map((day) => {
                                 const appointmentsForSlot = getAppointmentsForSlot(day, time);
 
                                 return (
-                                    <td key={day} className={`border px-4 py-2 text-center `}>
+                                    <td key={day} className={`border border-gray-100 px-4 py-2 text-center `}>
                                         {appointmentsForSlot.length > 0 ? (
                                             appointmentsForSlot.map((appointment) => (
                                                 <div
@@ -282,7 +292,7 @@ const AppointmentTimeSlot = () => {
                                                 >
                                                     <div className='text-customBlue text-start'>{appointment.patientName}</div>
                                                     <div className='text-start'>{appointment.diseaseName}</div>
-                                                    <div className='flex items-center'><FaClock />{appointment.appointmentTime}</div>
+                                                    <div className='flex items-center '><FaClock />{appointment.appointmentTime}</div>
                                                 </div>
                                             ))
                                         ) : (

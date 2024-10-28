@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
+import { AiOutlineSearch, AiOutlineEye } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import api from "../../api/api"; // Adjust the path according to your project structure
-import { FaSearch, FaEye } from 'react-icons/fa'; // Replacing Material UI Icons with FontAwesome
 
 const PatientRecordAccess = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [appointments, setAppointments] = useState([]);
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
+  const [dateFilter, setDateFilter] = useState('Month'); // Default filter to 'Month'
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,8 +39,8 @@ const PatientRecordAccess = () => {
           return appointment.doctorId === doctorId && appointment.status === 'Completed';
         });
 
-        console.log('Filtered completed appointments:', completedAppointments); // Debugging
         setAppointments(completedAppointments);
+        setFilteredAppointments(completedAppointments); // Initially show all completed appointments
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
@@ -46,69 +49,127 @@ const PatientRecordAccess = () => {
     fetchAppointments();
   }, []);
 
-  // Filter patients based on search term
-  const filteredPatients = appointments.filter((appointment) =>
-    appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    appointment.diseaseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (appointment.patientIssue && appointment.patientIssue.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  // Filter patients based on search term and date filter
+  const getFilteredPatients = () => {
+    const today = new Date();
+    let filteredList = appointments.filter((appointment) => {
+      const appointmentDate = new Date(appointment.appointmentDate);
+
+      // Apply date filter logic
+      if (dateFilter === 'Day') {
+        return (
+          appointmentDate.toDateString() === today.toDateString() // Only today
+        );
+      } else if (dateFilter === 'Week') {
+        const lastWeek = new Date(today);
+        lastWeek.setDate(today.getDate() - 7); // Last 7 days
+        return appointmentDate >= lastWeek && appointmentDate <= today;
+      } else if (dateFilter === 'Month') {
+        const lastMonth = new Date(today);
+        lastMonth.setDate(today.getDate() - 30); // Last 30 days
+        return appointmentDate >= lastMonth && appointmentDate <= today;
+      }
+
+      return true; // default case, show all appointments if no filter selected
+    });
+
+    // Apply search term filtering
+    if (searchTerm) {
+      filteredList = filteredList.filter((appointment) =>
+        appointment.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        appointment.diseaseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (appointment.patientIssue && appointment.patientIssue.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    return filteredList;
+  };
+
+  // Update filtered appointments whenever search term or date filter changes
+  useEffect(() => {
+    setFilteredAppointments(getFilteredPatients());
+  }, [searchTerm, dateFilter, appointments]);
+
+  const handleFilterChange = (filter) => {
+    setDateFilter(filter);
+    setAnchorEl(null);
+  };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md m-6">
-      <h2 className="text-lg font-semibold mb-4">Completed Appointments</h2>
+      <h2 className="text-lg font-semibold mb-4">Patient Record Access</h2>
 
-      {/* Search Section */}
       <div className="flex justify-between items-center mb-4">
-        <div className="relative w-full">
-          <input
-            type="text"
-            placeholder="Search Patient"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <span className="absolute inset-y-0 right-3 flex items-center text-gray-500">
-            <FaSearch />
-          </span>
+        <div className="relative w-full max-w-xs">
+          <div className="flex items-center border rounded px-2">
+            <AiOutlineSearch className="text-gray-500 mr-2" />
+            <input
+              type="text"
+              placeholder="Search Patient"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full py-2 outline-none"
+            />
+          </div>
+        </div>
+
+        <div>
+          <button
+            onClick={(e) => setAnchorEl(e.currentTarget)}
+            className="bg-gray-100 p-2 rounded-lg flex items-center text-gray-600"
+          >
+            {dateFilter}
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          <div
+            className={`absolute mt-2 w-32 rounded-lg shadow-lg bg-white border ${anchorEl ? 'block' : 'hidden'}`}
+            onMouseLeave={() => setAnchorEl(null)}
+          >
+            <div onClick={() => handleFilterChange('Day')} className="px-4 py-2 cursor-pointer hover:bg-gray-100">Day</div>
+            <div onClick={() => handleFilterChange('Week')} className="px-4 py-2 cursor-pointer hover:bg-gray-100">Week</div>
+            <div onClick={() => handleFilterChange('Month')} className="px-4 py-2 cursor-pointer hover:bg-gray-100">Month</div>
+          </div>
         </div>
       </div>
 
       {/* Table of Completed Appointments */}
-      <div className="max-h-[600px] overflow-y-auto">
+      <div className="max-h-[600px] overflow-y-auto border rounded-lg shadow">
         <table className="min-w-full table-auto">
-          <thead className="sticky top-0 bg-gray-100 z-10">
+          <thead className="sticky top-0 bg-gray-50 border-b">
             <tr>
-              <th className="p-3 text-left text-sm font-semibold">Patient Name</th>
-              <th className="p-3 text-left text-sm font-semibold">Disease Name</th>
-              <th className="p-3 text-left text-sm font-semibold">Patient Issue</th>
-              <th className="p-3 text-left text-sm font-semibold">Last Appointment Date</th>
-              <th className="p-3 text-left text-sm font-semibold">Last Appointment Time</th>
-              <th className="p-3 text-left text-sm font-semibold">Age</th>
-              <th className="p-3 text-left text-sm font-semibold">Gender</th>
-              <th className="p-3 text-left text-sm font-semibold">Action</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Patient Name</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Disease Name</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Patient Issue</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Last Appointment Date</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Last Appointment Time</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Age</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Gender</th>
+              <th className="p-4 text-left text-sm font-semibold text-gray-700">Action</th>
             </tr>
           </thead>
           <tbody>
-            {filteredPatients.length > 0 ? (
-              filteredPatients.map((appointment, index) => (
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment, index) => (
                 <tr key={index} className="border-t">
-                  <td className="p-3">{appointment.patientName}</td>
-                  <td className="p-3">{appointment.diseaseName}</td>
-                  <td className="p-3">{appointment.patientIssue}</td>
-                  <td className="p-3">{new Date(appointment.appointmentDate).toLocaleDateString()}</td>
-                  <td className="p-3 text-blue-600">{appointment.appointmentTime}</td>
-                  <td className="p-3">{appointment.patientAge} Years</td>
-                  <td className="p-3">
+                  <td className="p-4">{appointment.patientName}</td>
+                  <td className="p-4">{appointment.diseaseName}</td>
+                  <td className="p-4">{appointment.patientIssue}</td>
+                  <td className="p-4">{new Date(appointment.appointmentDate).toLocaleDateString('en-GB')}</td>
+                  <td className="p-4 text-blue-600">{appointment.appointmentTime}</td>
+                  <td className="p-4">{appointment.patientAge} Years</td>
+                  <td className="p-4">
                     <span className={appointment.patientGender === 'Male' ? 'text-blue-500' : 'text-pink-500'}>
                       {appointment.patientGender === 'Male' ? '♂' : '♀'}
                     </span>
                   </td>
-                  <td className="p-3">
+                  <td className="p-4">
                     <button
                       className="text-blue-500 hover:text-blue-700"
                       onClick={() => navigate(`/doctor/patient-detail/${appointment.patientId}`)}
                     >
-                      <FaEye className="text-lg" />
+                      <AiOutlineEye size={20} />
                     </button>
                   </td>
                 </tr>

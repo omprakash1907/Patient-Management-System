@@ -157,7 +157,7 @@ const AppointmentBookingPage = () => {
                 </p>
                 <p className="flex justify-between items-center pb-2">
                   <span className="font-semibold text-gray-500">Patient Issue</span>
-                  {appointment.diseaseName || "Not specified"}
+                  {appointment.patientIssue || "Not specified"}
                 </p>
               </div>
               <div className="flex justify-between space-x-2 p-4 bg-white rounded-b-lg">

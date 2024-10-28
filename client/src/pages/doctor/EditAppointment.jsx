@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import api from '../../api/api';
 import { jwtDecode } from 'jwt-decode';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 
 // Modal for Rescheduling Appointment
 const RescheduleAppointmentModal = ({ open, onClose, appointment, timeSlots, onSave }) => {
@@ -95,7 +96,7 @@ const EditAppointment = () => {
 
     fetchAppointments();
     generateTimeSlots();
-  }, []);
+  }, [appointments]);
 
   const handleOpenRescheduleModal = (appointment) => {
     setSelectedAppointment(appointment);
@@ -133,9 +134,9 @@ const EditAppointment = () => {
       <table className="min-w-full table-auto border-collapse">
         <thead>
           <tr>
-            <th className="border px-4 py-2 bg-gray-100">Time</th>
+            <th className="border border-gray-100 px-4 py-2 0">Time</th>
             {weekDays.map((day, index) => (
-              <th key={index} className="border px-4 py-2 bg-gray-100">
+              <th key={index} className="border border-gray-100 px-4 py-2 ">
                 {moment(day).format('dddd, DD MMM')}
               </th>
             ))}
@@ -144,7 +145,7 @@ const EditAppointment = () => {
         <tbody>
           {timeSlots.map((time) => (
             <tr key={time}>
-              <td className="border px-4 py-2 text-gray-500">{time}</td>
+              <td className="border border-gray-100 px-4 py-2 text-gray-500">{time}</td>
               {weekDays.map((day, index) => {
                 const dayAppointments = appointments.filter(
                   (appointment) =>
@@ -153,12 +154,12 @@ const EditAppointment = () => {
                 );
 
                 return (
-                  <td key={index} className={`border px-4 py-2 text-center ${dayAppointments.length > 0 ? 'bg-blue-100' : 'bg-gray-50'}`}>
+                  <td key={index} className={`border border-gray-100 px-4 py-2 text-center ${dayAppointments.length > 0 ? 'bg-customBlue text-start' : 'bg-gray-50'}`}>
                     {dayAppointments.length > 0 ? (
                       dayAppointments.map((appointment) => (
                         <div
                           key={appointment.id}
-                          className="text-green-500 mb-2 cursor-pointer"
+                          className="text-white mb-2 cursor-pointer"
                           onClick={() => handleOpenRescheduleModal(appointment)}
                         >
                           <div className="font-semibold">{appointment.patientName}</div>
@@ -183,16 +184,17 @@ const EditAppointment = () => {
       <h2 className="text-2xl font-semibold mb-6">Edit Appointments</h2>
 
       {/* Navigation buttons for previous/next week */}
-      <div className="flex justify-between mb-4">
-        <button className="text-customBlue" onClick={() => setCurrentWeekStart(currentWeekStart.clone().subtract(7, 'days'))}>
-          &lt; Previous Week
-        </button>
-        <h3>{moment(currentWeekStart).format('DD MMMM, YYYY')} - {moment(currentWeekStart).add(6, 'days').format('DD MMMM, YYYY')}</h3>
-        <button className="text-customBlue" onClick={() => setCurrentWeekStart(currentWeekStart.clone().add(7, 'days'))}>
-          Next Week &gt;
-        </button>
+      <div className="flex justify-center text-customBlue font-semibold bg-gray-100 rounded-tr-xl rounded-tl-xl">
+        <div className="flex items-center my-3">
+          <button className="text-customBlue mr-2" onClick={() => setCurrentWeekStart(currentWeekStart.clone().subtract(7, 'days'))}>
+            <AiOutlineLeft />
+          </button>
+          <h3>{moment(currentWeekStart).format('DD MMMM, YYYY')} - {moment(currentWeekStart).add(6, 'days').format('DD MMMM, YYYY')}</h3>
+          <button className="text-customBlue ml-2" onClick={() => setCurrentWeekStart(currentWeekStart.clone().add(7, 'days'))}>
+            <AiOutlineRight />
+          </button>
+        </div>
       </div>
-
       {/* Render the Appointment Grid */}
       <div className="overflow-x-auto">
         {renderAppointmentGrid()}

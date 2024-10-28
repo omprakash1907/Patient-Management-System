@@ -3,7 +3,7 @@ import { FaSearch, FaCalendarAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import api from "../../api/api"; // Adjust the path according to your project structure
-import { jwtDecode } from 'jwt-decode'; // Ensure proper import of jwtDecode
+import {jwtDecode} from 'jwt-decode'; // Correct import syntax for jwtDecode
 import CreatePrescription from '../../components/Doctor/CreatePrescription';
 import noRecordImage from "../../assets/images/nodoctor.png";
 
@@ -12,43 +12,45 @@ const CreatePrescriptionPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date());
 
+    const today = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
+
     useEffect(() => {
-        const fetchAppointments = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('Token not found');
-                    return;
-                }
-
-                // Decode the token to get the doctor ID
-                const decodedToken = jwtDecode(token);
-                const doctorId = decodedToken.id;
-
-                // Fetch all appointments
-                const response = await api.get('/appointments', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                // Filter for appointments based on selected date and doctor ID
-                const filteredAppointments = response.data.data.filter(appointment => {
-                    const appointmentDate = new Date(appointment.appointmentDate).toISOString().split('T')[0];
-                    const selectedDateString = selectedDate.toISOString().split('T')[0];
-                    return appointment.doctorId === doctorId &&
-                        appointmentDate === selectedDateString &&
-                        appointment.status !== 'Completed';
-                });
-
-                setAppointments(filteredAppointments);
-            } catch (error) {
-                console.error('Error fetching appointments:', error);
+      const fetchAppointments = async () => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            console.error('Token not found');
+            return;
+          }
+  
+          // Decode the token to get the doctor ID
+          const decodedToken = jwtDecode(token);
+          const doctorId = decodedToken.id;
+  
+          // Fetch all appointments
+          const response = await api.get('/appointments', {
+            headers: {
+              Authorization: `Bearer ${token}`
             }
-        };
+          });
+  
+          // Filter for today's appointments associated with the logged-in doctor
+          // Exclude appointments with status 'completed'
+          const filteredAppointments = response.data.data.filter(appointment => {
+            const appointmentDate = appointment.appointmentDate.split('T')[0];
+            return appointment.doctorId === doctorId && appointmentDate === today && appointment.status !== 'Completed';
+          });
+  
+          setAppointments(filteredAppointments);
+        } catch (error) {
+          console.error('Error fetching appointments:', error);
+        }
+      };
+  
+      fetchAppointments();
+    }, []);
 
-        fetchAppointments();
-    }, [selectedDate]);
+    console.log(appointments)
 
     // Filter appointments based on search term
     const filteredAppointments = appointments.filter((appointment) =>
@@ -86,7 +88,6 @@ const CreatePrescriptionPage = () => {
             </div>
 
             {/* Appointments Grid */}
-            {/* Appointments Grid */}
             {filteredAppointments.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {filteredAppointments.map((appointment) => (
@@ -104,7 +105,7 @@ const CreatePrescriptionPage = () => {
                     ))}
                 </div>
             ) : (
-                <div className="flex items-center justify-center w-full ">
+                <div className="flex items-center justify-center w-full">
                     <img
                         src={noRecordImage}
                         alt="No Doctor Found"
@@ -112,8 +113,6 @@ const CreatePrescriptionPage = () => {
                     />
                 </div>
             )}
-
-
         </div>
     );
 };

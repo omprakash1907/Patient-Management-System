@@ -104,7 +104,7 @@ const RescheduleAppointment = () => {
 
         fetchAppointments();
         generateTimeSlots();
-    }, []);
+    }, [appointments]);
 
     const handleOpenRescheduleModal = (appointment) => {
         setSelectedAppointment(appointment);
@@ -171,7 +171,7 @@ const RescheduleAppointment = () => {
                                                     onClick={() => handleOpenRescheduleModal(appointment)}
                                                 >
                                                     <div className="font-semibold">{appointment.doctorName}</div> 
-                                                    <div className="text-sm">{appointment.diseaseName}</div>
+                                                    <div className="text-sm">{appointment.patientIssue}</div>
                                                 </div>
                                             ))
                                         ) : (
