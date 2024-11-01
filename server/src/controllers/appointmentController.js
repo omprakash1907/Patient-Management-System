@@ -1,213 +1,370 @@
-const Appointment = require('../models/Appointment');
-const Doctor = require('../models/doctor');
-const Patient = require('../models/patient')
-// Helper function to convert "HH:MM" or "HH:MM AM/PM" to minutes
-const timeToMinutes = (time) => {
-    if (!time) {
-        throw new Error('Invalid time value');
+const Appointment = require("../models/appointmentModel");
+const User = require("../models/userModel");
+
+// @desc    Create a new appointment
+// @route   POST /api/appointment
+// @access  Private (Only patients can book)
+exports.createAppointment = async (req, res) => {
+  const {
+    specialty,
+    country,
+    state,
+    city,
+    appointmentDate,
+    appointmentTime,
+    hospital,
+    doctor, // Expecting the doctor ID from the frontend
+    patientIssue,
+    diseaseName,
+    appointmentType,
+    doctorFees,
+  } = req.body;
+
+  try {
+    // Check if the user making the request is a patient
+    const user = await User.findById(req.user._id);
+    if (!user || user.role !== "patient") {
+      return res
+        .status(403)
+        .json({ message: "Only patients can book appointments" });
     }
-    const [hours, minutes] = time.split(':').map(Number);
-    return hours * 60 + minutes;
+
+    // Check if the doctor exists in the User collection
+    const doctorUser = await User.findById(doctor);
+    if (!doctorUser || doctorUser.role !== "doctor") {
+      return res.status(404).json({ message: "Doctor not found or not valid" });
+    }
+
+    // Check for conflicting appointments (same doctor, same date, and overlapping time)
+    const existingAppointment = await Appointment.findOne({
+      doctor: doctor,  // Same doctor
+      appointmentDate: appointmentDate,  // Same date
+      appointmentTime: appointmentTime  // Same time slot
+    });
+
+    if (existingAppointment) {
+      return res.status(400).json({
+        message: "The selected time slot is already booked for this doctor.",
+      });
+    }
+
+    // Generate a unique room ID (using doctor and patient IDs)
+    const roomID = `${doctorUser._id}_${user._id}_${Date.now()}`;
+
+    // If no conflict, create the appointment
+    const newAppointment = await Appointment.create({
+      patient: req.user._id,
+      specialty,
+      country,
+      state,
+      city,
+      appointmentDate,
+      appointmentTime,
+      hospital,
+      doctor,
+      patientIssue,
+      diseaseName,
+      appointmentType,
+      status: "Pending",
+      doctorFees,
+      roomID,  // Add the generated room ID to the appointment
+    });
+
+    // Return the new appointment including the generated ID
+    res.status(201).json({
+      message: "Appointment created successfully",
+      appointment: {
+        id: newAppointment._id,
+        ...newAppointment._doc,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error creating appointment", error });
+  }
 };
 
-// Helper function to convert "9 AM - 5 PM" format to "09:00-17:00"
-const convertHumanReadableTime = (timeRange) => {
-    const [startTime, endTime] = timeRange.split('-').map(t => t.trim());
+// @desc    Get All Appointments
+// @route   GET /api/appointments
+// @access  Private (Patients only)
+// @desc    Get All Appointments for the logged-in patient
+// @route   GET /api/appointments
+// @access  Private (Patients only)
+exports.getAllAppointments = async (req, res) => {
+  try {
+    const appointments = await Appointment.find()
+      .populate({
+        path: "patient",
+        select: "firstName lastName phoneNumber age gender address",
+      })
+      .populate({
+        path: "doctor",
+        select:
+          "firstName lastName doctorDetails.qualification doctorDetails.specialtyType doctorDetails.experience doctorDetails.hospital _id", // Add _id here to ensure doctor ID is included
+      });
 
-    const convertTo24HourFormat = (time) => {
-        const [timePart, period] = time.split(' ');
-        let [hours, minutes] = timePart.split(':').map(Number);
-
-        if (!minutes) minutes = 0; // Handle case where minutes are not provided (e.g., "9 AM")
-        if (period === 'PM' && hours < 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0; // Handle midnight case
-
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-    };
-
-    const start24Hour = convertTo24HourFormat(startTime);
-    const end24Hour = convertTo24HourFormat(endTime);
-
-    return `${start24Hour}-${end24Hour}`;
-};
-
-// Book appointment function
-
-exports.bookAppointment = async (req, res) => {
-    console.log(req.user);
-
-    try {
-        const {
-            appointmentDate,
-            appointmentTime,
-            appointmentType,
-            patientIssue,
-            diseaseName,
-            country,
-            state,
-            city,
-            hospital,
-            doctorId
-        } = req.body;
-
-        const patientId = req.user._id; // Get the patient's ID from req.user
-        const patientName = req.user.firstName + req.user.lastName; // Fetch patient's name from req.user
-        // console.log(req.user.firstName+req.user.lastName);
-
-        // Find the doctor
-        const doctor = await Doctor.findById(doctorId);
-        if (!doctor) {
-            return res.status(404).json({ message: 'Doctor not found' });
-        }
-
-        // Ensure doctor's working time is valid
-        if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
-            return res.status(400).json({ message: 'Doctor availability times are not set properly' });
-        }
-
-        // Convert workingTime to 24-hour format
-        const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
-
-        // Check if the appointment falls within the doctor's working hours
-        const appointmentHourMinutes = timeToMinutes(appointmentTime);
-        const workingStart = timeToMinutes(workingTimeFormatted.split('-')[0]);
-        const workingEnd = timeToMinutes(workingTimeFormatted.split('-')[1]);
-
-        if (appointmentHourMinutes < workingStart || appointmentHourMinutes > workingEnd) {
-            return res.status(400).json({ message: 'Doctor is not available at this time' });
-        }
-
-        // Check for existing appointments at the same time
-        const existingAppointment = await Appointment.findOne({
-            doctorId,
-            appointmentDate,
-            appointmentTime
-        });
-
-        if (existingAppointment) {
-            return res.status(400).json({ message: 'The doctor already has an appointment at this time' });
-        }
-
-        // Create appointment
-        const appointment = new Appointment({
-            patientId,
-            doctorId,
-            patientName, // Use name from req.user
-            appointmentDate,
-            appointmentTime,
-            appointmentType,
-            patientIssue,
-            diseaseName,
-            country,
-            state,
-            city,
-            hospital,
-            roomID,// Add the generated room ID to the appointment
-        });
-
-        // Save the appointment
-        await appointment.save();
-
-        // Update the patient's record to include the new appointment ID
-        await Patient.findByIdAndUpdate(
-            patientId,
-            { $push: { appointments: appointment._id } }, // Push the appointment ID to the appointments array
-            { new: true } // Return the updated patient document
-        );
-        await Doctor.findByIdAndUpdate(
-            doctorId,
-            { $addToSet: { patients: patientId } }, // Use $addToSet to avoid duplicate patient entries
-            { new: true } // Return the updated doctor document
-        );
-
-        res.status(201).json({ message: 'Appointment booked successfully', appointment });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
+    res.status(200).json({
+      success: true,
+      count: appointments.length,
+      data: appointments.map((appointment) => ({
+        id: appointment._id,
+        appointmentType: appointment.appointmentType,
+        appointmentDate: appointment.appointmentDate,
+        appointmentTime: appointment.appointmentTime,
+        patientName: appointment.patient
+          ? `${appointment.patient.firstName} ${appointment.patient.lastName}`
+          : "Unknown",
+        patientPhoneNumber: appointment.patient
+          ? appointment.patient.phoneNumber
+          : "N/A",
+        patientAge: appointment.patient ? appointment.patient.age : "N/A",
+        patientGender: appointment.patient ? appointment.patient.gender : "N/A",
+        patientIssue: appointment.patientIssue,
+        //  ? appointment.patient.age
+        //  : "N/A",
+        diseaseName: appointment.diseaseName,
+        doctorId: appointment.doctor ? appointment.doctor._id : null, // Add doctor ID to the response
+        patientId: appointment.patient ? appointment.patient._id : null,
+        doctorName: appointment.doctor
+          ? `${appointment.doctor.firstName} ${appointment.doctor.lastName}`
+          : "N/A",
+        doctorSpecialty: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.specialtyType
+          : "N/A",
+        doctorQualification: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.qualification
+          : "N/A",
+        doctorExperience: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.experience
+          : "N/A",
+        doctorHospital: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.hospital.currentHospital
+          : "N/A",
+        patientAddress: appointment.patient
+          ? appointment.patient.address
+          : "N/A",
+        status: appointment.status,
+        doctorFees: appointment.doctorFees,
+        hospitalName: appointment.hospital,
+      })),
+    });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
 
-exports.updateAppointment = async (req, res) => {
-    // console.log(req.params);
+// @desc    Get Appointment by ID
+// @route   GET /api/appointments/:id
+// @access  Private (Patients only)
+exports.getAppointmentById = async (req, res) => {
+  const { id } = req.params;
 
-    try {
-        const appointmentId = req.params.id;
-        const { newAppointmentDate, newAppointmentTime } = req.body;
+  try {
+    const appointment = await Appointment.findById(id)
+      .populate({
+        path: "patient",
+        select: "firstName lastName phoneNumber age gender address",
+      })
+      .populate({
+        path: "doctor",
+        select:
+          "firstName lastName specialty qualification experience hospital",
+      });
 
-        // Find the existing appointment
-        const appointment = await Appointment.findById(appointmentId);
-        console.log("appointment" + appointment);
-
-        if (!appointment) {
-            return res.status(404).json({ message: 'Appointment not found' });
-        }
-
-        const doctorId = appointment.doctorId;
-        console.log("Doctor ID:", doctorId);
-        // Find the doctor
-        const doctor = await Doctor.findById(doctorId);
-        console.log(doctor);
-
-        if (!doctor) {
-            return res.status(404).json({ message: 'Doctor not found' });
-        }
-
-        // Convert doctor's working time to 24-hour format
-        const workingTimeFormatted = convertHumanReadableTime(doctor.workingTime);
-        const workingStart = timeToMinutes(workingTimeFormatted.split('-')[0]);
-        const workingEnd = timeToMinutes(workingTimeFormatted.split('-')[1]);
-
-        // Ensure doctor timings exist and are valid
-        if (!doctor.workingTime || !doctor.checkupTime || !doctor.breakTime) {
-            return res.status(400).json({ message: 'Doctor availability times are not set properly' });
-        }
-
-        const newAppointmentMinutes = timeToMinutes(newAppointmentTime);
-
-        // Check if the new time falls within the doctor's working hours
-        if (newAppointmentMinutes < workingStart || newAppointmentMinutes > workingEnd) {
-            return res.status(400).json({ message: 'Doctor is not available at this time' });
-        }
-
-        // Check for overlapping appointments
-        const overlappingAppointment = await Appointment.findOne({
-            doctorId,
-            appointmentDate: newAppointmentDate,
-            appointmentTime: newAppointmentTime,
-            _id: { $ne: appointmentId } // Exclude the current appointment
-        });
-
-        if (overlappingAppointment) {
-            return res.status(400).json({ message: 'Another appointment exists at this time' });
-        }
-
-        // Update the appointment date and time
-        appointment.appointmentDate = newAppointmentDate;
-        appointment.appointmentTime = newAppointmentTime;
-
-        await appointment.save();
-
-        res.status(200).json({ message: 'Appointment updated successfully', appointment });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
     }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        id: appointment._id,
+        appointmentType: appointment.appointmentType,
+        appointmentDate: appointment.appointmentDate,
+        appointmentTime: appointment.appointmentTime,
+        patientName: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
+        patientPhoneNumber: appointment.patient.phoneNumber,
+        patientAge: appointment.patient.age,
+        patientGender: appointment.patient.gender,
+        patientIssue: appointment.patientIssue,
+        diseaseName: appointment.diseaseName,
+        doctorName: appointment.doctor
+          ? `${appointment.doctor.firstName} ${appointment.doctor.lastName}`
+          : "N/A",
+        doctorSpecialty: appointment.doctor
+          ? appointment.doctor.specialty
+          : "N/A",
+        doctorQualification: appointment.doctor
+          ? appointment.doctor.qualification
+          : "N/A",
+        doctorExperience: appointment.doctor
+          ? appointment.doctor.experience
+          : "N/A",
+        doctorHospital: appointment.doctor
+          ? appointment.doctor.hospital
+          : "N/A",
+        patientAddress: appointment.patient.address,
+        status: appointment.status,
+        doctorFees: appointment.doctorFees,
+        hospitalName: appointment.hospital,
+        roomID: appointment.roomID, // Provide roomID for video call
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
 };
 
-exports.deleteAppointment = async (req, res) => {
-    try {
-        const { appointmentId } = req.params;
+// @desc    Reschedule Appointment
+// @route   PATCH /api/appointments/reschedule/:id
+// @access  Private
+exports.rescheduleAppointment = async (req, res) => {
+  const { id } = req.params;
+  const { appointmentDate, appointmentTime } = req.body;
 
-        // Find and delete the appointment
-        const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId);
-        if (!deletedAppointment) {
-            return res.status(404).json({ message: 'Appointment not found' });
-        }
+  try {
+    const appointment = await Appointment.findById(id);
 
-        res.status(200).json({ message: 'Appointment deleted successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
     }
+
+    appointment.appointmentDate =
+      appointmentDate || appointment.appointmentDate;
+    appointment.appointmentTime =
+      appointmentTime || appointment.appointmentTime;
+
+    await appointment.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Appointment rescheduled successfully",
+      data: appointment,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// @desc    Cancel Appointment
+// @route   PATCH /api/appointments/cancel/:id
+// @access  Private
+// @desc    Cancel Appointment
+// @route   PATCH /api/appointments/cancel/:id
+// @access  Private
+exports.cancelAppointment = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const appointment = await Appointment.findById(id);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    appointment.status = "Cancelled"; // Update the status to cancelled
+
+    await appointment.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Appointment cancelled successfully",
+      data: appointment,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+// @desc    Get all booked appointments for a doctor on a given date
+// @route   GET /api/appointments/booked/:doctorId/:date
+// @access  Private
+exports.getDoctorAppointmentsByDate = async (req, res) => {
+  const { doctorId, date } = req.params;
+
+  try {
+    // Find all appointments for the doctor on the selected date
+    const appointments = await Appointment.find({
+      doctor: doctorId,
+      appointmentDate: new Date(date),  // Ensure correct date format
+    }).select("appointmentTime");
+
+    res.status(200).json({
+      success: true,
+      bookedSlots: appointments.map((a) => a.appointmentTime),
+    });
+  } catch (error) {
+    console.error("Error fetching doctor's appointments:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+
+// @desc    Get booked slots for a specific doctor on a particular date
+// @route   GET /api/appointments/booked/:doctorId/:date
+// @access  Private (for fetching booked slots for appointment booking)
+exports.getBookedSlots = async (req, res) => {
+  const { doctorId } = req.params; // We don't need to pass a specific date
+
+  try {
+    // Find all appointments for the doctor
+    const appointments = await Appointment.find({
+      doctor: doctorId,
+      status: "Pending", // Only consider appointments that are pending
+    }).select("appointmentDate appointmentTime");
+
+    // Group booked slots by date
+    const bookedSlotsByDate = {};
+
+    appointments.forEach(appointment => {
+      const dateKey = appointment.appointmentDate.toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+      if (!bookedSlotsByDate[dateKey]) {
+        bookedSlotsByDate[dateKey] = [];
+      }
+      bookedSlotsByDate[dateKey].push(appointment.appointmentTime);
+    });
+
+    // Return the grouped booked slots
+    res.status(200).json({
+      success: true,
+      bookedSlots: bookedSlotsByDate, // Slots grouped by date
+    });
+  } catch (error) {
+    console.error("Error fetching booked slots:", error);
+    res.status(500).json({ message: "Error fetching booked slots", error });
+  }
+};
+
+// @desc    Update appointment status
+// @route   PATCH /api/appointments/:id
+// @access  Private
+exports.updateAppointmentStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body; // Status will be passed in the request body
+
+  try {
+    // Find the appointment by ID
+    const appointment = await Appointment.findById(id);
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    // Update the appointment status
+    appointment.status = status || appointment.status;
+
+    await appointment.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Appointment status updated successfully",
+      data: appointment,
+    });
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
 };
