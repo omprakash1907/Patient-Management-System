@@ -1,13 +1,9 @@
-// routes/paymentRoutes.js
 const express = require('express');
 const router = express.Router();
-const paymentController = require('../controllers/paymentController');
+const { createPayment, executePayment, cancelPayment } = require('../controllers/paymentController');
 
-// Pay route
-router.post('/pay/:billId', paymentController.initiatePayment); 
-
-// Capture payment route
-router.post('/capture', paymentController.capturePayment);
-
+router.post('/create', createPayment);  // Create a payment
+router.get('/success', executePayment);  // Handle success after PayPal approval
+// router.get('/cancel', cancelPayment);    // Handle canceled payments
 
 module.exports = router;
