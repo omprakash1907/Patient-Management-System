@@ -76,6 +76,10 @@ app.get("/uploads-list", (req, res) => {
   });
 });
 
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
+
 
 
 // Start server and initialize Socket.io
