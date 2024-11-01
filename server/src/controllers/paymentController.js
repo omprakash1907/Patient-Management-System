@@ -1,123 +1,78 @@
-// controllers/paymentController.js
-const paypal = require('@paypal/checkout-server-sdk');
-const Bill = require('../models/bill');
-const dotenv = require('dotenv');
-dotenv.config();
+const paypal = require("paypal-rest-sdk");
 
-// PayPal environment setup
-const environment = new paypal.core.SandboxEnvironment(process.env.PAYPAL_CLIENT_ID, process.env.PAYPAL_CLIENT_SECRET);
-const client = new paypal.core.PayPalHttpClient(environment);
+paypal.configure({
+  mode: "sandbox", // 'sandbox' for testing, 'live' for production
+  client_id: "AbBvw2_XUvhfKmOWafxTS77MS2lxpmMxJAOYcwRK1ZtRWrMG9XFhUWM1qSAoT1RBf-8RtjTur3mtQ0gT",  // Replace with your client ID
+  client_secret: "EDRKbUQf82m9qi9SaUuUrbrf7hWPyvKregYDSfByYbLS7sQ7r84tsm1U2C0P0ySPwZVuTAFeJj-cr8gX",  // Replace with your client secret
+});
 
-// Initiate PayPal payment
-exports.initiatePayment = async (req, res) => {
-    const { billId } = req.params; // Bill ID from the URL parameter
-    try {
-        // Fetch the bill to get the total payable amount
-        const bill = await Bill.findById(billId);
-        if (!bill) {
-            return res.status(404).json({ error: 'Bill not found' });
+// Route for creating a payment
+// paymentController.js
+exports.createPayment = (req, res) => {
+  const { totalAmount } = req.body;
+
+  const create_payment_json = {
+    intent: "sale",
+    payer: { payment_method: "paypal" },
+    redirect_urls: {
+      return_url: "http://localhost:3000/payment/success",
+      cancel_url: "http://localhost:3000/payment/cancel",
+    },
+    transactions: [
+      {
+        item_list: {
+          items: [
+            {
+              name: "Hospital Bill Payment",
+              sku: "001",
+              price: totalAmount,
+              currency: "USD", // Change this to the correct currency code
+              quantity: 1,
+            },
+          ],
+        },
+        amount: {
+          currency: "USD", // Ensure this matches the accepted currency in your PayPal account
+          total: totalAmount,
+        },
+        description: "Payment for Hospital Bill",
+      },
+    ],
+  };
+  
+
+  paypal.payment.create(create_payment_json, (error, payment) => {
+    if (error) {
+      console.error("Error creating PayPal payment:", error.response); // Log the actual error response
+      return res.status(500).json({ message: "Payment creation failed", error });
+    } else {
+      for (let i = 0; i < payment.links.length; i++) {
+        if (payment.links[i].rel === "approval_url") {
+          return res.status(200).json({ forwardLink: payment.links[i].href });
         }
-
-        const totalAmount = bill.totalPrice;
-
-        // Create the order for PayPal
-        const request = new paypal.orders.OrdersCreateRequest();
-        request.prefer("return=representation");
-        request.requestBody({
-            intent: "CAPTURE",
-            purchase_units: [{
-                amount: {
-                    currency_code: "USD",
-                    value: totalAmount.toString()
-                }
-            }],
-            application_context: {
-                brand_name: "Your App Name",
-                landing_page: "BILLING",
-                user_action: "PAY_NOW",
-                return_url: `${process.env.PAYPAL_RETURN_URL}`,
-                cancel_url: `${process.env.PAYPAL_CANCEL_URL}`
-            }
-        });
-
-        // Execute the payment creation
-        const order = await client.execute(request);
-
-        res.status(200).json({
-            success: true,
-            orderId: order.result.id,
-            approvalUrl: order.result.links.find(link => link.rel === 'approve').href
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Payment initiation failed', message: error.message });
+      }
     }
-};
-
-// Capture PayPal payment
-
-// Capture PayPal payment
-// Capture PayPal payment
-exports.capturePayment = async (req, res) => {
-    const { orderId, billId } = req.body;
-    try {
-        const request = new paypal.orders.OrdersCaptureRequest(orderId);
-        request.requestBody({});
-
-        const capture = await client.execute(request);
-
-        console.log('Capture Response:', capture); // Log the entire capture response
-
-        // Check if payment was successful
-        if (capture.result.status !== 'COMPLETED') {
-            return res.status(400).json({ error: 'Payment capture failed, order is not completed' });
-        }
-
-        // Update the bill status to 'paid'
-        const bill = await Bill.findByIdAndUpdate(billId, { status: 'paid' }, { new: true });
-
-        if (!bill) {
-            return res.status(404).json({ error: 'Bill not found' });
-            
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'Payment successful',
-            captureId: capture.result.id,
-            bill // Return the updated bill information
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Payment capture failed', message: error.message });
-    }
+  });
 };
 
 
-// exports.capturePayment = async (req, res) => {
-//     const { orderId, billId } = req.body;
-//     try {
-//         const request = new paypal.orders.OrdersCaptureRequest(orderId);
-//         request.requestBody({});
+// Route for executing the payment
+exports.executePayment = (req, res) => {
+  const payerId = req.query.PayerID;
+  const paymentId = req.query.paymentId;
+  const { totalAmount } = req.body;
 
-//         const capture = await client.execute(request);
+  const execute_payment_json = {
+    payer_id: payerId,
+    transactions: [{ amount: { currency: "USD", total: totalAmount } }]
+  };
 
-//         // Update the bill status to 'paid'
-//         const bill = await Bill.findByIdAndUpdate(billId, { status: 'paid' }, { new: true });
-
-//         if (!bill) {
-//             return res.status(404).json({ error: 'Bill not found' });
-//         }
-
-//         res.status(200).json({
-//             success: true,
-//             message: 'Payment successful',
-//             captureId: capture.result.id,
-//             status: capture.result.status,
-//             bill
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ error: 'Payment capture failed', message: error.message });
-//     }
-// };
+  paypal.payment.execute(paymentId, execute_payment_json, (error, payment) => {
+    if (error) {
+      console.error("Payment execution error", error);
+      res.status(500).send(error);
+    } else {
+      res.json({ payment });
+    }
+  });
+};
