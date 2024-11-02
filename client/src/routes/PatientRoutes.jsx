@@ -1,18 +1,19 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import PatientDashboard from "../pages/Patient/PatientDashboard";
-import PatientEditProfile from "../pages/Patient/PatientEditProfile";
-import PrescriptionPage from "../pages/Patient/PrescriptionPage";
-import TestReportPage from "../pages/Patient/TestReportPage";
-import MedicalHistoryPage from "../pages/Patient/MedicalHistoryPage";
-import AppointmentBookingPage from "../pages/Patient/AppointmentBookingPage";
-import PrescriptionAccessPage from "../pages/Patient/PrescriptionAccessPage";
-import ChatPage from "../pages/Patient/ChatPage";
-import BillPage from "../pages/Patient/BillPage";
-import TeleAccess from "../pages/Patient/TeleAccess";
+
+import PatientEditProfile from "../pages/patient/PatientEditProfile";
+import PrescriptionPage from "../pages/patient/PrescriptionPage";
+import TestReportPage from "../pages/patient/TestReportPage";
+import MedicalHistoryPage from "../pages/patient/MedicalHistoryPage";
+import AppointmentBookingPage from "../pages/patient/AppointmentBookingPage";
+import PrescriptionAccessPage from "../pages/patient/PrescriptionAccessPage";
+import ChatPage from "../pages/patient/ChatPage";
+import BillPage from "../pages/patient/BillPage";
+import TeleAccess from "../pages/patient/TeleAccess";
 import CommonLayout from "../components/Layout/CommonLayout";
-import BookAppointment from "../pages/Patient/BookAppointment";
-import RescheduleAppointment from "../pages/Patient/RescheduleAppointment ";
+import BookAppointment from "../pages/patient/BookAppointment";
+import RescheduleAppointment from "../pages/patient/RescheduleAppointment ";
+import PatientDashboard from "../pages/patient/PatientDashboard";
 
 const PatientRoutes = () => {
   return (
