@@ -56,7 +56,7 @@ const CommonSidebar = ({ role }) => {
         { label: 'Manage', path: '/doctor/manage-prescription' },
       ],
     },
-    { label: 'Teleconsultation', path: '/doctor/teleconsultation', icon: FaCommentDots },
+    { label: 'Teleconsultation Module', path: '/doctor/teleconsultation', icon: FaCommentDots },
     { label: 'Chat', path: '/doctor/doctor-chat', icon: FaCommentDots },
   ];
 

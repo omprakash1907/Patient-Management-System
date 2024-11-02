@@ -13,6 +13,8 @@ import PrescriptionView from "../pages/doctor/PrescriptionView";
 import ManagePrescription from "../pages/doctor/ManagePrescription";
 import PatientDetailPage from "../pages/doctor/PatientDetailPage";
 import ChatPage from "../pages/ChatPage";
+import TeleConsultationScreen from "../pages/doctor/TeleConsultationScreen";
+import DoctorMeetingConference from "../pages/doctor/DoctorMeetingConference";
 
 const DoctorRoutes = () => {
   return (
@@ -102,6 +104,22 @@ const DoctorRoutes = () => {
         element={
           <CommonLayout role="doctor">
             <ManagePrescription />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/teleconsultation"
+        element={
+          <CommonLayout role="doctor">
+            <TeleConsultationScreen />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/doctorMeetingConference/:appointmentId"
+        element={
+          <CommonLayout role="doctor">
+            <DoctorMeetingConference />
           </CommonLayout>
         }
       />

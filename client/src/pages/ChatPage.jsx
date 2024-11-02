@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import userImage from "../assets/images/user.png";
 import chatIcon from "../assets/images/chat-icon.png";
 import io from "socket.io-client";
+import { useBreadcrumb } from "../context/BreadcrumbContext";
 
 const socket = io("http://localhost:8000");
 
@@ -14,6 +15,14 @@ const ChatPage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [selectedChat, setSelectedChat] = useState(null);
+
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Chat", path: "/chat" },
+    ]);
+  }, []);
 
   const messagesEndRef = useRef(null);
 
@@ -43,7 +52,8 @@ const ChatPage = () => {
     if (!role || !token) return;
 
     const fetchUsers = async () => {
-      const endpoint = role === "doctor" ? "/api/users/patients" : "/api/users/doctors";
+      const endpoint =
+        role === "doctor" ? "/api/users/patients" : "/api/users/doctors";
       try {
         const response = await fetch(`http://localhost:8000${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -62,9 +72,12 @@ const ChatPage = () => {
     if (selectedChat) {
       const fetchMessages = async () => {
         try {
-          const response = await fetch(`http://localhost:8000/api/chats/${selectedChat}/messages`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await fetch(
+            `http://localhost:8000/api/chats/${selectedChat}/messages`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           const data = await response.json();
           setMessages(data.messages || []);
           scrollToBottom();
@@ -120,17 +133,22 @@ const ChatPage = () => {
     if (!newMessage.trim() || !selectedChat) return;
 
     try {
-      const sendMessageResponse = await fetch(`http://localhost:8000/api/chats/${selectedChat}/message`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ content: newMessage }),
-      });
+      const sendMessageResponse = await fetch(
+        `http://localhost:8000/api/chats/${selectedChat}/message`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ content: newMessage }),
+        }
+      );
 
       if (!sendMessageResponse.ok) {
-        throw new Error(`Error ${sendMessageResponse.status}: ${sendMessageResponse.statusText}`);
+        throw new Error(
+          `Error ${sendMessageResponse.status}: ${sendMessageResponse.statusText}`
+        );
       }
 
       setNewMessage("");
@@ -141,13 +159,15 @@ const ChatPage = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       sendMessage();
     }
   };
 
-  const filteredUserList = userList.filter(user =>
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUserList = userList.filter((user) =>
+    `${user.firstName} ${user.lastName}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -170,15 +190,23 @@ const ChatPage = () => {
               <div
                 key={user._id}
                 onClick={() => startChat(user)}
-                className={`flex items-center p-2 cursor-pointer ${selectedChatUser && selectedChatUser._id === user._id ? "bg-blue-100" : ""}`}
+                className={`flex items-center p-2 cursor-pointer ${
+                  selectedChatUser && selectedChatUser._id === user._id
+                    ? "bg-blue-100"
+                    : ""
+                }`}
               >
                 <img
-                  src={`http://localhost:8000/${user.profileImage || userImage}`}
+                  src={`http://localhost:8000/${
+                    user.profileImage || userImage
+                  }`}
                   alt="avatar"
                   className="w-12 h-12 rounded-full mr-4"
                 />
                 <div>
-                  <p className="font-semibold">{user.firstName} {user.lastName}</p>
+                  <p className="font-semibold">
+                    {user.firstName} {user.lastName}
+                  </p>
                   <p className="text-gray-500">Last message preview...</p>
                 </div>
               </div>
@@ -196,16 +224,40 @@ const ChatPage = () => {
         {selectedChatUser ? (
           <>
             <div className="flex items-center p-4 bg-white border-b">
-              <img src={`http://localhost:8000/${selectedChatUser.profileImage || userImage}`} alt="avatar" className="w-12 h-12 rounded-full mr-4" />
+              <img
+                src={`http://localhost:8000/${
+                  selectedChatUser.profileImage || userImage
+                }`}
+                alt="avatar"
+                className="w-12 h-12 rounded-full mr-4"
+              />
               <div>
-                <h3 className="font-semibold">{selectedChatUser.firstName} {selectedChatUser.lastName}</h3>
+                <h3 className="font-semibold">
+                  {selectedChatUser.firstName} {selectedChatUser.lastName}
+                </h3>
                 <p className="text-gray-500">Last seen at 9:00 PM</p>
               </div>
             </div>
-            <div className="flex-1 p-4 space-y-2 overflow-y-auto" ref={messagesEndRef}>
+            <div
+              className="flex-1 p-4 space-y-2 overflow-y-auto"
+              ref={messagesEndRef}
+            >
               {messages.map((message, index) => (
-                <div key={index} className={`flex ${message.sender._id === loggedInUserId ? "justify-end" : "justify-start"}`}>
-                  <div className={`p-3 rounded-lg ${message.sender._id === loggedInUserId ? "bg-customBlue text-white" : "bg-gray-200 text-gray-800"}`}>
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.sender._id === loggedInUserId
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`p-3 rounded-lg ${
+                      message.sender._id === loggedInUserId
+                        ? "bg-customBlue text-white"
+                        : "bg-gray-200 text-gray-800"
+                    }`}
+                  >
                     {message.content.endsWith(".pdf") ? (
                       <div className="flex items-center space-x-2">
                         <FaFilePdf className="text-red-600" />
@@ -214,7 +266,15 @@ const ChatPage = () => {
                     ) : (
                       <p>{message.content}</p>
                     )}
-                    <span className={`text-xs ${message.sender._id === loggedInUserId ? "text-white" : "text-gray-500"} block mt-1`}>{new Date(message.createdAt).toLocaleString()}</span>
+                    <span
+                      className={`text-xs ${
+                        message.sender._id === loggedInUserId
+                          ? "text-white"
+                          : "text-gray-500"
+                      } block mt-1`}
+                    >
+                      {new Date(message.createdAt).toLocaleString()}
+                    </span>
                   </div>
                 </div>
               ))}
@@ -229,7 +289,12 @@ const ChatPage = () => {
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
               />
-              <button onClick={sendMessage} className="ml-2 bg-customBlue text-white px-4 py-2 rounded-lg">Send</button>
+              <button
+                onClick={sendMessage}
+                className="ml-2 bg-customBlue text-white px-4 py-2 rounded-lg"
+              >
+                Send
+              </button>
             </div>
           </>
         ) : (
