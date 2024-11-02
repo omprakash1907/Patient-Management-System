@@ -7,7 +7,7 @@ import {
 } from "react-icons/fa";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
 import logo from "../../assets/images/logo.png";
-import PrescriptionModal from "../../components/Patient/PrescritionModal";
+import PrescriptionModal from "../../components/PrescritionModal";
 import api from "../../api/api";
 
 const PrescriptionAccessPage = () => {

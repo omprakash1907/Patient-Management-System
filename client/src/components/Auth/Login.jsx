@@ -20,17 +20,21 @@ const Login = () => {
 
     if (token && role) {
       // Redirect based on the stored role
-      if (role === "doctor") {
-        navigate("/doctor/profile-setting");
-      } else if (role === "admin") {
-        navigate("/admin/profile-setting");
-      } else if (role === "patient") {
-        navigate("/patient/patient-dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      redirectToDashboard(role);
     }
   }, [navigate]);
+
+  const redirectToDashboard = (role) => {
+    if (role === "doctor") {
+      navigate("/doctor/profile-setting");
+    } else if (role === "admin") {
+      navigate("/admin/profile-setting");
+    } else if (role === "patient") {
+      navigate("/patient/patient-dashboard");
+    } else {
+      navigate("/dashboard");
+    }
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -55,24 +59,22 @@ const Login = () => {
       try {
         const { token, role } = await loginUser({ email, password });
 
-        localStorage.setItem("token", token);
-        localStorage.setItem("role", role);
+        if (token && role) {
+          // Set token and role in local storage
+          localStorage.setItem("token", token);
+          localStorage.setItem("role", role);
 
-        Swal.fire({
-          icon: 'success',
-          title: 'Login successfully!!',
-          text: 'Your operation was successful.',
-          confirmButtonText: 'OK',
-        });
+          Swal.fire({
+            icon: 'success',
+            title: 'Login successfully!!',
+            text: 'Your operation was successful.',
+            confirmButtonText: 'OK',
+          });
 
-        if (role === 'doctor') {
-          navigate("/doctor/profile-setting");
-        } else if (role === 'admin') {
-          navigate("/admin/profile-setting");
-        } else if (role === 'patient') {
-          navigate("/patient/patient-dashboard");
+          // Reload the page after setting token and role
+          window.location.reload();
         } else {
-          navigate("/dashboard");
+          throw new Error("Invalid login details");
         }
         
       } catch (error) {

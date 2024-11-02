@@ -7,9 +7,12 @@ import moment from 'moment';
 import DatePicker from "react-datepicker";
 import noRecordImage from "../../assets/images/nodoctor.png";
 import "react-datepicker/dist/react-datepicker.css";
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
 
 // Modal for Payment Return Confirmation (second image)
 const PaymentReturnModal = ({ open, onClose, onConfirm }) => {
+    
+
     return (
         <div className={`fixed inset-0 flex justify-center items-center ${open ? 'block' : 'hidden'} bg-black bg-opacity-50 `}>
             <div className="bg-white rounded-lg shadow-lg w-[420px] border-t-8 border-red-500 p-2">
@@ -140,6 +143,14 @@ const AppointmentManagement = () => {
     const [selectedDate, setSelectedDate] = useState(null); // State for selected date
 
     const navigate = useNavigate();
+
+    const { updateBreadcrumb } = useBreadcrumb();
+
+    useEffect(() => {
+        updateBreadcrumb([
+          { label: "Appointment Management", path: "/doctor/appointment-management" },
+        ]);
+      }, []);
 
     useEffect(() => {
         const generateTimeSlots = () => {

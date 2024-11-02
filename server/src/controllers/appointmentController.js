@@ -95,13 +95,15 @@ exports.getAllAppointments = async (req, res) => {
     const appointments = await Appointment.find()
       .populate({
         path: "patient",
-        select: "firstName lastName phoneNumber age gender address",
+        select: "firstName lastName phoneNumber age gender address profileImage email dateOfBirth bloodGroup height weight country state city",
       })
       .populate({
         path: "doctor",
-        select:
-          "firstName lastName doctorDetails.qualification doctorDetails.specialtyType doctorDetails.experience doctorDetails.hospital _id", // Add _id here to ensure doctor ID is included
+        select: "firstName lastName doctorDetails.qualification doctorDetails.specialtyType doctorDetails.experience doctorDetails.hospital doctorDetails.description doctorDetails.zipCode doctorDetails.onlineConsultationRate country state city",
       });
+
+    // Log the appointments to verify data structure
+    console.log("Populated Appointments Data:", appointments);
 
     res.status(200).json({
       success: true,
@@ -112,18 +114,16 @@ exports.getAllAppointments = async (req, res) => {
         appointmentDate: appointment.appointmentDate,
         appointmentTime: appointment.appointmentTime,
         patientName: appointment.patient
-          ? `${appointment.patient.firstName} ${appointment.patient.lastName}`
+          ? `${appointment.patient.firstName} ${appointment.patient.lastName || ''}`
           : "Unknown",
-        patientPhoneNumber: appointment.patient
-          ? appointment.patient.phoneNumber
-          : "N/A",
+        patientPhoneNumber: appointment.patient ? appointment.patient.phoneNumber : "N/A",
         patientAge: appointment.patient ? appointment.patient.age : "N/A",
+        profileImage: appointment.patient ? appointment.patient.profileImage : "N/A",
+        email: appointment.patient ? appointment.patient.email : "N/A",
         patientGender: appointment.patient ? appointment.patient.gender : "N/A",
         patientIssue: appointment.patientIssue,
-        //  ? appointment.patient.age
-        //  : "N/A",
         diseaseName: appointment.diseaseName,
-        doctorId: appointment.doctor ? appointment.doctor._id : null, // Add doctor ID to the response
+        doctorId: appointment.doctor ? appointment.doctor._id : null,
         patientId: appointment.patient ? appointment.patient._id : null,
         doctorName: appointment.doctor
           ? `${appointment.doctor.firstName} ${appointment.doctor.lastName}`
@@ -138,14 +138,28 @@ exports.getAllAppointments = async (req, res) => {
           ? appointment.doctor.doctorDetails.experience
           : "N/A",
         doctorHospital: appointment.doctor && appointment.doctor.doctorDetails
-          ? appointment.doctor.doctorDetails.hospital.currentHospital
+          ? appointment.doctor.doctorDetails.hospital.hospitalName
           : "N/A",
-        patientAddress: appointment.patient
-          ? appointment.patient.address
+        patientAddress: appointment.patient ? appointment.patient.address : "N/A",
+        doctorDescription: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.description
           : "N/A",
-        status: appointment.status,
+        doctorZipCode: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.zipCode
+          : "N/A",
+        onlineConsultationRate: appointment.doctor && appointment.doctor.doctorDetails
+          ? appointment.doctor.doctorDetails.onlineConsultationRate
+          : "N/A",
+        country: appointment.patient ? appointment.patient.country : "N/A",
+        state: appointment.patient ? appointment.patient.state : "N/A",
+        city: appointment.patient ? appointment.patient.city : "N/A",
         doctorFees: appointment.doctorFees,
         hospitalName: appointment.hospital,
+        bloodGroup: appointment.patient ? appointment.patient.bloodGroup : "N/A",
+        height: appointment.patient ? appointment.patient.height : "N/A",
+        weight: appointment.patient ? appointment.patient.weight : "N/A",
+        dateOfBirth: appointment.patient ? appointment.patient.dateOfBirth : "N/A",
+        status: appointment.status,
       })),
     });
   } catch (error) {

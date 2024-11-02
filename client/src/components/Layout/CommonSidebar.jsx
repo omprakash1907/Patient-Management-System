@@ -57,7 +57,7 @@ const CommonSidebar = ({ role }) => {
       ],
     },
     { label: 'Teleconsultation', path: '/doctor/teleconsultation', icon: FaCommentDots },
-    { label: 'Chat', path: '/doctor/chat', icon: FaCommentDots },
+    { label: 'Chat', path: '/doctor/doctor-chat', icon: FaCommentDots },
   ];
 
   // Function to get menu items based on role

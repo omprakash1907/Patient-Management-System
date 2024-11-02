@@ -7,13 +7,13 @@ import TestReportPage from "../pages/patient/TestReportPage";
 import MedicalHistoryPage from "../pages/patient/MedicalHistoryPage";
 import AppointmentBookingPage from "../pages/patient/AppointmentBookingPage";
 import PrescriptionAccessPage from "../pages/patient/PrescriptionAccessPage";
-import ChatPage from "../pages/patient/ChatPage";
 import BillPage from "../pages/patient/BillPage";
 import TeleAccess from "../pages/patient/TeleAccess";
 import CommonLayout from "../components/Layout/CommonLayout";
 import BookAppointment from "../pages/patient/BookAppointment";
 import RescheduleAppointment from "../pages/patient/RescheduleAppointment ";
 import PatientDashboard from "../pages/patient/PatientDashboard";
+import ChatPage from "../pages/ChatPage";
 
 const PatientRoutes = () => {
   return (

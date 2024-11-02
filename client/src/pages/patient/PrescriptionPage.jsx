@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEye, FaSearch } from "react-icons/fa";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
-import PrescriptionModal from "../../components/Patient/PrescritionModal";
+import PrescriptionModal from "../../components/PrescritionModal";
 import api from "../../api/api";
 
 const PrescriptionPage = () => {

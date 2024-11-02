@@ -1,5 +1,3 @@
-// src/routes/DoctorRoutes.jsx
-
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import CommonLayout from "../components/Layout/CommonLayout";
@@ -13,6 +11,8 @@ import CreatePrescriptionPage from "../pages/doctor/CreatePrescriptionPage";
 import CreatePrescriptionForm from "../pages/doctor/CreatePrescriptionForm";
 import PrescriptionView from "../pages/doctor/PrescriptionView";
 import ManagePrescription from "../pages/doctor/ManagePrescription";
+import PatientDetailPage from "../pages/doctor/PatientDetailPage";
+import ChatPage from "../pages/ChatPage";
 
 const DoctorRoutes = () => {
   return (
@@ -66,6 +66,14 @@ const DoctorRoutes = () => {
         }
       />
       <Route
+        path="/patient-detail/:id"
+        element={
+          <CommonLayout role="doctor">
+            <PatientDetailPage />
+          </CommonLayout>
+        }
+      />
+      <Route
         path="/create-prescription"
         element={
           <CommonLayout role="doctor">
@@ -94,6 +102,14 @@ const DoctorRoutes = () => {
         element={
           <CommonLayout role="doctor">
             <ManagePrescription />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/doctor-chat"
+        element={
+          <CommonLayout role="doctor">
+            <ChatPage />
           </CommonLayout>
         }
       />
