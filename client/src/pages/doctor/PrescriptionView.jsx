@@ -55,7 +55,7 @@ const PrescriptionView = () => {
     }
 
     return (
-        <div className="p-8 bg-white min-h-screen shadow-lg rounded-lg">
+        <div className="p-8 bg-white min-h-screen rounded-xl m-6">
             {/* Patient Information */}
             <div className="bg-white p-4 rounded-lg ">
                 <div className="flex justify-between items-center mb-6">
@@ -198,7 +198,7 @@ const PrescriptionView = () => {
                 <TabPanel>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {files.length > 0 ? files.map((file, index) => (
-                            <div key={index} className="border p-4 rounded-lg shadow">
+                            <div key={index} className="border p-4 rounded-lg border-gray-100">
                                 <p>{file.description}</p>
                             </div>
                         )) : (

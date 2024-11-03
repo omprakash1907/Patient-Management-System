@@ -5,12 +5,20 @@ import DoctorOffCanvas from "../../components/Admin/DoctorOffCanvas";
 import api from "../../api/api";
 import noRecordImage from "../../assets/images/nodoctor.png";
 import userImage from "../../assets/images/user.png";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const DoctorManagement = () => {
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [isOffCanvasOpen, setIsOffCanvasOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Doctor Management", path: "/admin/doctor-management" },
+    ]);
+  }, []);
 
   // Fetch doctors from API
   useEffect(() => {
@@ -163,22 +171,22 @@ const DoctorManagement = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-xl text-center  h-full">
-                    <div className="flex items-center justify-center space-x-4">
+                    <div className="flex items-center justify-center space-x-2">
                       {" "}
-                      <button
-                        onClick={() => handleViewClick(doctor)}
-                        className="text-customBlue bg-gray-100 p-2 rounded-lg"
-                        title="View"
-                      >
-                        <FaEye />
-                      </button>
                       <Link
                         to={`/admin/doctor-management/edit/${doctor._id}`}
-                        className="text-green-500 hover:text-green-600 mx-2 bg-gray-100 p-2 rounded-lg"
+                        className="text-green-500 hover:text-green-600  bg-gray-100 p-2 rounded-lg"
                         title="Edit"
                       >
                         <FaEdit />
                       </Link>
+                      <button
+                        onClick={() => handleViewClick(doctor)}
+                        className="text-customBlue bg-gray-100 p-2 rounded-lg "
+                        title="View"
+                      >
+                        <FaEye />
+                      </button>
                       <button
                         onClick={() => handleDeleteDoctor(doctor._id)}
                         className="text-red-500 hover:text-red-600 bg-gray-100 p-2 rounded-lg"

@@ -5,10 +5,19 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import Swal from "sweetalert2";
 import countryData from "../../country-json/countries+states+cities.json";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const EditDoctor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Doctor Management", path: "/admin/doctor-management" },
+      { label: "Edit Doctor", path: "admin/doctor-management/edit/:id" },
+    ]);
+  }, [updateBreadcrumb]);
 
   const [formData, setFormData] = useState({
     firstName: "",

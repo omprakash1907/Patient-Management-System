@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCalendarAlt } from "react-icons/fa";
-import api from "../../api/api"; // Import the Axios instance from api.js
-import moment from "moment"; // For handling date comparisons
-import { jwtDecode } from "jwt-decode"; // To decode the token and extract doctorId
+import api from "../../api/api";
+import moment from "moment";
+import { jwtDecode } from "jwt-decode";
 import TeleConsultationCard from "../../components/commonComponent/TeleConsultationCard";
 import CustomDateFilter from "../../components/commonComponent/CustomDateFilter";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
+import noRecordImage from "../../assets/images/nodoctor.png"; // Import the "No records" image
 
 const TeleConsultationScreen = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -15,7 +16,7 @@ const TeleConsultationScreen = () => {
     fromDate: null,
     toDate: null,
   });
-  const [appointments, setAppointments] = useState([]); // State to store appointments
+  const [appointments, setAppointments] = useState([]);
 
   const { updateBreadcrumb } = useBreadcrumb();
 
@@ -25,12 +26,11 @@ const TeleConsultationScreen = () => {
     ]);
   }, []);
 
-  // Fetch the appointments for the logged-in doctor
   const fetchAppointments = async () => {
     try {
       const token = localStorage.getItem("token");
-      const decodedToken = jwtDecode(token); // Decode the token to get the doctorId
-      const loggedInDoctorId = decodedToken.id; // Assuming the token has the doctor's ID as "id"
+      const decodedToken = jwtDecode(token);
+      const loggedInDoctorId = decodedToken.id;
 
       const response = await api.get("/appointments", {
         headers: {
@@ -38,43 +38,42 @@ const TeleConsultationScreen = () => {
         },
       });
       const fetchedAppointments = response.data.data;
-      // Filter appointments for the logged-in doctor only
+
       const doctorAppointments = fetchedAppointments.filter(
         (appointment) => appointment.doctorId === loggedInDoctorId
       );
 
-      setAppointments(doctorAppointments); // Set only the logged-in doctor's appointments
+      setAppointments(doctorAppointments);
     } catch (error) {
       console.error("Error fetching appointments:", error);
     }
   };
 
   useEffect(() => {
-    fetchAppointments(); // Fetch appointments when the component mounts
+    fetchAppointments();
   }, []);
 
-  // Function to get data based on active tab and appointment status
   const getCurrentAppointments = () => {
-    const today = moment().startOf("day"); // Start of today for comparison
+    const today = moment().startOf("day");
     let filteredAppointments;
 
     switch (activeTab) {
-      case 0: // Today Appointment
+      case 0:
         filteredAppointments = appointments.filter((app) =>
           moment(app.appointmentDate).isSame(today, "day")
         );
         break;
-      case 1: // Upcoming Appointment
+      case 1:
         filteredAppointments = appointments.filter((app) =>
           moment(app.appointmentDate).isAfter(today)
         );
         break;
-      case 2: // Previous Appointment
+      case 2:
         filteredAppointments = appointments.filter((app) =>
           moment(app.appointmentDate).isBefore(today)
         );
         break;
-      case 3: // Cancelled Appointment
+      case 3:
         filteredAppointments = appointments.filter(
           (app) => app.status === "Cancelled"
         );
@@ -83,7 +82,6 @@ const TeleConsultationScreen = () => {
         filteredAppointments = appointments;
     }
 
-    // If filter dates are selected, filter the appointments by date range
     if (filterDates.fromDate && filterDates.toDate) {
       const fromDate = moment(filterDates.fromDate).startOf("day");
       const toDate = moment(filterDates.toDate).endOf("day");
@@ -101,7 +99,6 @@ const TeleConsultationScreen = () => {
 
   const handleApplyDateFilter = (fromDate, toDate) => {
     if (fromDate && toDate) {
-      // Update the date range display
       setDateRange(
         `${new Date(fromDate).toLocaleDateString()} - ${new Date(
           toDate
@@ -109,19 +106,17 @@ const TeleConsultationScreen = () => {
       );
       setFilterDates({ fromDate, toDate });
     }
-    setOpenCustomDateModal(false); // Close modal after applying filter
+    setOpenCustomDateModal(false);
   };
 
-  // Handler for resetting the date filter
   const handleResetDateFilter = () => {
-    setFilterDates({ fromDate: null, toDate: null }); // Clear the filter dates
-    setDateRange("2 Jan, 2022 - 13 Jan, 2022"); // Reset to default date range
-    setOpenCustomDateModal(false); // Close modal
+    setFilterDates({ fromDate: null, toDate: null });
+    setDateRange("2 Jan, 2022 - 13 Jan, 2022");
+    setOpenCustomDateModal(false);
   };
 
   return (
     <div className="p-6 bg-white m-6 rounded-xl">
-      {/* Tabs for different types of appointments */}
       <div className="flex space-x-4 border-b border-gray-300 pb-2 mb-6">
         {[
           "Today Appointment",
@@ -143,7 +138,6 @@ const TeleConsultationScreen = () => {
         ))}
       </div>
 
-      {/* Date range display */}
       <div className="mt-4 mb-6 flex justify-between items-center">
         <h2 className="text-xl font-semibold">Teleconsultation Module</h2>
         <button
@@ -155,12 +149,17 @@ const TeleConsultationScreen = () => {
         </button>
       </div>
 
-      {/* Grid of Patient Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {currentAppointments.map((patient, index) => (
-          <TeleConsultationCard key={index} patient={patient} />
-        ))}
-      </div>
+      {currentAppointments.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {currentAppointments.map((patient, index) => (
+            <TeleConsultationCard key={index} patient={patient} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex justify-center items-center mt-10">
+          <img src={noRecordImage} alt="No records found"  />
+        </div>
+      )}
 
       <CustomDateFilter
         open={openCustomDateModal}

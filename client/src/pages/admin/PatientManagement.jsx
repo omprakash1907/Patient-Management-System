@@ -3,6 +3,7 @@ import { FaEye, FaSearch } from 'react-icons/fa';
 import api from '../../api/api';
 import PatientDetailModal from './PatientDetailModal';
 import noRecordImage from "../../assets/images/nodoctor.png";
+import { useBreadcrumb } from '../../context/BreadcrumbContext';
 
 const PatientManagement = () => {
   const [activeTab, setActiveTab] = useState('today');
@@ -11,6 +12,14 @@ const PatientManagement = () => {
   const [appointments, setAppointments] = useState([]);
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Patient Management", path: "/admin/patient-management" },
+    ]);
+  }, []);
+
 
   // Fetch all appointments based on active tab
   useEffect(() => {
@@ -80,8 +89,8 @@ const PatientManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 h-full">
-      <div className="bg-white p-4 rounded-lg h-full">
+    <div className="p-6 h-full">
+      <div className="bg-white p-4 rounded-xl h-full">
         
         {/* Tabs */}
         <div className="flex space-x-4 mb-4">
@@ -112,7 +121,7 @@ const PatientManagement = () => {
         </div>
 
         {/* Patient Table */}
-        <table className="w-full bg-white rounded-lg">
+        <table className="w-full  rounded-lg overflow-hidden">
           <thead className="bg-gray-100">
             <tr>
               <th className="px-6 py-3 text-left">Patient Name</th>
@@ -134,12 +143,12 @@ const PatientManagement = () => {
                   <td className="px-6 py-4">{appointment.diseaseName}</td>
                   <td className="px-6 py-4">{appointment.appointmentTime}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-full ${appointment.appointmentType === 'Online' ? 'bg-blue-100 text-blue-600' : 'bg-yellow-50 text-yellow-600'}`}>
+                    <span className={`px-2 py-1 rounded-full ${appointment.appointmentType === 'Online' ? 'bg-yellow-50 text-yellow-600' : 'bg-blue-100 text-blue-600'}`}>
                       {appointment.appointmentType}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <button onClick={() => handleViewDetails(appointment)} className="text-customBlue" title="View">
+                    <button onClick={() => handleViewDetails(appointment)} className="text-customBlue text-xl bg-gray-100 p-1 rounded-lg" title="View" >
                       <FaEye />
                     </button>
                   </td>

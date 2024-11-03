@@ -40,7 +40,7 @@ const BillingTable = () => {
         <h2 className="text-xl font-semibold">Billing & Payments</h2>
         <Link to="/admin/select-template">
           <button className="px-4 py-2 bg-customBlue text-white text-sm font-medium rounded-lg hover:bg-blue-700">
-              Create Bills
+            Create Bills
           </button>
         </Link>
       </div>
@@ -48,7 +48,11 @@ const BillingTable = () => {
       {/* Pending Bills Info */}
       <Link to="/admin/pending-invoice">
         <div className="mb-4  ">
-          <strong> Pending Bills :{bills.filter(bill => bill.status === "Unpaid").length}</strong>
+          <strong>
+            {" "}
+            Pending Bills :
+            {bills.filter((bill) => bill.status === "Unpaid").length}
+          </strong>
         </div>
       </Link>
 
@@ -60,8 +64,12 @@ const BillingTable = () => {
             <thead className="sticky top-0 bg-gray-100 z-10">
               <tr>
                 <th className="p-3 text-sm font-semibold border-b">Bill No</th>
-                <th className="p-3 text-sm font-semibold border-b">Patient Name</th>
-                <th className="p-3 text-sm font-semibold border-b">Disease Name</th>
+                <th className="p-3 text-sm font-semibold border-b">
+                  Patient Name
+                </th>
+                <th className="p-3 text-sm font-semibold border-b">
+                  Disease Name
+                </th>
                 <th className="p-3 text-sm font-semibold border-b">Status</th>
                 <th className="p-3 text-sm font-semibold border-b">Action</th>
               </tr>
@@ -74,10 +82,18 @@ const BillingTable = () => {
                       {bill.billNumber}
                     </span>
                   </td>
-                  <td className="p-3">{bill.patient.firstName} {bill.patient.lastName}</td>
+                  <td className="p-3">
+                    {bill.patient
+                      ? `${bill.patient.firstName} ${bill.patient.lastName}`
+                      : "N/A"}
+                  </td>
                   <td className="p-3">{bill.diseaseName}</td>
                   <td className="p-3">
-                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${statusStyles[bill.status]}`}>
+                    <span
+                      className={`px-3 py-1 text-sm font-medium rounded-full ${
+                        statusStyles[bill.status]
+                      }`}
+                    >
                       {bill.status}
                     </span>
                   </td>
@@ -85,8 +101,9 @@ const BillingTable = () => {
                     <button
                       onClick={() => handleViewInvoice(bill)}
                       className="text-customBlue bg-gray-100 p-1 rounded-lg "
+                      disabled={!bill.patient} // Disable the button if patient is null
                     >
-                      <FaEye  />
+                      <FaEye />
                     </button>
                   </td>
                 </tr>

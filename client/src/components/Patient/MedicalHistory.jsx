@@ -44,7 +44,7 @@ const MedicalHistory = () => {
           {history.map((record, index) => (
             <div
               key={index}
-              className="min-w-[300px] max-w-[300px] bg-white rounded-lg  border mb-4"
+              className="min-w-[300px] max-w-[300px] bg-white rounded-lg  border border-gray-100 mb-4"
             >
 
               {/* Gray Header with Name and Date */}

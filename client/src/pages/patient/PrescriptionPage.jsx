@@ -7,7 +7,7 @@ import api from "../../api/api";
 const PrescriptionPage = () => {
   const { updateBreadcrumb } = useBreadcrumb();
   const [showModal, setShowModal] = useState(false);
-  const [selectedPrescription, setSelectedPrescription] = useState(null); // Full prescription data
+  const [selectedPrescriptionId, setSelectedPrescriptionId] = useState(null);
   const [prescriptions, setPrescriptions] = useState([]);
 
   useEffect(() => {
@@ -30,20 +30,14 @@ const PrescriptionPage = () => {
     fetchPrescriptions();
   }, []);
 
-  const openModal = async (prescriptionId) => {
-    try {
-      // Fetch the full details of the selected prescription using the prescriptionId
-      const response = await api.get(`/prescription/${prescriptionId}`);
-      setSelectedPrescription(response.data); // Set the full prescription data
-      setShowModal(true); // Show the modal
-    } catch (error) {
-      console.error("Error fetching prescription details:", error);
-    }
+  const openModal = (prescription) => {
+    setSelectedPrescriptionId(prescription._id); // Set prescription ID
+    setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setSelectedPrescription(null);
+    setSelectedPrescriptionId(null);
   };
 
   return (
@@ -66,32 +60,32 @@ const PrescriptionPage = () => {
         {prescriptions.map((prescription, index) => (
           <div
             key={prescription._id || index} // Use prescription ID if available, otherwise fallback to index
-            className="border rounded-lg transition"
+            className="border rounded-lg shadow-md transition"
           >
             {/* Card header with doctor name and eye icon */}
-            <div className="flex justify-between items-center p-2 bg-gray-50 rounded-t-lg ">
+            <div className="flex justify-between items-center p-2 bg-gray-50 rounded-t-lg mb-4">
               <h4 className="font-semibold">
                 Dr. {prescription.doctor.firstName} {prescription.doctor.lastName}
               </h4>
-              <div className="text-customBlue p-2 rounded-full bg-white shadow cursor-pointer">
-                <FaEye onClick={() => openModal(prescription._id)} />
+              <div className="text-customBlue p-2 rounded-full bg-white shadow">
+                <FaEye onClick={() => openModal(prescription)} />
               </div>
             </div>
 
             {/* Hospital, Disease, and Date Information */}
-            <div className="grid grid-cols-2 gap-2 py-4 px-2 text-sm ">
+            <div className="grid grid-cols-2 gap-2 p-2">
               <p className="text-gray-500">Hospital Name</p>
-              <p className="text-gray-900 font-medium text-end">
+              <p className="text-gray-900 font-medium">
                 {prescription.appointmentId.hospital}
               </p>
 
               <p className="text-gray-500">Disease Name</p>
-              <p className="text-gray-900 font-medium text-end">
+              <p className="text-gray-900 font-medium">
                 {prescription.medicines[0]?.name || "N/A"}
               </p>
 
               <p className="text-gray-500">Date</p>
-              <p className="text-gray-900 font-medium text-end">
+              <p className="text-gray-900 font-medium">
                 {new Date(prescription.prescriptionDate).toLocaleDateString()}
               </p>
             </div>
@@ -100,10 +94,10 @@ const PrescriptionPage = () => {
       </div>
 
       {/* Prescription Modal */}
-      {showModal && selectedPrescription && (
+      {showModal && selectedPrescriptionId && (
         <PrescriptionModal
           closeModal={closeModal}
-          prescriptionData={selectedPrescription} // Pass the full prescription data
+          prescriptionId={selectedPrescriptionId}
         />
       )}
     </div>

@@ -5,7 +5,7 @@ const CreatePrescription = ({ id, patientid, prescriptionId, name, age, gender, 
     const navigate = useNavigate();
 
     return (
-        <div className="bg-white rounded-lg border w-full relative  ">
+        <div className="bg-white rounded-lg border border-gray-100 w-full relative  ">
             <div className="flex justify-between items-center  bg-gray-50 p-3">
                 <h2 className="font-bold text-lg text-gray-800">{name}</h2>
                 <div className="flex items-center">

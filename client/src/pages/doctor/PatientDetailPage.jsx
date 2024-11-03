@@ -2,23 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import AddRecordPage from "./AddRecordPage";
 import api from "../../api/api";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode"; // Correct import for jwtDecode
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
 import { FaEye, FaPlus } from "react-icons/fa";
-import PrescritionModal from "../../components/PrescritionModal";
+import PrescriptionModal from "../../components/PrescritionModal";
 
 const PatientDetailPage = () => {
   const { id } = useParams();
   const [patientData, setPatientData] = useState(null);
   const [appointments, setAppointments] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false); // State to handle add record modal
-  const [doctorId, setDoctorId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false); // State for the add record modal
+  const [prescriptionModalOpen, setPrescriptionModalOpen] = useState(false); // State for the prescription modal
+  const [selectedPrescription, setSelectedPrescription] = useState(null); // Selected appointment data
   const { updateBreadcrumb } = useBreadcrumb();
-  const [prescriptionModalOpen, setPrescriptionModalOpen] = useState(false); // State to handle prescription modal
-  const [selectedAppointment, setSelectedAppointment] = useState(null); // State to hold selected appointment data
+  const [doctorId, setDoctorId] = useState(null);
 
   useEffect(() => {
     updateBreadcrumb([
+      { label: "Patient Record Access", path: "/doctor/patient-record-access" },
       { label: "Patient Details", path: `/doctor/patient-detail/${id}` },
     ]);
   }, [id, updateBreadcrumb]);
@@ -76,9 +77,19 @@ const PatientDetailPage = () => {
     fetchAppointments();
   }, [id]);
 
-  const handleViewClick = (appointment) => {
-    setSelectedAppointment(appointment);
-    setPrescriptionModalOpen(true);
+  const handleViewClick = async (appointment) => {
+    try {
+      const response = await api.get(`/prescription/${appointment.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      setSelectedPrescription(response.data.prescription); // Set prescription data
+      setPrescriptionModalOpen(true); // Open the modal
+    } catch (error) {
+      console.error("Error fetching prescription:", error);
+    }
   };
 
   if (!patientData) {
@@ -233,10 +244,11 @@ const PatientDetailPage = () => {
       />
 
       {/* Prescription Modal */}
-      {prescriptionModalOpen && (
-        <PrescritionModal
-          closeModal={() => setPrescriptionModalOpen(false)}
-          appointment={selectedAppointment} // Pass selected appointment data to the modal
+      {prescriptionModalOpen && selectedPrescription && (
+        <PrescriptionModal
+          open={prescriptionModalOpen}
+          handleClose={() => setPrescriptionModalOpen(false)}
+          prescriptionData={selectedPrescription}
         />
       )}
     </>

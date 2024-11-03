@@ -15,10 +15,12 @@ const EditProfile = ({ onCancel }) => {
     // Navigate dynamically based on the user's role
     if (userRole === "admin") {
       updateBreadcrumb([
+        { label: "Profile Setting", path: "/admin/profile-setting" },
         { label: "Edit Profile", path: "/admin/edit-profile" },
       ]);
     } else if (userRole === "doctor") {
       updateBreadcrumb([
+        { label: "Profile Setting", path: "/doctor/profile-setting" },
         { label: "Edit Profile", path: "/doctor/edit-profile" },
       ]);
     } else {

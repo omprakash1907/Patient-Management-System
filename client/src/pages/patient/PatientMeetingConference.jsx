@@ -3,15 +3,23 @@ import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { FaBars, FaTimes } from "react-icons/fa";
-import noRecordImage from "../../assets/images/nodoctor.png"; // Import the "No Record" image
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const PatientMeetingConference = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [roomID, setRoomID] = useState(null);
   const [userName, setUserName] = useState('');
-  const [loading, setLoading] = useState(true);
   const sidebarRef = useRef(null);
   const { appointmentId } = useParams();
+  const [loading, setLoading] = useState(true);
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Teleconsultation Access", path: "/patient/tele-access" },
+      { label: "Tele Conference", path: "/patient/patientMeetingConference/:appointmentId" },
+    ]);
+  }, []);
 
   const closeSidebar = () => {
     setIsSidebarOpen(false);
@@ -35,7 +43,6 @@ const PatientMeetingConference = () => {
     };
   }, [isSidebarOpen]);
 
-  // Fetch appointment details (room ID and user name) from the backend
   const fetchAppointmentDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:8000/api/appointments/${appointmentId}`);
@@ -45,17 +52,19 @@ const PatientMeetingConference = () => {
     } catch (error) {
       console.error("Error fetching appointment details:", error);
     } finally {
-      setLoading(false);
-    }
+        setLoading(false);
+      }
   };
 
-  // Initialize Zego meeting using room ID and user name
   const initZegoCloudMeeting = async (element) => {
-    if (!roomID || !userName) return;
-
     const appID = 1757979495;
     const serverSecret = "04f46682ad34e9005b14d629441180e3";
     const userID = Date.now().toString();
+
+    if (!roomID) {
+      console.error("Room ID is not available");
+      return;
+    }
 
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
     const zp = ZegoUIKitPrebuilt.create(kitToken);
@@ -68,9 +77,9 @@ const PatientMeetingConference = () => {
           url: `${window.location.protocol}//${window.location.host}${window.location.pathname}?roomID=${roomID}`,
         },
       ],
-      roomID,
-      userID,
-      userName,
+      roomID: roomID,
+      userID: userID,
+      userName: userName,
       scenario: {
         mode: ZegoUIKitPrebuilt.OneONoneCall,
       },
@@ -88,25 +97,20 @@ const PatientMeetingConference = () => {
 
   useEffect(() => {
     const videoCallDiv = document.getElementById('video-call-container');
-    if (videoCallDiv && roomID && userName) {
+    if (videoCallDiv && roomID) {
       initZegoCloudMeeting(videoCallDiv);
     }
-  }, [roomID, userName]);
+  }, [roomID]);
 
   return (
-    <div className="flex flex-col w-full bg-gray-100">
-      <div className="container mx-auto p-6">
-        <header className="flex items-center justify-between bg-white shadow-md p-4 rounded-md mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Meeting Conference</h1>
-          <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            {isSidebarOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
-          </button>
-        </header>
+    <div className="flex">
+      <div className="w-full ">
+        <div className="container mx-auto py-4 ">
+          <header className="flex items-center justify-between bg-white p-4 rounded-xl">
+            <h4 className="text-xl font-semibold text-gray-800">Patient Meeting Conference</h4>
+          </header>
 
-        <div className="bg-white rounded-lg p-6">
+          <div className="bg-white  rounded-lg p-6">
           {loading ? (
             <div className="text-center mt-4">
               <p>Loading...</p>
@@ -119,38 +123,13 @@ const PatientMeetingConference = () => {
               {/* Zego Meeting will be initialized here */}
             </div>
           ) : (
-            <div className="flex flex-col items-center mt-8">
-              <img
-                src={noRecordImage}
-                alt="No Appointment Found"
-                className="w-96 mb-4"
-              />
-              <p className="text-gray-500 text-lg">No Appointment Found</p>
+            <div className="text-center mt-4">
+              <p>Room ID is not available. Please check the appointment details.</p>
             </div>
           )}
         </div>
-
-        {isSidebarOpen && (
-          <div
-            ref={sidebarRef}
-            className="absolute top-0 left-0 w-64 h-full bg-white shadow-lg p-6 z-50 transition-transform transform translate-x-0"
-          >
-            <button
-              onClick={closeSidebar}
-              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
-            >
-              <FaTimes className="text-2xl" />
-            </button>
-            <nav className="mt-8">
-              <ul className="space-y-4">
-                <li className="text-gray-700 hover:text-gray-900 cursor-pointer">Home</li>
-                <li className="text-gray-700 hover:text-gray-900 cursor-pointer">Appointments</li>
-                <li className="text-gray-700 hover:text-gray-900 cursor-pointer">Settings</li>
-                <li className="text-gray-700 hover:text-gray-900 cursor-pointer">Logout</li>
-              </ul>
-            </nav>
-          </div>
-        )}
+      
+        </div>
       </div>
     </div>
   );

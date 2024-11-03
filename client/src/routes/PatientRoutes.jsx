@@ -14,6 +14,7 @@ import BookAppointment from "../pages/patient/BookAppointment";
 import RescheduleAppointment from "../pages/patient/RescheduleAppointment ";
 import PatientDashboard from "../pages/patient/PatientDashboard";
 import ChatPage from "../pages/ChatPage";
+import PatientMeetingConference from "../pages/patient/PatientMeetingConference";
 
 const PatientRoutes = () => {
   return (
@@ -95,6 +96,14 @@ const PatientRoutes = () => {
         element={
           <CommonLayout role="patient">
             <TeleAccess />
+          </CommonLayout>
+        }
+      />
+      <Route
+        path="/patientMeetingConference/:appointmentId"
+        element={
+          <CommonLayout role="patient">
+            <PatientMeetingConference />
           </CommonLayout>
         }
       />
