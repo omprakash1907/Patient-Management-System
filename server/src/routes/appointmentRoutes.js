@@ -10,7 +10,7 @@ const {
   getBookedSlots,
   updateAppointmentStatus,
 } = require("../controllers/appointmentController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 
 // Route to create an appointment
 router.post("/appointment", protect, createAppointment);

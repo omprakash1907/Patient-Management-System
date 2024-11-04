@@ -7,7 +7,7 @@ const {
   getAllInvoices,
   getUserInvoices,
 } = require("../controllers/invoiceController");
-const { protect, admin } = require("../middlewares/authMiddleware");
+const { protect, admin } = require("../middleware/authMiddleware");
 const upload = require("../utils/multerConfig");
 
 // Route to create an invoice by Admin only

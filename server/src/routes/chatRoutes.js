@@ -8,7 +8,7 @@ const {
   sendMessage,
 } = require("../controllers/chatController");
 const upload = require("../utils/multerConfig");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 
 // Get all chats for a user (patient/doctor)
 router.get("/chats", protect, getAllChats);

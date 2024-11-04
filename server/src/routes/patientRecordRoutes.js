@@ -6,7 +6,7 @@ const {
   addPatientRecord,
   getPatientRecords,
 } = require("../controllers/patientRecordController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 const upload = require("../utils/multerConfig");
 
 // Route to get all appointments for a doctor

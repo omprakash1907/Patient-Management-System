@@ -5,7 +5,7 @@ const {
   getPrescriptionById,
   getAllPrescriptionsByUser, // Import the new function
 } = require("../controllers/prescriptionController");
-const { protect } = require("../middlewares/authMiddleware");
+const { protect } = require("../middleware/authMiddleware");
 
 // Route to create a prescription
 router.post("/", protect, createPrescription);

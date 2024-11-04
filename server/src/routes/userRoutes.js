@@ -20,7 +20,7 @@ const {
   editPatientById,
   deletePatientById,
 } = require("../controllers/userController");
-const { protect, admin } = require("../middlewares/authMiddleware");
+const { protect, admin } = require("../middleware/authMiddleware");
 const upload = require("../utils/multerConfig");
 
 // Multer error handler
