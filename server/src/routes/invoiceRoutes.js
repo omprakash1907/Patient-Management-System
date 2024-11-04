@@ -14,7 +14,7 @@ const upload = require("../utils/multerConfig");
 router.post("/", protect, admin, upload.single("logo"), createInvoice);
 
 // Route to get an invoice (populating doctor and patient)
-router.get("/:id", protect, admin, getInvoice);
+router.get("/:id", protect,  getInvoice);
 router.patch("/:id", protect, admin, upload.single("logo"), updateInvoice);
 
 // Route to get all invoices

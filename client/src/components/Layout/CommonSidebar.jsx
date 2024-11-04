@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import { HiOutlineLogout } from 'react-icons/hi';
 import logo from '../../assets/images/logo.png';
+import appointmentImg from '../../assets/images/appointment.png'; // Import your appointment image here
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 const CommonSidebar = ({ role }) => {
@@ -128,7 +129,6 @@ const CommonSidebar = ({ role }) => {
                 </span>
               )}
 
-              {/* Background gradient and clip path for active tab */}
               <div
                 className={`absolute inset-0 bg-gradient-to-r from-[#E0F3FB] to-white opacity-0 ${
                   activeTab === item.label ? 'opacity-100' : 'group-hover:opacity-100'
@@ -159,6 +159,20 @@ const CommonSidebar = ({ role }) => {
           </li>
         ))}
       </ul>
+
+      {role === 'patient' && (
+        <div className="flex flex-col items-center p-4 pt-20 bg-gray-100 mx-6 my-4 rounded-xl relative">
+          <img src={appointmentImg} alt="Appointment" className="w-30 mb-2 absolute top-[-100px]" />
+          <p className='font-medium'>Hospital appointment</p>
+          <p className="text-center text-gray-700 mb-3 text-sm font-medium">
+            You have to fill up the form to be admitted to the hospital.
+          </p>
+          <NavLink to="/patient/appointment-booking" className="bg-customBlue flex justify-center items-center gap-4 text-white py-2 px-4 rounded-xl w-full font-semibold">
+            <FaCalendarAlt/>
+            Appointment
+          </NavLink>
+        </div>
+      )}
 
       <div className="mb-5 p-0">
         <button

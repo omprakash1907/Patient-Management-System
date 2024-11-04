@@ -61,7 +61,7 @@ const CommonNavbar = ({ role, onSearch }) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-white shadow-md p-4">
+    <div className="flex items-center justify-between bg-white  p-4">
       {/* Breadcrumb Path */}
       <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full space-x-2">
         <Link to={`/${role.toLowerCase()}/dashboard`}>

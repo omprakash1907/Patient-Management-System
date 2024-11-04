@@ -1,13 +1,14 @@
+require("dotenv").config(); // Load environment variables from .env
 const paypal = require("paypal-rest-sdk");
 
+// Configure PayPal with environment variables
 paypal.configure({
   mode: "sandbox", // 'sandbox' for testing, 'live' for production
-  client_id: "AbBvw2_XUvhfKmOWafxTS77MS2lxpmMxJAOYcwRK1ZtRWrMG9XFhUWM1qSAoT1RBf-8RtjTur3mtQ0gT",  // Replace with your client ID
-  client_secret: "EDRKbUQf82m9qi9SaUuUrbrf7hWPyvKregYDSfByYbLS7sQ7r84tsm1U2C0P0ySPwZVuTAFeJj-cr8gX",  // Replace with your client secret
+  client_id: process.env.PAYPAL_CLIENT_ID,  // Use the client ID from .env
+  client_secret: process.env.PAYPAL_CLIENT_SECRET,  // Use the client secret from .env
 });
 
 // Route for creating a payment
-// paymentController.js
 exports.createPayment = (req, res) => {
   const { totalAmount } = req.body;
 
@@ -26,20 +27,19 @@ exports.createPayment = (req, res) => {
               name: "Hospital Bill Payment",
               sku: "001",
               price: totalAmount,
-              currency: "USD", // Change this to the correct currency code
+              currency: "USD", // Ensure this is set to the correct currency code
               quantity: 1,
             },
           ],
         },
         amount: {
-          currency: "USD", // Ensure this matches the accepted currency in your PayPal account
+          currency: "USD", // Ensure this matches the currency in your PayPal account
           total: totalAmount,
         },
         description: "Payment for Hospital Bill",
       },
     ],
   };
-  
 
   paypal.payment.create(create_payment_json, (error, payment) => {
     if (error) {
@@ -55,7 +55,6 @@ exports.createPayment = (req, res) => {
   });
 };
 
-
 // Route for executing the payment
 exports.executePayment = (req, res) => {
   const payerId = req.query.PayerID;
@@ -64,7 +63,7 @@ exports.executePayment = (req, res) => {
 
   const execute_payment_json = {
     payer_id: payerId,
-    transactions: [{ amount: { currency: "USD", total: totalAmount } }]
+    transactions: [{ amount: { currency: "USD", total: totalAmount } }],
   };
 
   paypal.payment.execute(paymentId, execute_payment_json, (error, payment) => {
