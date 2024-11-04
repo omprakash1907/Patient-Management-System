@@ -1,0 +1,246 @@
+{
+	"info": {
+		"_postman_id": "a8aa89f9-3cc5-4ff0-98b7-954e474a5ae8",
+		"name": "invoice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31020344"
+	},
+	"item": [
+		{
+			"name": "Create INVOICE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgxZmFlODYyNzZlYTk3YzJjMTRmYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyODY4NTk1MywiZXhwIjoxNzMxMjc3OTUzfQ.kJ-K_INvXbwCRO1ziRUkqqFtKOEVxl7PLcZhuY-kkas",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "hospital",
+							"value": "670814ee86276ea97c2ba666",
+							"type": "text"
+						},
+						{
+							"key": "patient",
+							"value": "6708248ce37b601be43117b3",
+							"type": "text"
+						},
+						{
+							"key": "doctor",
+							"value": "67096e432e9078b61afa4875",
+							"type": "text"
+						},
+						{
+							"key": "doctorName",
+							"value": "Dr. John Doe",
+							"type": "text"
+						},
+						{
+							"key": "diseaseName",
+							"value": "Cardiovascular Disease",
+							"type": "text"
+						},
+						{
+							"key": "billDate",
+							"value": "2024-10-12",
+							"type": "text"
+						},
+						{
+							"key": "billTime",
+							"value": "10:00 AM",
+							"type": "text"
+						},
+						{
+							"key": "billNumber",
+							"value": "INV-001",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "5551234567",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "xyz@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "123 Medical Lane",
+							"type": "text"
+						},
+						{
+							"key": "otherText",
+							"value": "Urgent care required",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "Consultation and diagnostics",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "1000",
+							"type": "text"
+						},
+						{
+							"key": "tax",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "discount",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "totalAmount",
+							"value": "1050",
+							"type": "text"
+						},
+						{
+							"key": "paymentType",
+							"value": "Online",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "Male",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "30",
+							"type": "text"
+						},
+						{
+							"key": "insuranceCompany",
+							"value": "Blue Cross",
+							"type": "text"
+						},
+						{
+							"key": "insurancePlan",
+							"value": "Premium",
+							"type": "text"
+						},
+						{
+							"key": "claimAmount",
+							"value": "1000",
+							"type": "text"
+						},
+						{
+							"key": "claimedAmount",
+							"value": "900",
+							"type": "text"
+						},
+						{
+							"key": "logo",
+							"type": "file",
+							"src": "/C:/Users/RNW/Downloads/Zoho-logo.png"
+						},
+						{
+							"key": "status",
+							"value": "unpaid",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/invoice"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Invoice",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgxZmFlODYyNzZlYTk3YzJjMTRmYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTE4MzgzMSwiZXhwIjoxNzMxNzc1ODMxfQ.siegx7o-wwbIIBsxqznLOtGCIU0jKezN38_gGrCJLAc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "amount",
+							"value": "2000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "patient",
+							"value": "6708248ce37b601be43117b3",
+							"type": "text"
+						},
+						{
+							"key": "doctor",
+							"value": "67096e432e9078b61afa4875",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "9878542635",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/invoice/6709ab6f90cebfd1a099dd12"
+			},
+			"response": []
+		},
+		{
+			"name": "get invoice by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgyNDhjZTM3YjYwMWJlNDMxMTdiMyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI5Mzc4MDU5LCJleHAiOjE3MzE5NzAwNTl9.zOgAaU3xrS3SaxBdR8ZsZGRJfoui4GJ7eiiRYGM-W6A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://localhost:8000/api/invoice/6709ab6f90cebfd1a099dd12"
+			},
+			"response": []
+		},
+		{
+			"name": "get All Invoce",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgxZmFlODYyNzZlYTk3YzJjMTRmYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTE4MzgzMSwiZXhwIjoxNzMxNzc1ODMxfQ.siegx7o-wwbIIBsxqznLOtGCIU0jKezN38_gGrCJLAc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://localhost:8000/api/invoice"
+			},
+			"response": []
+		}
+	]
+}

@@ -3,6 +3,7 @@ import { FaEye, FaEdit, FaSearch, FaCashRegister } from "react-icons/fa";
 import api from "../../api/api";
 import CashPaymentModal from "../../components/Admin/CashPaymentModal";
 import { useNavigate } from "react-router-dom";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const PaymentProcess = () => {
   const navigate = useNavigate(); // Initialize navigate
@@ -10,7 +11,13 @@ const PaymentProcess = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isCashModalOpen, setCashModalOpen] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
+  const { updateBreadcrumb } = useBreadcrumb();
 
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Payment Process", path: "/admin/monitor-billing" },
+    ]);
+  }, []);
   // Fetch billing data from API
   useEffect(() => {
     const fetchBillingData = async () => {
@@ -34,12 +41,17 @@ const PaymentProcess = () => {
   );
 
   const handleEditBill = (bill) => {
-    navigate(`/admin/payment-process/edit-bill/${bill._id}`); 
+    navigate(`/admin/payment-process/edit-bill/${bill._id}`);
   };
 
   const handleOpenCashModal = (bill) => {
     setSelectedBill(bill);
     setCashModalOpen(true);
+  };
+
+  const handleViewDetails = (billId) => {
+    console.log(billId);
+    navigate(`/admin/invoice/${billId}/${billId.doctor?.firstName}`);
   };
 
   return (
@@ -61,7 +73,7 @@ const PaymentProcess = () => {
 
       {/* Billing Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg">
+        <table className="min-w-full bg-white rounded-xl overflow-hidden">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-4 text-left">Bill Number</th>
@@ -77,7 +89,7 @@ const PaymentProcess = () => {
           <tbody>
             {filteredBillingData.length > 0 ? (
               filteredBillingData.map((entry, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
+                <tr key={index} className="border-b ">
                   <td className="px-6 py-4 text-blue-500">
                     <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
                       {entry.billNumber}
@@ -120,7 +132,10 @@ const PaymentProcess = () => {
                     >
                       <FaEdit />
                     </button>
-                    <button className="text-gray-400 bg-gray-100 p-2 rounded-lg">
+                    <button
+                      onClick={() => handleViewDetails(entry._id)}
+                      className="text-gray-400 bg-gray-100 p-2 rounded-lg"
+                    >
                       <FaEye />
                     </button>
                   </td>

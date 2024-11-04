@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/api";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const EditBill = () => {
   const { id } = useParams(); // Get bill ID from route parameters
@@ -25,6 +26,15 @@ const EditBill = () => {
     totalAmount: "",
     address: "",
   });
+
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Payment Process", path: "/admin/monitor-billing" },
+      { label: "Edit Bill", path: "/admin/payment-process/edit-bill/:id" },
+    ]);
+  }, []);
 
   useEffect(() => {
     // Fetch bill details and populate the form

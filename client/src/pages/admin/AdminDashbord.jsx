@@ -23,7 +23,7 @@ const AdminDashboard = () => {
         <div className="lg:col-span-3">
           <AppointmentsList />
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 ">
           <PatientsSummary />
         </div>
       </div>

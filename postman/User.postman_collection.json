@@ -1,0 +1,554 @@
+{
+	"info": {
+		"_postman_id": "3a40b97d-571f-478b-af54-c50f2ec7d234",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31020344"
+	},
+	"item": [
+		{
+			"name": "Register-admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"abc\",\r\n  \"lastName\": \"soni\",\r\n  \"email\": \"abc@gmail.com\",\r\n  \"phoneNumber\": \"9909002447\",\r\n  \"password\": \"123123\",\r\n  \"country\": \"India\",\r\n  \"state\": \"Gujarat\",\r\n  \"city\": \"Surat\",\r\n  \"hospital\": \"67266413eaf088771495b627\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/register-admin"
+			},
+			"response": []
+		},
+		{
+			"name": "Register-patient",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"Vikas\",\r\n    \"lastName\": \"Patil\",\r\n    \"email\": \"viks@gmail.com\",\r\n    \"phoneNumber\": \"8889498887\",\r\n    \"password\": \"123456\",\r\n    \"age\": 29,\r\n    \"height\": 160,\r\n    \"weight\": 60,\r\n    \"gender\": \"Male\",\r\n    \"bloodGroup\": \"O+\",\r\n    \"dateOfBirth\": \"1993-05-10\",\r\n    \"country\": \"India\",\r\n    \"state\": \"Gujarat\",\r\n    \"city\": \"Surat\",\r\n    \"address\": \"123 Main St\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/register-patient"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Doctor By Admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmYwMjBiMGY5NTA0NWM0YWI3MmVkZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyODQ5MjAxOSwiZXhwIjoxNzMxMDg0MDE5fQ.lLF9ne-N_D3vP_IdVrwX_XJEnrZidHm-s2n0vk9irh4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "firstName",
+							"value": "Dr. Mahesh",
+							"type": "text"
+						},
+						{
+							"key": "lastName",
+							"value": "Savani",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "Dr@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "phoneNumber",
+							"value": "987654321",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123",
+							"type": "text"
+						},
+						{
+							"key": "qualification",
+							"value": "MBBS",
+							"type": "text"
+						},
+						{
+							"key": "specialtyType",
+							"value": "Heart Speciality",
+							"type": "text"
+						},
+						{
+							"key": "workType",
+							"value": "Online",
+							"type": "text"
+						},
+						{
+							"key": "workingTime",
+							"value": "09:00 AM - 05:00 PM",
+							"type": "text"
+						},
+						{
+							"key": "checkupTime",
+							"value": "09:00 AM - 01:00 PM",
+							"type": "text"
+						},
+						{
+							"key": "breakTime",
+							"value": "01:00 PM - 02:00 PM",
+							"type": "text"
+						},
+						{
+							"key": "experience",
+							"value": "10",
+							"type": "text"
+						},
+						{
+							"key": "zipCode",
+							"value": "395001",
+							"type": "text"
+						},
+						{
+							"key": "onlineConsultationRate",
+							"value": "2000",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "India",
+							"type": "text"
+						},
+						{
+							"key": "state",
+							"value": "Gujarat",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Surat",
+							"type": "text"
+						},
+						{
+							"key": "hospitalName",
+							"value": "Savani Hospital",
+							"type": "text"
+						},
+						{
+							"key": "hospitalAddress",
+							"value": "123 Main St, Los Angeles",
+							"type": "text"
+						},
+						{
+							"key": "websiteLink",
+							"value": "http://examplehospital.com",
+							"type": "text"
+						},
+						{
+							"key": "emergencyContactNumber",
+							"value": "6665554442",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "Male",
+							"type": "text"
+						},
+						{
+							"key": "age",
+							"value": "55",
+							"type": "text"
+						},
+						{
+							"key": "doctorAddress",
+							"value": "456 Elm St, Los Angeles",
+							"type": "text"
+						},
+						{
+							"key": "profileImage",
+							"type": "file",
+							"src": "/C:/Users/RNW/Downloads/Redesing-graph-08-1024x657.jpg"
+						},
+						{
+							"key": "signatureImage",
+							"type": "file",
+							"src": "/C:/Users/RNW/Downloads/Pet-Food-Market.jpg"
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/users/add-doctor"
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"kashyap@gmail.com\",\r\n  \"password\": \"123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/login"
+			},
+			"response": []
+		},
+		{
+			"name": "Request OTP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"meetlakhani98787@gmail.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/forgot-password"
+			},
+			"response": []
+		},
+		{
+			"name": "Verify OTP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"meetlakhani98787@gmail.com\",\r\n  \"otp\": \"803802\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/verify-otp"
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"meetlakhani98787@gmail.com\",\r\n  \"password\": \"123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/reset-password"
+			},
+			"response": []
+		},
+		{
+			"name": "change Password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmYwMjBiMGY5NTA0NWM0YWI3MmVkZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyNzk5MzUwNSwiZXhwIjoxNzMwNTg1NTA1fQ.5jCIUTo5MWivlvAL-rluWVT_fsQr2MOTnR0CI0Rs5T4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"currentPassword\": \"123456\",\r\n  \"newPassword\": \"123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/change-password"
+			},
+			"response": []
+		},
+		{
+			"name": "User Profile",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWZkOGFhNDFjZjM5MGJjNmNmMDM4NiIsInJvbGUiOiJwYXRpZW50IiwiZmlyc3ROYW1lIjoiTW9uaWwiLCJsYXN0TmFtZSI6IlBhdGVsIiwiaWF0IjoxNzMwNjY5OTQ2LCJleHAiOjE3MzMyNjE5NDZ9.7DdwyuLPKdj0OqFRsL4QUL8VAK7t5DKazNhz46O6Z0o",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/profile"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Doctors",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgxZmFlODYyNzZlYTk3YzJjMTRmYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTg3NDY5OSwiZXhwIjoxNzMyNDY2Njk5fQ.EqwO1iXKLvyFiJGIT1pU3hUKLbYlnoqCNGHcMFG0FRs",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/doctors"
+			},
+			"response": []
+		},
+		{
+			"name": "get dr. by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgyNDhjZTM3YjYwMWJlNDMxMTdiMyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI5MzU3OTUwLCJleHAiOjE3MzE5NDk5NTB9.QIaBTZNOD2DpKAvrSiypotc3Vjg-G40_PKYCVNDk0eU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/doctors/6709693cb1a1efe71ab8546d"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit Dr. by id",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmYwMjBiMGY5NTA0NWM0YWI3MmVkZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyODM0NjU2OCwiZXhwIjoxNzMwOTM4NTY4fQ.gxKGU6ItKfiBx33qgOUEFhodGvZB3gGXMeftW5d8v_M",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"Updated First Name\",\r\n  \"lastName\": \"Updated Last Name\",\r\n  \"qualification\": \"Updated Qualification\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/doctors/66fedc77cd28841ff655876d"
+			},
+			"response": []
+		},
+		{
+			"name": "delete dr. by id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmYwMjBiMGY5NTA0NWM0YWI3MmVkZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyODM0NDYwMiwiZXhwIjoxNzMwOTM2NjAyfQ.PFrPTbaZR_j_12pn3Tm_RvxKGaPZknTMTrXAtW4evsU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/doctors/66fedc77cd28841ff655876d"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Patients",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgxZmFlODYyNzZlYTk3YzJjMTRmYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTI4MDY2OCwiZXhwIjoxNzMxODcyNjY4fQ.Guqkb2syEi1-Y4ZOuRkPgJeqPvGGtjTl6osoeqGyN6w",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/patients"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Patient by id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgxZmFlODYyNzZlYTk3YzJjMTRmYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTI4MDY2OCwiZXhwIjoxNzMxODcyNjY4fQ.Guqkb2syEi1-Y4ZOuRkPgJeqPvGGtjTl6osoeqGyN6w",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/patients/6708248ce37b601be43117b3"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit patient by id",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgyNDhjZTM3YjYwMWJlNDMxMTdiMyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI5MjkzNzY2LCJleHAiOjE3MzE4ODU3NjZ9.tOERAiVQGr3Y52rMH4SGNK5LqgW4uphJj0owtFiKQ9A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"age\": 30\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/patients/6708248ce37b601be43117b3"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Patient by id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmYwMjBiMGY5NTA0NWM0YWI3MmVkZCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyODM0NDYwMiwiZXhwIjoxNzMwOTM2NjAyfQ.PFrPTbaZR_j_12pn3Tm_RvxKGaPZknTMTrXAtW4evsU",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/users/patients/66fedb67cd28841ff6558769"
+			},
+			"response": []
+		},
+		{
+			"name": "Edit User Profile",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MTY5YWM4YzQzMzAzYzljZTI4NjEwYiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcyOTUzNTgwNCwiZXhwIjoxNzMyMTI3ODA0fQ.ISpD8vL0LyCvwpLwGPxg6OjIOA7xVm6TmIWN3isoma4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "profileImage",
+							"type": "file",
+							"src": "/C:/Users/RNW/Downloads/1669889379817-yatharth_27343883.jpeg"
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/users/profile"
+			},
+			"response": []
+		}
+	]
+}

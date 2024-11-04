@@ -2,11 +2,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaSearch } from "react-icons/fa";
 import api from "../../api/api";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const InsuranceClaims = () => {
   const navigate = useNavigate();
   const [insuranceClaimsData, setInsuranceClaimsData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Insurance Claims", path: "/admin/insurance-claims" },
+    ]);
+  }, []);
 
   // Fetch insurance claims data from API
   useEffect(() => {
@@ -59,7 +67,7 @@ const InsuranceClaims = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md m-6">
+    <div className="p-6 bg-white rounded-lg m-6">
       {/* Header */}
       <div className="flex justify-between items-center mb-4 space-x-4">
         <h2 className="text-xl font-semibold">Insurance Claims</h2>
@@ -77,7 +85,7 @@ const InsuranceClaims = () => {
 
       {/* Insurance Claims Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg">
+        <table className="min-w-full bg-white rounded-lg overflow-hidden">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-4 text-left">Bill Number</th>
@@ -93,7 +101,7 @@ const InsuranceClaims = () => {
           <tbody>
             {filteredData.length > 0 ? (
               filteredData.map((claim, index) => (
-                <tr key={index} className="border-b hover:bg-gray-50">
+                <tr key={index} className="border-b ">
                   <td className="px-6 py-4 text-blue-500 cursor-pointer">
                     <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
                       {claim.billNumber || "N/A"}

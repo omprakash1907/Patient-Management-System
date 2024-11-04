@@ -5,11 +5,12 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  Filler,
 } from 'chart.js';
 import dayjs from 'dayjs';
-import axios from 'axios';
+import api from '../../api/api'; // Use configured Axios instance
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Filler);
 
 const PatientsSummary = () => {
   const [patientData, setPatientData] = useState({ newPatients: 0, oldPatients: 0, totalPatients: 0 });
@@ -18,8 +19,15 @@ const PatientsSummary = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const response = await axios.get('/users/patients');
-        const patients = response.data || [];
+        // Use the configured Axios instance
+        const response = await api.get('/users/patients');
+        
+        // Log the entire response to verify the structure
+        console.log("Fetched API Response:", response);
+        
+        const patients = response.data.data || response.data || []; // Adjust if nested under `data`
+
+        console.log("Fetched Patients Data:", patients); // Log patients data
 
         const today = dayjs();
         let newPatients = 0;
@@ -35,11 +43,10 @@ const PatientsSummary = () => {
           }
         });
 
-        // Set the counts in the state
         setPatientData({
           newPatients,
           oldPatients,
-          totalPatients: patients.length
+          totalPatients: patients.length,
         });
       } catch (error) {
         console.error('Error fetching patient data:', error);
@@ -51,7 +58,6 @@ const PatientsSummary = () => {
     fetchPatientData();
   }, []);
 
-  // Data for the Doughnut chart
   const data = {
     labels: ['New Patients', 'Old Patients'],
     datasets: [

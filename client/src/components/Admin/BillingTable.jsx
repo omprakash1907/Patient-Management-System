@@ -38,8 +38,8 @@ const BillingTable = () => {
       {/* Header Section */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Billing & Payments</h2>
-        <Link to="/admin/select-template">
-          <button className="px-4 py-2 bg-customBlue text-white text-sm font-medium rounded-lg hover:bg-blue-700">
+        <Link to="/admin/create-bill">
+          <button className="px-4 py-2 bg-customBlue text-white text-sm font-medium rounded-lg ">
             Create Bills
           </button>
         </Link>

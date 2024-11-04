@@ -94,8 +94,7 @@ const BillPage = () => {
 
       {filteredBills.length === 0 ? (
         <div className="flex flex-col items-center">
-          <img src={noRecordImage} alt="No records found" className="w-64 mb-4" />
-          <p className="text-gray-500 text-lg">No records found</p>
+          <img src={noRecordImage} alt="No records found"  />
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">

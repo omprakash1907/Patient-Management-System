@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "2949a329-eabf-42b7-98b9-dbf26aae4cef",
+		"name": "chats",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31020344"
+	},
+	"item": [
+		{
+			"name": "Create chat by patients",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDE4NGNjNzY4YmY3YjcyNmFiZTk0YyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI4MTcwODg0LCJleHAiOjE3MzA3NjI4ODR9.1YKcCsHY2OMvLs4JoOsJCKezunpc_DL6GFB2hieCgik",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"doctorId\": \"66fedc77cd28841ff655876d\", \r\n  \"content\": \"Hi Doctor, how are you?\", \r\n  \"sender\": \"670184cc768bf7b726abe94c\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/chats/start"
+			},
+			"response": []
+		},
+		{
+			"name": "Send a Message in an Existing Chat",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDE4NGNjNzY4YmY3YjcyNmFiZTk0YyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI4MTcwODg0LCJleHAiOjE3MzA3NjI4ODR9.1YKcCsHY2OMvLs4JoOsJCKezunpc_DL6GFB2hieCgik",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/RNW/Downloads/Live Projects Team.pdf"
+						},
+						{
+							"key": "content",
+							"value": "3rd message",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://localhost:8000/api/chats/6701ce6ca22ae7ea60fc80fe/message"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Chats for the Logged-in User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDE4NGNjNzY4YmY3YjcyNmFiZTk0YyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI4MTY5OTgyLCJleHAiOjE3MzA3NjE5ODJ9.zDQCiXBvwCSXUODe326aEMdlXk-E-4WLpcbsDlsk4Ws",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"doctorId\": \"66fedc77cd28841ff655876d\", \r\n  \"content\": \"Hi Doctor, how are you?\", \r\n  \"sender\": \"patientId_here\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/chats"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Messages for a Specific Chat",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDE4NGNjNzY4YmY3YjcyNmFiZTk0YyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI4MTY5OTgyLCJleHAiOjE3MzA3NjE5ODJ9.zDQCiXBvwCSXUODe326aEMdlXk-E-4WLpcbsDlsk4Ws",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"doctorId\": \"66fedc77cd28841ff655876d\", \r\n  \"content\": \"Hi Doctor, how are you?\", \r\n  \"sender\": \"patientId_here\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/chats/6701ce6ca22ae7ea60fc80fe/messages"
+			},
+			"response": []
+		}
+	]
+}

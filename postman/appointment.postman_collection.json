@@ -1,0 +1,131 @@
+{
+	"info": {
+		"_postman_id": "2f39f769-70bb-403e-8c03-b45093bca5ca",
+		"name": "appointment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31020344"
+	},
+	"item": [
+		{
+			"name": "Book Appointment by patient",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MTdlYTMxNDY1OTlmZDMxOGU4ZDAyNCIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI5ODg0NTIzLCJleHAiOjE3MzI0NzY1MjN9.h1XPFOVbpak_S4pp8dr7SLqhqqWUA8Z6xfrdkpP9rwc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"specialty\": \"Cardiology\",\r\n  \"country\": \"USA\",\r\n  \"state\": \"California\",\r\n  \"city\": \"Los Angeles\",\r\n  \"appointmentDate\": \"2024-10-25\",\r\n  \"appointmentTime\": \"12:00 AM\",\r\n  \"hospital\": \"Cedars-Sinai Medical Center\",\r\n  \"doctor\": \"6709693cb1a1efe71ab8546d\",\r\n  \"patientIssue\": \"Stomach pain\",\r\n  \"diseaseName\": \"Coronary  disease\",\r\n  \"appointmentType\": \"Onsite\",\r\n  \"doctorFees\": 200\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/appointment"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Appointment Details",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MWQ3OTIzNmY3YjRjNGE0NDEwYmYyNCIsInJvbGUiOiJkb2N0b3IiLCJmaXJzdE5hbWUiOiJLYXNoeWFwIiwibGFzdE5hbWUiOiJjaGF1aGFuIiwiaWF0IjoxNzMwNjcwNzcyLCJleHAiOjE3MzMyNjI3NzJ9.nDiDLYPv-m2CaU_ndcu0AVIsYNHmbEk5EZNSTqZouEc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/appointments"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Appointment by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmVkYjY3Y2QyODg0MWZmNjU1ODc2OSIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI4MTU0MDY0LCJleHAiOjE3MzA3NDYwNjR9.Ykr8ZzYlilJfaHKRXoLIT3Nr6N-wxJRyolHSQPIRjmM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": "http://localhost:8000/api/appointments/6706ef82d4338cafbacd95d5"
+			},
+			"response": []
+		},
+		{
+			"name": "Reschedule Appointment",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZmVkYjY3Y2QyODg0MWZmNjU1ODc2OSIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI4MTU0NTkwLCJleHAiOjE3MzA3NDY1OTB9.Aqo0dGQNrSNszzMGOKSZJPCJjA_Cm4WEwtzBiPHXuPk",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"appointmentDate\": \"2024-10-22\",\r\n  \"appointmentTime\": \"5:00 PM - 6:00 PM\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/appointments/reschedule/6701898a780cddc0a4ee6712"
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Appointment",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MDgyNDhjZTM3YjYwMWJlNDMxMTdiMyIsInJvbGUiOiJwYXRpZW50IiwiaWF0IjoxNzI5ODc5ODMzLCJleHAiOjE3MzI0NzE4MzN9.SQVnjOrEd6zT88OX0VykR1xMu3tbp2dt0deZ8dpQ9eM",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8000/api/appointments/cancel/6714052b7cb7adca13cd9924"
+			},
+			"response": []
+		}
+	]
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import AppointmentCard from "../../components/Admin/AppointmentCard";
 import PatientsSummaryChart from "../../components/Admin/PatientsSummaryChart";
@@ -7,8 +7,16 @@ import PatientsAgeChart from "../../components/Admin/PatientsAgeChart";
 // Import the "no data found" images
 import NoPatientImage from '../../assets/images/patient-count.png';
 import NoDoctorImage from '../../assets/images/doctor-count.png';
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const ReportingAndAnalytics = () => {
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Reporting and Analytics", path: "/admin/report-analysis" },
+    ]);
+  }, []);
   // Data arrays for patients and doctors count
   const patientsCountData = [
     // Uncomment this to test the empty data scenario

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineCamera, AiOutlineClockCircle } from "react-icons/ai";
 import { FiUpload } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import api from "../../api/api";
 import countryData from "../../country-json/countries+states+cities.json"; 
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const AddDoctor = () => {
   const [formData, setFormData] = useState({
@@ -41,6 +42,14 @@ const AddDoctor = () => {
   const [showHospitalFields, setShowHospitalFields] = useState(false);
   const [filteredStates, setFilteredStates] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Doctor Management", path: "/admin/doctor-management" },
+      { label: "Add Doctor", path: "/admin/doctor-management/add-doctor" },
+    ]);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

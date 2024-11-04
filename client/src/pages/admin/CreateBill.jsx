@@ -4,6 +4,8 @@ import AddFieldModal from "../../components/Admin/AddFieldModal";
 import { FiUpload } from "react-icons/fi";
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const CreateBill = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -11,6 +13,14 @@ const CreateBill = () => {
   const [patientFields, setPatientFields] = useState([]);
   const [isHospitalModalOpen, setIsHospitalModalOpen] = useState(false);
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Monitor Billing", path: "/admin/monitor-billing" },
+      { label: "Create Bill", path: "/admin/create-bill" },
+    ]);
+  }, []);
 
   const [hospitals, setHospitals] = useState([]);
   const [patients, setPatients] = useState([]);
@@ -162,7 +172,12 @@ const CreateBill = () => {
         },
       });
 
-      alert("Invoice created successfully!");
+      Swal.fire({
+        icon: 'success',
+        title: 'Invoice Created successfully!!',
+        text: 'Your operation was successful.',
+        confirmButtonText: 'OK',
+      });
       setFormValues({
         hospitalId: "",
         patientId: "",
@@ -198,7 +213,12 @@ const CreateBill = () => {
       setSelectedFile(null);
     } catch (error) {
       console.error("Error creating invoice:", error);
-      alert("Error creating invoice. Please try again.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalide Field',
+        text: 'Something went wrong!',
+        confirmButtonText: 'Try Again',
+      }); 
     }
   };
 

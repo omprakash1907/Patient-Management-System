@@ -3,10 +3,19 @@ import { useParams } from "react-router-dom";
 import api from "../../api/api";
 import logo from "../../assets/images/logo.png";
 import mask from "../../assets/images/invoice-mask.png";
+import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
 const Invoice = () => {
   const { billId } = useParams();
   const [invoiceData, setInvoiceData] = useState(null);
+  const { updateBreadcrumb } = useBreadcrumb();
+
+  useEffect(() => {
+    updateBreadcrumb([
+      { label: "Monitor Billing", path: "/admin/monitor-billing" },
+      { label: "Invoice", path: "/admin/invoice/:billId/:patientName" },
+    ]);
+  }, []);
 
   useEffect(() => {
     const fetchInvoiceData = async () => {
@@ -118,7 +127,7 @@ const Invoice = () => {
               <td className="px-4 py-2">{invoiceData.description}</td>
               <td className="px-4 py-2">₹ {invoiceData.amount}</td>
               <td className="px-4 py-2">1</td>
-              <td className="px-4 py-2">₹ {invoiceData.amount}</td>
+              <td className="px-2 py-2">₹ {invoiceData.amount}</td>
             </tr>
           </tbody>
         </table>
