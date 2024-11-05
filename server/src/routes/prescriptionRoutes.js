@@ -4,7 +4,7 @@ const {
   createPrescription,
   getPrescriptionById,
   getAllPrescriptionsByUser, // Import the new function
-} = require("../controllers/prescriptionController");
+} = require("../controllers/Prescriptioncontroller");
 const { protect } = require("../middleware/authMiddleware");
 
 // Route to create a prescription
