@@ -48,7 +48,7 @@ const AdminRegister = () => {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/hospitals");
+        const response = await axios.get("https://patient-management-system-1-8zui.onrender.com/api/hospitals");
         if (response.data && Array.isArray(response.data.data)) {
           setHospitals(response.data.data);
         } else {
@@ -85,7 +85,7 @@ const AdminRegister = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/api/hospitals", hospitalPayload);
+      const response = await axios.post("https://patient-management-system-1-8zui.onrender.com/api/hospitals", hospitalPayload);
       if (response.status === 201) {
         alert("Hospital created successfully!");
         setHospitals([...hospitals, response.data.hospital]);

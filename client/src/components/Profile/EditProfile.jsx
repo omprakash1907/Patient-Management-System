@@ -168,7 +168,7 @@ const EditProfile = ({ onCancel }) => {
                 ? previewImage
                 : formData.profileImage &&
                   !(formData.profileImage instanceof File)
-                ? `http://localhost:8000/${formData.profileImage}`
+                ? `https://patient-management-system-1-8zui.onrender.com/${formData.profileImage}`
                 : userImage
             }
             alt="Profile"

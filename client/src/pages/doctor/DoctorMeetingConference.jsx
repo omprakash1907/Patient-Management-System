@@ -38,7 +38,7 @@ const PatientMeetingConference = () => {
   // Fetch appointment details (room ID and user name) from the backend
   const fetchAppointmentDetails = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/appointments/${appointmentId}`);
+      const response = await axios.get(`https://patient-management-system-1-8zui.onrender.com/api/appointments/${appointmentId}`);
       const appointmentData = response.data.data;
       setRoomID(appointmentData.roomID);
       setUserName(appointmentData.patientName);

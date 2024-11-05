@@ -20,7 +20,7 @@ const DoctorOffCanvas = ({ doctor, isOpen, onClose }) => {
         <div className="relative p-4 bg-gradient-to-br from-[#4C49ED] to-[#020067] rounded-lg shadow-lg mb-6">
           <div className="flex items-center mb-4">
             <img
-              src={doctor.profileImage ? `http://localhost:8000/${doctor.profileImage}` : userImage}
+              src={doctor.profileImage ? `https://patient-management-system-1-8zui.onrender.com/${doctor.profileImage}` : userImage}
               alt="Doctor Profile"
               className="w-16 h-16 rounded-full mr-4"
             />
@@ -82,7 +82,7 @@ const DoctorOffCanvas = ({ doctor, isOpen, onClose }) => {
           <div className="mt-4">
             <strong className="text-gray-500 font-semibold pb-2">Signature:</strong>
             <img
-              src={doctor.signatureImage ? `http://localhost:8000/${doctor.signatureImage}` : ""}
+              src={doctor.signatureImage ? `https://patient-management-system-1-8zui.onrender.com/${doctor.signatureImage}` : ""}
               alt="Doctor Signature"
               className="w-full h-24 object-contain bg-white rounded border-gray-200"
             />

@@ -136,7 +136,7 @@ const DoctorManagement = () => {
                     <img
                       src={
                         doctor.profileImage
-                          ? `http://localhost:8000/${doctor.profileImage}`
+                          ? `https://patient-management-system-1-8zui.onrender.com/${doctor.profileImage}`
                           : userImage
                       }
                       alt="Doctor"

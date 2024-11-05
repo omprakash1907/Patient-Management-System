@@ -391,7 +391,7 @@ const BookAppointment = () => {
                             <h2 className='pb-2 font-medium text-2xl'>Doctor Details</h2>
                             <div className="flex items-center mb-4 relative z-10 p-4 bg-gradient-to-br from-[#4C49ED] to-[#020067]  rounded-lg shadow-lg ">
                                 <img
-                                    src={`http://localhost:8000/${doctorDetails.profileImage || noappointmentrecord}`}
+                                    src={`https://patient-management-system-1-8zui.onrender.com/${doctorDetails.profileImage || noappointmentrecord}`}
                                     alt="Doctor"
                                     className="w-16 h-16 rounded-full mr-4"
                                 />

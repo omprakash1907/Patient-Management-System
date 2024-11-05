@@ -58,7 +58,7 @@ const PatientEditProfile = () => {
           profileImage: patient.profileImage,
         });
 
-        setProfileImagePreview(`http://localhost:8000/${patient.profileImage}`);
+        setProfileImagePreview(`https://patient-management-system-1-8zui.onrender.com/${patient.profileImage}`);
       } catch (error) {
         console.error("Failed to fetch patient profile:", error);
         if (attempt < maxAttempts) {

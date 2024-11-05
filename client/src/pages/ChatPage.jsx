@@ -6,7 +6,7 @@ import chatIcon from "../assets/images/chat-icon.png";
 import io from "socket.io-client";
 import { useBreadcrumb } from "../context/BreadcrumbContext";
 
-const socket = io("http://localhost:8000");
+const socket = io("https://patient-management-system-1-8zui.onrender.com");
 
 const ChatPage = () => {
   const [selectedChatUser, setSelectedChatUser] = useState(null);
@@ -55,7 +55,7 @@ const ChatPage = () => {
       const endpoint =
         role === "doctor" ? "/api/users/patients" : "/api/users/doctors";
       try {
-        const response = await fetch(`http://localhost:8000${endpoint}`, {
+        const response = await fetch(`https://patient-management-system-1-8zui.onrender.com${endpoint}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();
@@ -73,7 +73,7 @@ const ChatPage = () => {
       const fetchMessages = async () => {
         try {
           const response = await fetch(
-            `http://localhost:8000/api/chats/${selectedChat}/messages`,
+            `https://patient-management-system-1-8zui.onrender.com/api/chats/${selectedChat}/messages`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -105,7 +105,7 @@ const ChatPage = () => {
 
   const startChat = async (user) => {
     try {
-      const response = await fetch("http://localhost:8000/api/chats/start", {
+      const response = await fetch("https://patient-management-system-1-8zui.onrender.com/api/chats/start", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -134,7 +134,7 @@ const ChatPage = () => {
 
     try {
       const sendMessageResponse = await fetch(
-        `http://localhost:8000/api/chats/${selectedChat}/message`,
+        `https://patient-management-system-1-8zui.onrender.com/api/chats/${selectedChat}/message`,
         {
           method: "POST",
           headers: {
@@ -197,7 +197,7 @@ const ChatPage = () => {
                 }`}
               >
                 <img
-                  src={`http://localhost:8000/${
+                  src={`https://patient-management-system-1-8zui.onrender.com/${
                     user.profileImage || userImage
                   }`}
                   alt="avatar"
@@ -225,7 +225,7 @@ const ChatPage = () => {
           <>
             <div className="flex items-center p-4 bg-white border-b">
               <img
-                src={`http://localhost:8000/${
+                src={`https://patient-management-system-1-8zui.onrender.com/${
                   selectedChatUser.profileImage || userImage
                 }`}
                 alt="avatar"

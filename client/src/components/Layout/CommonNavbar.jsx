@@ -26,12 +26,12 @@ const CommonNavbar = ({ role, onSearch }) => {
 
         // Fetch user profile using the token
         axios
-          .get("http://localhost:8000/api/users/profile", {
+          .get("https://patient-management-system-1-8zui.onrender.com/api/users/profile", {
             headers: { Authorization: `Bearer ${token}` },
           })
           .then((response) => {
             const userData = response.data;
-            setProfileImage(`http://localhost:8000/${userData.profileImage}`);
+            setProfileImage(`https://patient-management-system-1-8zui.onrender.com/${userData.profileImage}`);
           })
           .catch((error) => console.error("Error fetching user profile:", error));
       } catch (error) {
@@ -138,7 +138,7 @@ const CommonNavbar = ({ role, onSearch }) => {
         {/* User Profile */}
         <Link to={`/${role.toLowerCase()}/profile-setting`} className="flex items-center space-x-2">
           <img
-            src={profileImage || "http://localhost:8000/default-profile.png"}
+            src={profileImage || "https://patient-management-system-1-8zui.onrender.com/default-profile.png"}
             alt="user"
             className="w-10 h-10 rounded-full"
           />

@@ -29,7 +29,7 @@ const ProfileSidebar = () => {
   return (
     <div className="p-6 text-center">
       <img
-        src={profileImage ? `http://localhost:8000/${profileImage}` : user}
+        src={profileImage ? `https://patient-management-system-1-8zui.onrender.com/${profileImage}` : user}
         alt="Profile"
         className="w-48 h-48 mx-auto rounded-full mb-4"
       />
