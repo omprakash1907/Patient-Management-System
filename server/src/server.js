@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cors({
-  origin: ['https://patient-management-system-1-8zui.onrender.com'], // Allow frontend origin
+  origin: ['https://patient-management-system-gamma.vercel.app'], // Allow frontend origin
   methods: ["GET", "POST", "PUT", "DELETE",'PATCH'],
   allowedHeaders: ["Authorization", "Content-Type"],
   credentials: true,
