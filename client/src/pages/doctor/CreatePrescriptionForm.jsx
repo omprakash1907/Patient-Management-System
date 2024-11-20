@@ -118,7 +118,7 @@ const CreatePrescriptionForm = () => {
     return (
         <div className="flex gap-8 p-6 bg-gray-50 ">
             {/* Prescription Form Section */}
-            <div className="flex-1 bg-white p-8 rounded-lg w-2/3">
+            <div className="flex-1 bg-white p-8 rounded-lg ">
                 <Formik
                     enableReinitialize // Allows initialValues to be updated when setInitialValues changes
                     initialValues={initialValues}
@@ -288,17 +288,7 @@ const CreatePrescriptionForm = () => {
                 </Formik>
             </div>
 
-            {/* Prescription Summary Section */}
-            <div className="bg-white p-8 rounded-lg w-1/3">
-                {prescriptionData ? (
-                    <>
-                        <h2 className="text-2xl font-bold mb-6">Prescription Summary</h2>
-                        {/* Summary code continues as before */}
-                    </>
-                ) : (
-                    <p>Loading prescription details...</p>
-                )}
-            </div>
+           
         </div>
     );
 };

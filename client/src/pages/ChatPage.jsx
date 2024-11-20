@@ -172,7 +172,7 @@ const ChatPage = () => {
 
   return (
     <div className="flex h-full p-6">
-      <div className="w-1/5 bg-white shadow-sm p-4 rounded-s-xl">
+      <div className="w-1/5 bg-white shadow-sm p-4 rounded-s-xl overflow-y-auto custom-scroll">
         <h2 className="text-xl font-semibold">Chat</h2>
         <div className="relative mt-4 mb-6">
           <input
@@ -184,7 +184,7 @@ const ChatPage = () => {
           />
           <FaSearch className="absolute top-3 right-4 text-gray-500" />
         </div>
-        <div className="space-y-2 h-full overflow-y-auto">
+        <div className="space-y-2 h-full ">
           {filteredUserList.length > 0 ? (
             filteredUserList.map((user) => (
               <div
