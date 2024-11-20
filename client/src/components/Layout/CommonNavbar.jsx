@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineDown, AiOutlineRight } from "react-icons/ai";
-import { FaBell, FaHome, FaSearch } from "react-icons/fa";
+import { FaBars, FaBell, FaHome, FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
 
-const CommonNavbar = ({ role, onSearch }) => {
+const CommonNavbar = ({ role, onSearch, toggleSidebar }) => {
   const { breadcrumb } = useBreadcrumb();
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
@@ -26,14 +26,21 @@ const CommonNavbar = ({ role, onSearch }) => {
 
         // Fetch user profile using the token
         axios
-          .get("https://patient-management-system-1-8zui.onrender.com/api/users/profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          })
+          .get(
+            "https://patient-management-system-1-8zui.onrender.com/api/users/profile",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
           .then((response) => {
             const userData = response.data;
-            setProfileImage(`https://patient-management-system-1-8zui.onrender.com/${userData.profileImage}`);
+            setProfileImage(
+              `https://patient-management-system-1-8zui.onrender.com/${userData.profileImage}`
+            );
           })
-          .catch((error) => console.error("Error fetching user profile:", error));
+          .catch((error) =>
+            console.error("Error fetching user profile:", error)
+          );
       } catch (error) {
         console.error("Error decoding token:", error);
       }
@@ -61,19 +68,24 @@ const CommonNavbar = ({ role, onSearch }) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-white  p-4">
+    <div className="flex items-center justify-between bg-white p-4 shadow-md">
+      {/* Sidebar Toggle Button */}
+      <button
+        onClick={toggleSidebar}
+        className="text-gray-700 text-lg lg:hidden"
+      >
+        <FaBars />
+      </button>
+
       {/* Breadcrumb Path */}
-      <div className="flex items-center bg-gray-100 px-4 py-2 rounded-full space-x-2">
+      <div className="hidden lg:flex items-center bg-gray-100 px-4 py-2 rounded-full space-x-2">
         <Link to={`/${role.toLowerCase()}/dashboard`}>
           <FaHome className="text-gray-500 text-lg" />
         </Link>
         {breadcrumb.map((item, index) => (
           <React.Fragment key={index}>
             <AiOutlineRight className="text-gray-400 text-sm" />
-            <Link
-              to={item.path}
-              className="text-customBlue font-medium"
-            >
+            <Link to={item.path} className="text-customBlue font-medium">
               {item.label}
             </Link>
           </React.Fragment>
@@ -83,14 +95,16 @@ const CommonNavbar = ({ role, onSearch }) => {
       {/* Right Side - Greeting, Search, Notification, and Profile */}
       <div className="flex items-center space-x-4">
         {/* Greeting */}
-        <div className="text-gray-700">
-          <h1 className="text-lg font-bold">{greeting}, {userName.split(" ")[0]}!</h1>
+        <div className="text-gray-700 hidden lg:flex flex-col items-center space-x-2">
+          <h1 className="text-lg font-bold">
+            {greeting}, {userName.split(" ")[0]}!
+          </h1>
           <p className="text-gray-500 text-sm">Hope you have a good day</p>
         </div>
 
         {/* Conditionally render search bar only if userRole is "admin" */}
         {userRole === "admin" && (
-          <div className="relative flex items-center bg-gray-100 rounded-full px-4 py-2 space-x-2">
+          <div className="relative hidden lg:flex items-center bg-gray-100 rounded-full px-4 py-2 space-x-2">
             <FaSearch className="text-gray-500" />
             <input
               type="text"
@@ -100,7 +114,10 @@ const CommonNavbar = ({ role, onSearch }) => {
               onChange={handleSearchChange}
             />
 
-            <div className="flex items-center cursor-pointer" onClick={toggleDropdown}>
+            <div
+              className="flex items-center cursor-pointer"
+              onClick={toggleDropdown}
+            >
               <span className="text-gray-500 mx-2">{filterOption}</span>
               <AiOutlineDown className="text-gray-500" />
             </div>
@@ -136,13 +153,19 @@ const CommonNavbar = ({ role, onSearch }) => {
         </div>
 
         {/* User Profile */}
-        <Link to={`/${role.toLowerCase()}/profile-setting`} className="flex items-center space-x-2">
+        <Link
+          to={`/${role.toLowerCase()}/profile-setting`}
+          className="flex items-center space-x-2"
+        >
           <img
-            src={profileImage || "https://patient-management-system-1-8zui.onrender.com/default-profile.png"}
+            src={
+              profileImage ||
+              "https://patient-management-system-1-8zui.onrender.com/default-profile.png"
+            }
             alt="user"
             className="w-10 h-10 rounded-full"
           />
-          <div>
+          <div className="hidden lg:block">
             <span className="font-semibold text-sm">{userName}</span>
             <span className="block text-gray-500 text-xs">{userRole}</span>
           </div>
