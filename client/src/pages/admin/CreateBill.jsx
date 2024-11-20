@@ -6,6 +6,7 @@ import { AiOutlineMinusCircle } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useBreadcrumb } from "../../context/BreadcrumbContext";
+import { useNavigate } from "react-router-dom";
 
 const CreateBill = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -14,6 +15,7 @@ const CreateBill = () => {
   const [isHospitalModalOpen, setIsHospitalModalOpen] = useState(false);
   const [isPatientModalOpen, setIsPatientModalOpen] = useState(false);
   const { updateBreadcrumb } = useBreadcrumb();
+  const navigate = useNavigate()
 
   useEffect(() => {
     updateBreadcrumb([
@@ -211,6 +213,7 @@ const CreateBill = () => {
         status: "Unpaid",
       });
       setSelectedFile(null);
+      navigate('/admin/monitor-billing')
     } catch (error) {
       console.error("Error creating invoice:", error);
       Swal.fire({
