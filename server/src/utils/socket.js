@@ -7,7 +7,7 @@ module.exports = {
   init: (server) => {
     io = socketio(server, {
       cors: {
-        origin: "http://localhost:3000",
+        origin: ['https://patient-management-system-gamma.vercel.app', 'http://localhost:3000'],
         methods: ["GET", "POST"],
         allowedHeaders: ["Authorization"],
         credentials: true,
