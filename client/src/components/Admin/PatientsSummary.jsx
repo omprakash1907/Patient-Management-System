@@ -1,122 +1,128 @@
-import { useEffect, useState } from 'react';
-import { Doughnut } from 'react-chartjs-2';
+import { useState, useEffect } from 'react';
 import {
-  Chart as ChartJS,
-  ArcElement,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
-  Legend,
-  Filler,
-} from 'chart.js';
-import dayjs from 'dayjs';
-import api from '../../api/api'; // Use configured Axios instance
+  ResponsiveContainer,
+  Legend
+} from 'recharts';
+import classNames from 'classnames';
+import api from '../../api/api';
 
-ChartJS.register(ArcElement, Tooltip, Legend, Filler);
+const PatientSummary = () => {
+  const [activeTab, setActiveTab] = useState('Week');
+  const [chartData, setChartData] = useState([]);
 
-const PatientsSummary = () => {
-  const [patientData, setPatientData] = useState({ newPatients: 0, oldPatients: 0, totalPatients: 0 });
-  const [loading, setLoading] = useState(true);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        // Use the configured Axios instance
         const response = await api.get('/users/patients');
-        
-        // Log the entire response to verify the structure
-        console.log("Fetched API Response:", response);
-        
-        const patients = response.data.data || response.data || []; // Adjust if nested under `data`
+        const patients = response.data;
 
-        console.log("Fetched Patients Data:", patients); // Log patients data
+        const currentDate = new Date();
+        const weeklySummary = [
+          { day: 'Mon', newPatient: 0, oldPatient: 0 },
+          { day: 'Tue', newPatient: 0, oldPatient: 0 },
+          { day: 'Wed', newPatient: 0, oldPatient: 0 },
+          { day: 'Thu', newPatient: 0, oldPatient: 0 },
+          { day: 'Fri', newPatient: 0, oldPatient: 0 },
+          { day: 'Sat', newPatient: 0, oldPatient: 0 },
+          { day: 'Sun', newPatient: 0, oldPatient: 0 },
+        ];
+        const dailySummary = Array.from({ length: 7 }, (_, i) => ({
+          date: new Date(currentDate - (i * 24 * 60 * 60 * 1000)).toLocaleDateString("en-GB", { day: 'numeric', month: 'short' }),
+          newPatient: 0,
+          oldPatient: 0
+        })).reverse();
 
-        const today = dayjs();
-        let newPatients = 0;
-        let oldPatients = 0;
+        patients.forEach(patient => {
+          const createdAt = new Date(patient.createdAt);
+          const daysAgo = Math.floor((currentDate - createdAt) / (1000 * 60 * 60 * 24));
 
-        // Count new and old patients based on creation date
-        patients.forEach((patient) => {
-          const registrationDate = dayjs(patient.createdAt);
-          if (registrationDate.isSame(today, 'day')) {
-            newPatients++;
+          const patientType = daysAgo < 7 ? 'newPatient' : 'oldPatient';
+
+          if (activeTab === 'Week') {
+            const dayOfWeek = createdAt.toLocaleString('en-US', { weekday: 'short' });
+            const dayIndex = weeklySummary.findIndex(day => day.day === dayOfWeek);
+            if (dayIndex >= 0) {
+              weeklySummary[dayIndex][patientType] += 1;
+            }
           } else {
-            oldPatients++;
+            const dateString = createdAt.toLocaleDateString("en-GB", { day: 'numeric', month: 'short' });
+            const dayIndex = dailySummary.findIndex(day => day.date === dateString);
+            if (dayIndex >= 0) {
+              dailySummary[dayIndex][patientType] += 1;
+            }
           }
         });
 
-        setPatientData({
-          newPatients,
-          oldPatients,
-          totalPatients: patients.length,
-        });
+        setChartData(activeTab === 'Week' ? weeklySummary : dailySummary);
       } catch (error) {
         console.error('Error fetching patient data:', error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchPatientData();
-  }, []);
-
-  const data = {
-    labels: ['New Patients', 'Old Patients'],
-    datasets: [
-      {
-        data: [patientData.newPatients, patientData.oldPatients],
-        backgroundColor: ['#F6C762', '#44C27F'],
-        borderWidth: 0,
-      },
-    ],
-  };
-
-  const options = {
-    cutout: '70%',
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
+  }, [activeTab]);
 
   return (
-    <div className="bg-white p-6 rounded-xl h-full">
-      <h2 className="text-lg font-semibold mb-4">Patients Summary</h2>
-      <div className="flex">
-        <div className="relative w-1/2 flex items-center justify-center">
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <>
-              <Doughnut data={data} options={options} />
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <p className="text-gray-400 text-sm">Total Patients</p>
-                <p className="text-2xl font-semibold text-blue-600">{patientData.totalPatients}</p>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="w-1/2 flex flex-col justify-center pl-6">
-          <ul>
-            <li className="flex items-center justify-between mb-2">
-              <span className="text-sm">New Patients (Today)</span>
-              <span className="text-sm text-gray-500">{patientData.newPatients}</span>
-              <span className="w-3 h-3 bg-[#F6C762] rounded-full ml-2"></span>
-            </li>
-            <li className="flex items-center justify-between mb-2">
-              <span className="text-sm">Old Patients</span>
-              <span className="text-sm text-gray-500">{patientData.oldPatients}</span>
-              <span className="w-3 h-3 bg-[#44C27F] rounded-full ml-2"></span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="text-sm">Total Patients</span>
-              <span className="text-sm text-gray-500">{patientData.totalPatients}</span>
-              <span className="w-3 h-3 bg-[#4C49ED] rounded-full ml-2"></span>
-            </li>
-          </ul>
+    <div className="p-6 bg-white rounded-lg shadow-md">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold">Patients Summary</h2>
+        <div className="flex space-x-2">
+          <button
+            className={classNames(
+              'px-4 py-2 rounded-lg',
+              activeTab === 'Week' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+            )}
+            onClick={() => handleTabChange('Week')}
+          >
+            Week
+          </button>
+          <button
+            className={classNames(
+              'px-4 py-2 rounded-lg',
+              activeTab === 'Day' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'
+            )}
+            onClick={() => handleTabChange('Day')}
+          >
+            Day
+          </button>
         </div>
       </div>
+
+      {/* Line Chart */}
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey={activeTab === 'Week' ? 'day' : 'date'} />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="newPatient"
+            stroke="#FFA500"
+            activeDot={{ r: 8 }}
+            name="New Patient"
+          />
+          <Line
+            type="monotone"
+            dataKey="oldPatient"
+            stroke="#1E90FF"
+            name="Old Patient"
+          />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 };
 
-export default PatientsSummary;
+export default PatientSummary;

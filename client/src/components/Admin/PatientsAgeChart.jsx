@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import api from "../../api/api";
 
 // Register Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PatientsAgeChart = () => {
-  const patientsAgeData = {
+  const [patientsAgeData, setPatientsAgeData] = useState({
     labels: [
       "0-2 Years",
       "3-12 Years",
@@ -17,7 +18,7 @@ const PatientsAgeChart = () => {
     ],
     datasets: [
       {
-        data: [8, 12, 20, 18, 8, 34],
+        data: [0, 0, 0, 0, 0, 0],
         backgroundColor: [
           "#FF6384", // Pink for 0-2 Years
           "#36A2EB", // Blue for 3-12 Years
@@ -30,7 +31,53 @@ const PatientsAgeChart = () => {
         cutout: "60%", // Inner radius for doughnut chart
       },
     ],
-  };
+  });
+  const [totalPatients, setTotalPatients] = useState(0);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await api.get("/users/patients");
+        const patients = response.data;
+
+        const ageGroups = [
+          { name: "0-2 Years", minAge: 0, maxAge: 2 },
+          { name: "3-12 Years", minAge: 3, maxAge: 12 },
+          { name: "13-19 Years", minAge: 13, maxAge: 19 },
+          { name: "20-39 Years", minAge: 20, maxAge: 39 },
+          { name: "40-59 Years", minAge: 40, maxAge: 59 },
+          { name: "60 And Above", minAge: 60, maxAge: Infinity },
+        ];
+
+        const ageData = Array(ageGroups.length).fill(0);
+        patients.forEach((patient) => {
+          const age = patient.age;
+          ageGroups.forEach((group, index) => {
+            if (age >= group.minAge && age <= group.maxAge) {
+              ageData[index] += 1;
+            }
+          });
+        });
+
+        const total = patients.length;
+        setTotalPatients(total);
+
+        setPatientsAgeData((prevData) => ({
+          ...prevData,
+          datasets: [
+            {
+              ...prevData.datasets[0],
+              data: ageData.map((value) => ((value / total) * 100).toFixed(1)), // Convert to percentages
+            },
+          ],
+        }));
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      }
+    };
+
+    fetchPatients();
+  }, []);
 
   const options = {
     plugins: {
@@ -63,12 +110,15 @@ const PatientsAgeChart = () => {
                   <span
                     className="w-3 h-3 rounded-full mr-2 "
                     style={{
-                      backgroundColor: patientsAgeData.datasets[0].backgroundColor[index],
+                      backgroundColor:
+                        patientsAgeData.datasets[0].backgroundColor[index],
                     }}
                   ></span>
                   {label}
                 </div>
-                <span>{patientsAgeData.datasets[0].data[index]}%</span>
+                <span>
+                  {patientsAgeData.datasets[0].data[index]}%{/* Percentage */}
+                </span>
               </li>
             ))}
           </ul>

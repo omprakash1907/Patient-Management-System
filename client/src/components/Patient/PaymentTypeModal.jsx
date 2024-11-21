@@ -3,29 +3,18 @@ import { FaCreditCard, FaMoneyBillAlt } from "react-icons/fa";
 import PaymentMethodModal from "./PaymentMethodModal";
 import api from "../../api/api";
 
-const PaymentTypeModal = ({ bill, onClose }) => {
+const PaymentTypeModal = ({ bill, onClose, onOpenCashPayment }) => {
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
   const [paymentType, setPaymentType] = useState(null);
 
-  const handlePaymentTypeSelection = async (type) => {
+  const handlePaymentTypeSelection = (type) => {
     setPaymentType(type);
     if (type === "Online") {
       // Show payment method modal
       setShowPaymentMethod(true);
-    } else {
-      try {
-        // For Cash payment, update the invoice status to "Paid"
-        await api.patch(`/invoice/${bill._id}`, {
-          status: "Paid", // Update status to "Paid"
-          patient: bill.patient._id, // Include patient ID
-          doctor: bill.doctor._id, // Include doctor ID
-        });
-        alert("Cash payment processed! Invoice status updated to 'Paid'.");
-        onClose(); // Close the modal after processing payment
-      } catch (error) {
-        console.error("Error processing cash payment:", error);
-        alert("Failed to process cash payment. Please try again.");
-      }
+    } else if (type === "Cash") {
+      onClose(); // Close the PaymentTypeModal
+      onOpenCashPayment(); // Open the CashPaymentModal
     }
   };
 

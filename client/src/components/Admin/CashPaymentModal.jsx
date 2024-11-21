@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const CashPaymentModal = ({ open, handleClose, handlePayment, totalAmount, paidAmount }) => {
   const [amount, setAmount] = useState('');
@@ -21,7 +22,19 @@ const CashPaymentModal = ({ open, handleClose, handlePayment, totalAmount, paidA
     if (isPayEnabled) {
       handlePayment(amount); // Call the handlePayment function with the entered amount
       handleClose(); // Close the modal after successful payment
+      Swal.fire({
+        icon: "error",
+        title: "Payment failed",
+        text: "Something went wrong!",
+        confirmButtonText: "Try Again",
+      });
     }
+    Swal.fire({
+      icon: "success",
+      title: "Payment successfully!!",
+      text: "Your operation was successful.",
+      confirmButtonText: "OK",
+    });
   };
 
   if (!open) return null;
