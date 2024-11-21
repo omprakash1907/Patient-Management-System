@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import RightBanner from "../commonComponent/RightBanner";
 import AuthContext from "../../context/AuthContext";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import logoBanner from "../../assets/images/loginBanner.png";
+import logo from "../../assets/images/logo.png";
 
 const Login = () => {
   const { loginUser, authError } = useContext(AuthContext);
@@ -65,10 +67,10 @@ const Login = () => {
           localStorage.setItem("role", role);
 
           Swal.fire({
-            icon: 'success',
-            title: 'Login successfully!!',
-            text: 'Your operation was successful.',
-            confirmButtonText: 'OK',
+            icon: "success",
+            title: "Login successfully!!",
+            text: "Your operation was successful.",
+            confirmButtonText: "OK",
           });
 
           // Reload the page after setting token and role
@@ -76,25 +78,32 @@ const Login = () => {
         } else {
           throw new Error("Invalid login details");
         }
-        
       } catch (error) {
         Swal.fire({
-          icon: 'error',
-          title: 'Login failed',
-          text: 'Something went wrong!',
-          confirmButtonText: 'Try Again',
-        }); 
+          icon: "error",
+          title: "Login failed",
+          text: "Something went wrong!",
+          confirmButtonText: "Try Again",
+        });
         setErrors({ password: authError || "Login failed, try again" });
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <img src={logo} alt="Logo" className="md:hidden flex mt-4 mx-auto w-60 h-30" />
       {/* Left Side - Form Section */}
-      <div className="w-1/2 flex justify-center items-center bg-white p-10">
-        <div className="w-full max-w-xl bg-white p-10 rounded-lg shadow-lg">
-          <h2 className="text-3xl font-bold mb-6">Login</h2>
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white p-6 md:p-10">
+        <div className="w-full max-w-md bg-white p-6 md:p-10 rounded-xl shadow-lg">
+          <img
+            src={logoBanner}
+            alt="Banner"
+            className="w-2/3 md:hidden flex max-w-lg mx-auto"
+          />
+          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
+            Login
+          </h2>
           <form onSubmit={handleSubmit}>
             {/* Email or Phone Input */}
             <div className="relative mb-4">
@@ -156,12 +165,20 @@ const Login = () => {
 
             <div className="flex justify-between items-center mb-4">
               <div>
-                <input type="checkbox" id="remember" className="mr-2" required />
+                <input
+                  type="checkbox"
+                  id="remember"
+                  className="mr-2"
+                  required
+                />
                 <label htmlFor="remember" className="text-sm">
                   Remember me
                 </label>
               </div>
-              <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-blue-500 hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>

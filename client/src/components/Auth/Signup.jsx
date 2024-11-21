@@ -5,6 +5,8 @@ import api from "../../api/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import countryData from '../../country-json/countries+states+cities.json';  // Assuming it's in the `countryjson` folder
+import logo from "../../assets/images/logo.png";
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -136,10 +138,11 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <img src={logo} alt="Logo" className="md:hidden flex mt-4 mx-auto w-60 h-30" />
       {/* Left Side - Form Section */}
-      <div className="w-1/2 flex justify-center items-center bg-white p-10">
-        <div className="w-full max-w-xl bg-white p-10 rounded-lg shadow-lg">
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white p-6 md:p-10">
+        <div className="w-full max-w-lg bg-white p-6 md:p-10 rounded-xl shadow-lg">
           <h2 className="text-3xl font-bold mb-6">Registration</h2>
           <form onSubmit={handleSubmit}>
             {/* First Name and Last Name */}

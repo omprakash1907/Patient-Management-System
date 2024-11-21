@@ -8,7 +8,7 @@ import vector from "../../assets/images/Vector.png";
 
 const RightBanner = () => {
   return (
-    <div className="w-1/2 bg-gray-100 relative flex justify-center items-center">
+    <div className="md:w-1/2 hidden bg-gray-100 relative md:flex justify-center items-center">
     {/* Vectors */}
     <img
       src={vector1}

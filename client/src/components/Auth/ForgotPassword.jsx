@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import RightBanner from "../commonComponent/RightBanner";
 import axios from "axios"; // For API request
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../../context/AuthContext";
+import logo from "../../assets/images/logo.png";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
+  const { authError, requestOtp } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,21 +25,25 @@ const ForgotPassword = () => {
     } else {
       setErrors({});
       try {
-        // Perform OTP request for password reset action here
-        await axios.post("http://localhost:5000/api/auth/forgot-password", {
-          email,
-        });
-        console.log("OTP requested for:", email);
+        localStorage.setItem("email", email);
+        await requestOtp({ email });
+        alert("OTP sent to your email/phone");
+        navigate("/enter-otp");
       } catch (error) {
-        console.error("Error sending OTP:", error);
+        setErrors({ email: authError });
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <img
+        src={logo}
+        alt="Logo"
+        className="md:hidden flex mt-4 mx-auto w-60 h-30"
+      />
       {/* Left Side - Form Section */}
-      <div className="w-1/2 flex justify-center items-center bg-white p-10">
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white p-6 md:p-10">
         <div className="w-full max-w-xl bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold mb-6">Forgot Password</h2>
           <p className="mb-4 text-sm text-gray-500">
@@ -66,13 +74,12 @@ const ForgotPassword = () => {
               )}
             </div>
 
-            <Link
-              to="/enter-otp"
+            <button
               type="submit"
               className="w-full py-2 bg-gray-200 block text-center text-gray-500 font-semibold rounded-md hover:bg-customBlue hover:text-white transition duration-200"
             >
               Get OTP
-            </Link>
+            </button>
           </form>
           <p className="text-center mt-2 text-sm">
             <Link to="/" className="text-blue-500 hover:underline">
