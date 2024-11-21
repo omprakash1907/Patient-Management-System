@@ -12,7 +12,7 @@ const Profile = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative bg-gray-100  py-16 px-36  h-full">
+    <div className="relative bg-gray-100  py-16 md:px-36  px-16  h-full">
       {/* Header */}
       <ProfileHeader title="Profile Setting" />
 

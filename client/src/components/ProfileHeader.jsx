@@ -9,7 +9,7 @@ const ProfileHeader = ({ title }) => {
           'linear-gradient(107.38deg, #4C49ED 2.61%, #020067 101.2%)',
       }}
     >
-      <h2 className="absolute top-12 left-36 text-3xl font-semibold text-white z-20">
+      <h2 className="absolute top-12 md:left-36 left-16 text-3xl font-semibold text-white z-20">
         {title}
       </h2>
     </div>

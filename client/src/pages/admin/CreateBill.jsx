@@ -112,6 +112,24 @@ const CreateBill = () => {
     });
   };
 
+  // Line 110 (after existing useEffect hooks)
+useEffect(() => {
+  const calculateTotalAmount = () => {
+    const amount = parseFloat(formValues.amount) || 0;
+    const tax = parseFloat(formValues.tax) || 0;
+    const discount = parseFloat(formValues.discount) || 0;
+
+    const total = amount + tax - discount;
+    setFormValues((prev) => ({
+      ...prev,
+      totalAmount: total > 0 ? total.toFixed(2) : "0.00",
+    }));
+  };
+
+  calculateTotalAmount();
+}, [formValues.amount, formValues.tax, formValues.discount]);
+
+
   const handleHospitalSelect = (e) => {
     const selectedHospital = hospitals.find(
       (hospital) => hospital._id === e.target.value

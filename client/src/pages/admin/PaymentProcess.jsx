@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEye, FaEdit, FaSearch, FaCashRegister } from "react-icons/fa";
+import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import api from "../../api/api";
 import CashPaymentModal from "../../components/Admin/CashPaymentModal";
 import { useNavigate } from "react-router-dom";
@@ -9,13 +10,14 @@ const PaymentProcess = () => {
   const navigate = useNavigate(); // Initialize navigate
   const [billingData, setBillingData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isCashModalOpen, setCashModalOpen] = useState(false);
+  const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const { updateBreadcrumb } = useBreadcrumb();
 
   useEffect(() => {
     updateBreadcrumb([
-      { label: "Payment Process", path: "/admin/monitor-billing" },
+      { label: "Billing and Payments", path: "/admin/monitor-billing" },
+      { label: "Payment Process", path: "/admin/payment-process" },
     ]);
   }, []);
   // Fetch billing data from API
@@ -44,9 +46,76 @@ const PaymentProcess = () => {
     navigate(`/admin/payment-process/edit-bill/${bill._id}`);
   };
 
-  const handleOpenCashModal = (bill) => {
+  const handleOpenPaymentModal = (bill) => {
     setSelectedBill(bill);
-    setCashModalOpen(true);
+    setPaymentModalOpen(true);
+  };
+
+  const handleClosePaymentModal = () => {
+    setPaymentModalOpen(false);
+    setSelectedBill(null);
+  };
+
+  const handlePayment = async (amount) => {
+    const totalAmount = selectedBill.totalAmount;
+    const newRemainingAmount =
+      totalAmount - (selectedBill.paidAmount || 0) - amount;
+
+    if (newRemainingAmount <= 0) {
+      // Full payment
+      try {
+        const response = await api.patch(`/invoice/${selectedBill._id}`, {
+          status: "Paid",
+          paidAmount: totalAmount, // Fully paid, update the amount in the database
+          remainingAmount: 0,
+          patient: selectedBill.patient._id,
+          doctor: selectedBill.doctor._id,
+        });
+        console.log("Invoice marked as paid:", response.data);
+
+        setBillingData((prevData) =>
+          prevData.map((bill) =>
+            bill._id === selectedBill._id
+              ? {
+                  ...bill,
+                  status: "Paid",
+                  paidAmount: totalAmount,
+                  remainingAmount: 0,
+                }
+              : bill
+          )
+        );
+      } catch (error) {
+        console.error("Error updating invoice status:", error);
+      }
+    } else {
+      try {
+        const response = await api.patch(`/invoice/${selectedBill._id}`, {
+          paidAmount: (selectedBill.paidAmount || 0) + amount,
+          remainingAmount: newRemainingAmount,
+          status: newRemainingAmount <= 0 ? "Paid" : "Unpaid",
+          patient: selectedBill.patient._id,
+          doctor: selectedBill.doctor._id,
+        });
+        console.log("Payment updated:", response.data);
+
+        setBillingData((prevData) =>
+          prevData.map((bill) =>
+            bill._id === selectedBill._id
+              ? {
+                  ...bill,
+                  paidAmount: (selectedBill.paidAmount || 0) + amount,
+                  remainingAmount: newRemainingAmount,
+                  status: newRemainingAmount <= 0 ? "Paid" : "Unpaid",
+                }
+              : bill
+          )
+        );
+      } catch (error) {
+        console.error("Error updating payment:", error);
+      }
+    }
+    handleClosePaymentModal();
   };
 
   const handleViewDetails = (billId) => {
@@ -121,12 +190,6 @@ const PaymentProcess = () => {
                   </td>
                   <td className="px-6 py-4 space-x-2 flex items-center">
                     <button
-                      onClick={() => handleOpenCashModal(entry)}
-                      className="text-green-500 bg-gray-100 p-2 rounded-lg"
-                    >
-                      <FaCashRegister />
-                    </button>
-                    <button
                       onClick={() => handleEditBill(entry)}
                       className="text-customBlue bg-gray-100 p-2 rounded-lg"
                     >
@@ -137,6 +200,12 @@ const PaymentProcess = () => {
                       className="text-gray-400 bg-gray-100 p-2 rounded-lg"
                     >
                       <FaEye />
+                    </button>
+                    <button
+                     onClick={() => handleOpenPaymentModal(entry)}
+                      className="text-green-500 bg-gray-100 p-2 rounded-lg"
+                    >
+                      <RiMoneyDollarCircleLine  />
                     </button>
                   </td>
                 </tr>
@@ -152,10 +221,13 @@ const PaymentProcess = () => {
         </table>
       </div>
 
-      {isCashModalOpen && (
+      {selectedBill && (
         <CashPaymentModal
-          bill={selectedBill}
-          closeModal={() => setCashModalOpen(false)}
+          open={isPaymentModalOpen}
+          handleClose={handleClosePaymentModal}
+          handlePayment={handlePayment}
+          totalAmount={selectedBill.totalAmount}
+          paidAmount={selectedBill.paidAmount || 0}
         />
       )}
     </div>
