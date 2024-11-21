@@ -1,7 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import RightBanner from "../commonComponent/RightBanner";
+import logo from "../../assets/images/logo.png";
+import AuthContext from "../../context/AuthContext";
+import Swal from "sweetalert2";
+
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -9,6 +13,8 @@ const ResetPassword = () => {
   const [errors, setErrors] = useState({});
   const [showNewPassword, setShowNewPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
+  const { resetPassword, authError } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const toggleNewPasswordVisibility = () => {
     setShowNewPassword(!showNewPassword);
@@ -18,7 +24,7 @@ const ResetPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Simple validation logic
@@ -36,15 +42,38 @@ const ResetPassword = () => {
       setErrors(validationErrors);
     } else {
       setErrors({});
-      // Perform successful password reset action here
-      console.log("Password reset successful!");
+      try {
+        const email = localStorage.getItem("email");
+        await resetPassword({ password: newPassword, email });
+        Swal.fire({
+          icon: "success",
+          title: "Password reset successful!!",
+          text: "Something went wrong!",
+          confirmButtonText: "OK",
+        });
+        localStorage.removeItem("email");
+        navigate("/");
+      } catch {
+        setErrors({ confirmPassword: authError });
+        Swal.fire({
+          icon: "error",
+          title: "Password reset failed",
+          text: "Something went wrong!",
+          confirmButtonText: "Try Again",
+        });
+      }
     }
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <img
+        src={logo}
+        alt="Logo"
+        className="md:hidden flex mt-4 mx-auto w-60 h-30"
+      />
       {/* Left Side - Form Section */}
-      <div className="w-1/2 flex justify-center items-center bg-white p-10">
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white p-6 md:p-10">
         <div className="w-full max-w-xl bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold mb-6">Reset Password</h2>
           <form onSubmit={handleSubmit}>

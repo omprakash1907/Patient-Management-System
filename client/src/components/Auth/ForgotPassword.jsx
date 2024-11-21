@@ -4,6 +4,7 @@ import axios from "axios"; // For API request
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
 import logo from "../../assets/images/logo.png";
+import Swal from "sweetalert2";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -27,10 +28,21 @@ const ForgotPassword = () => {
       try {
         localStorage.setItem("email", email);
         await requestOtp({ email });
-        alert("OTP sent to your email/phone");
+        Swal.fire({
+          icon: "success",
+          title: "OTP sent to your email/phone!!",
+          text: "Your operation was successful.",
+          confirmButtonText: "OK",
+        });
         navigate("/enter-otp");
       } catch (error) {
         setErrors({ email: authError });
+        Swal.fire({
+          icon: "error",
+          title: "Invalid Email/Phone ",
+          text: "Something went wrong!",
+          confirmButtonText: "Try Again",
+        });
       }
     }
   };

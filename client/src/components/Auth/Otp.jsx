@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import RightBanner from "../commonComponent/RightBanner";
 import { useNavigate } from "react-router-dom"; // Use navigate for routing
 import { FiClock } from "react-icons/fi";
+import AuthContext from "../../context/AuthContext";
+import logo from "../../assets/images/logo.png";
+import Swal from "sweetalert2";
 
 const Otp = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [errors, setErrors] = useState("");
   const [timer, setTimer] = useState(30); // 30 seconds timer for OTP
   const [touched, setTouched] = useState(new Array(6).fill(false)); // To track touched fields
-
+  const { verifyOtp, authError, requestOtp } = useContext(AuthContext);
   const navigate = useNavigate(); // For navigation
 
   // Handle OTP input change
@@ -26,28 +29,50 @@ const Otp = () => {
   };
 
   // Handle OTP submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Check if all fields are filled
-    const emptyFields = otp.some((value) => value === "");
-    if (emptyFields) {
-      setErrors("Please fill all fields.");
+    const otpString = otp.join("");
+    if (otpString.length < 6) {
+      setErrors("Please enter a valid 6-digit OTP.");
     } else {
       setErrors("");
-      // Perform OTP verification action here
-      console.log("OTP entered:", otp.join(""));
-      // Navigate to the reset password page
-      navigate("/reset-password");
+      try {
+        const email = localStorage.getItem("email");
+        const response = await verifyOtp({ otp: otpString, email });
+
+        if (response.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "OTP verified successfully!!",
+            text: "Something went wrong!",
+            confirmButtonText: "OK",
+          });
+          navigate("/reset-password");
+        } else {
+          setErrors(authError || "Invalid or expired OTP");
+          Swal.fire({
+            icon: "error",
+            title: "OTP not verified ",
+            text: "Something went wrong!",
+            confirmButtonText: "Try Again",
+          });
+        }
+      } catch (error) {
+        setErrors(authError || "Invalid or expired OTP");
+      }
     }
   };
 
-  // Handle Resend OTP (reset the timer)
-  const handleResendOtp = () => {
+  const handleResendOtp = async () => {
     setOtp(new Array(6).fill(""));
-    setTouched(new Array(6).fill(false)); // Reset touched state
-    setTimer(30); // Reset the timer
-    console.log("OTP resent");
+    setTimer(30);
+    const email = localStorage.getItem("email");
+    try {
+      await requestOtp({ email });
+      alert("OTP resent to your email/phone");
+    } catch (error) {
+      setErrors("Failed to resend OTP. Please try again.");
+    }
   };
 
   // Update timer
@@ -70,9 +95,14 @@ const Otp = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Side - OTP Form Section */}
-      <div className="w-1/2 flex justify-center items-center bg-white p-10">
+    <div className="min-h-screen flex flex-col md:flex-row">
+      <img
+        src={logo}
+        alt="Logo"
+        className="md:hidden flex mt-4 mx-auto w-60 h-30"
+      />
+      {/* Left Side - Form Section */}
+      <div className="w-full md:w-1/2 flex justify-center items-center bg-white p-6 md:p-10">
         <div className="w-full max-w-xl bg-white p-10 rounded-lg shadow-lg">
           <h2 className="text-3xl font-medium mb-4">Enter OTP</h2>
           <p className="mb-4 text-sm text-gray-500">
@@ -84,7 +114,7 @@ const Otp = () => {
               {otp.map((data, index) => (
                 <input
                   className={`w-12 h-12 text-center border rounded-md focus:outline-none ${
-                    errors 
+                    errors
                       ? "border-red-500 text-red-500 font-semibold"
                       : "border-gray-300"
                   }`}
