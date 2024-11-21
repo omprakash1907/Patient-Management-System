@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(cors({
-  origin: ['*'], // Allow frontend origin
+  origin: ['https://patient-management-system-gamma.vercel.app', 'http://localhost:3000'], // Allow frontend origin
   methods: ["GET", "POST", "PUT", "DELETE",'PATCH'],
   allowedHeaders: ["Authorization", "Content-Type"],
   credentials: true,
